@@ -1,0 +1,15 @@
+.panel-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid #ccc;
+  min-height: 200px;
+}
+
+.element {
+  padding: 16px;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  cursor: move;
+}

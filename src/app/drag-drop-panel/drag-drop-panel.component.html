@@ -1,0 +1,12 @@
+
+<div
+  cdkDropList
+  class="panel-container"
+  [cdkDropListData]="images"
+  (cdkDropListDropped)="drop($event)"
+  (cdkDropListEntered)="entered($event)"
+>
+  <div class="element" *ngFor="let image of images" cdkDrag>
+    <img [src]="image" width="100" />
+  </div>
+</div>
