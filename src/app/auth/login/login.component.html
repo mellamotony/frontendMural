@@ -1,1 +1,25 @@
-<p>login works!</p>
+<div class="contain">
+  <form
+    (ngSubmit)="onLogin($event)"
+    [formGroup]="body"
+    class="formulario">
+    <picture>
+      <img src="../../../assets/logo.png" alt="img aqui">
+    </picture>
+    <span class="p-float-label">
+      <input formControlName="usuario" pInputText id="username" />
+      <label htmlFor="username">Username</label>
+    </span>
+
+    <span class="p-float-label">
+      <p-password
+        formControlName="contraseña"
+        [feedback]="false"
+        [toggleMask]="true"
+        ></p-password>
+      <label for="password">Password</label>
+  </span>
+  <p-button class="button_login" type="submit">Ingresar</p-button>
+  </form>
+
+</div>
