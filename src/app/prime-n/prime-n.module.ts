@@ -2,12 +2,16 @@ import { NgModule } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
+import { SlideMenuModule } from 'primeng/slidemenu';
+import { MenubarModule } from 'primeng/menubar';
 
 @NgModule({
   exports:[
     ButtonModule,
     InputTextModule,
-    PasswordModule
+    PasswordModule,
+    SlideMenuModule,
+    MenubarModule
   ]
 })
 export class PrimeNModule { }

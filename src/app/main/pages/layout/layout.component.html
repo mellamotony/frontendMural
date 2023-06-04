@@ -1,7 +1,19 @@
-<div class="row">
-  <div class="col-3"></div>
-  <div class="col-7">
+<p-menubar >
+  <ng-template pTemplate="start">
+    <img src="https://primefaces.org/cdn/primeng/images/primeng.svg" height="40" class="mr-2" />
+  </ng-template>
+</p-menubar>
+<br>
+<div class="d-flex gap-3">
+
+    <div class="flex justify-content-center">
+      <p-slideMenu [model]="items" [viewportHeight]="550" [menuWidth]="160"></p-slideMenu>
+  </div>
+
+  <div class="flex-fill">
     <router-outlet></router-outlet>
+
+
   </div>
 
 </div>

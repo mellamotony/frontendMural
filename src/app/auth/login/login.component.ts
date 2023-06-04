@@ -1,6 +1,7 @@
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 // import { LoginService } from '../services/login.service';
 
 @Component({
@@ -15,6 +16,7 @@ export class LoginComponent {
   })
 
   constructor(
+    private router:Router,
     // private logService:LoginService,
     private fb:FormBuilder){}
 
@@ -27,11 +29,12 @@ export class LoginComponent {
       return;
     }
     //cuando paso la validacion
-    const user = this.body.controls['usuario'].value;
-    const contra = this.body.controls['contraseña'].value;
+    const email = this.body.controls['usuario'].value;
+    const password = this.body.controls['contraseña'].value;
 
-    console.log('datos enviados: ',{user,contra});
+    console.log('datos enviados: ',{email,password});
 
+    this.router.navigate(['/main']);
     // this.logService.EnviarLogin(user,contra).subscribe(data => console.log(data));
 
 

@@ -12,14 +12,21 @@
     </span>
 
     <span class="p-float-label">
-      <p-password
+      <!-- <p-password
         formControlName="contraseña"
         [feedback]="false"
         [toggleMask]="true"
-        ></p-password>
+        ></p-password> -->
+        <input
+
+          formControlName="contraseña"
+          type="password" pPassword id="password">
       <label for="password">Password</label>
   </span>
-  <p-button class="button_login" type="submit">Ingresar</p-button>
+  <p-button
+  [style]="{'background-color':'#FFF176','color':'black','border':'none','width':'500px','display':'flex','justify-content':'center'}"
+
+  type="submit">Ingresar</p-button>
   </form>
 
 </div>

@@ -14,6 +14,9 @@ const routes: Routes = [
         component:CreateMuralComponent
       }
     ]
+  },{
+    path:'**',
+    redirectTo:'mural'
   }
 ];
 

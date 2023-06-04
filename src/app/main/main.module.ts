@@ -8,6 +8,7 @@ import { LayoutComponent } from './pages/layout/layout.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CreateMuralComponent } from './pages/create-mural/create-mural.component';
 import { DragDropPanelComponent } from '../drag-drop-panel/drag-drop-panel.component';
+import { PrimeNModule } from '../prime-n/prime-n.module';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { DragDropPanelComponent } from '../drag-drop-panel/drag-drop-panel.compo
   imports: [
     CommonModule,
     MainRoutingModule,
-    DragDropModule
+    DragDropModule,
+    PrimeNModule
   ]
 })
 export class MainModule { }
