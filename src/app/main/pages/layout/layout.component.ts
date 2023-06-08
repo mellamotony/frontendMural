@@ -10,23 +10,18 @@ export class LayoutComponent implements OnInit {
   ngOnInit(): void {
     this.items = [
       {
-        label: 'Mural',
-        icon: 'pi pi-fw pi-file',
-        routerLink:'/main/mural'
-      },
-      {
-        label: 'Edit',
-        icon: 'pi pi-fw pi-pencil',
-
-      },
-      {
-        label: 'Users',
+        label: 'Dashboard',
         icon: 'pi pi-fw pi-user',
-
+        routerLink:'/main/dashboard'
       },
       {
-        label: 'Events',
-        icon: 'pi pi-fw pi-calendar',
+        label: 'Estado',
+        icon: 'pi pi-fw pi-verified',
+        routerLink:'/main/estado'
+      },
+      {
+        label: 'Historial',
+        icon: 'pi pi-fw pi-book',
 
       },
       {
@@ -35,6 +30,7 @@ export class LayoutComponent implements OnInit {
       {
         label: 'Quit',
         icon: 'pi pi-fw pi-power-off',
+        routerLink:'/auth/login'
       },
     ];
   }

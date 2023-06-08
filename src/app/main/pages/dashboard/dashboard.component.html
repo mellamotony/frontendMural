@@ -1,0 +1,14 @@
+<div class="body_dashboard">
+  <div class="card_body" routerLink="/main/mural">
+      <i class="pi pi-plus-circle" style="font-size: 3rem"></i>
+      <br>
+      <span>Crear un nuevo mural</span>
+  </div>
+
+  <div class="card_body" *ngFor="let item of list">
+    <h1>Plantilla</h1>
+    <span>{{item}}</span>
+  </div>
+
+
+</div>

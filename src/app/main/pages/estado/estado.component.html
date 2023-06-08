@@ -1,0 +1,24 @@
+
+<div class="card">
+  <p-table [value]="product" [tableStyle]="{'min-width': '50rem'}">
+      <ng-template pTemplate="header">
+          <tr>
+              <th>Nombre del Mural</th>
+              <th>Fecha</th>
+              <th>Estado</th>
+
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-product>
+          <tr [ngClass]="{'row-accessories': product.category === 'Accessories'}">
+              <td>{{product.nombre}}</td>
+              <td>{{product.fecha}}</td>
+              <td>
+                  <div [ngClass]="{'outofstock': product.estado == 'en espera', 'lowstock': product.estado == 'rechazado','instock': product.estado == 'aprobado'}">
+                      {{product.estado | titlecase}}
+                  </div>
+              </td>
+          </tr>
+      </ng-template>
+  </p-table>
+</div>

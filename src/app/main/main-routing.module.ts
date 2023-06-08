@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from './pages/layout/layout.component';
 import { CreateMuralComponent } from './pages/create-mural/create-mural.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { EstadoComponent } from './pages/estado/estado.component';
 
 const routes: Routes = [
   {
@@ -12,11 +14,18 @@ const routes: Routes = [
       {
         path:'mural',
         component:CreateMuralComponent
+      },
+      {
+        path:'dashboard',
+        component:DashboardComponent
+      },{
+        path:'estado',
+        component:EstadoComponent
       }
     ]
   },{
     path:'**',
-    redirectTo:'mural'
+    redirectTo:'/dashboard'
   }
 ];
 
