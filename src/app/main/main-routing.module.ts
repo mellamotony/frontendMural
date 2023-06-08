@@ -4,6 +4,7 @@ import { LayoutComponent } from './pages/layout/layout.component';
 import { CreateMuralComponent } from './pages/create-mural/create-mural.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { EstadoComponent } from './pages/estado/estado.component';
+import { HistorialComponent } from './pages/historial/historial.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,10 @@ const routes: Routes = [
       },{
         path:'estado',
         component:EstadoComponent
+      },
+      {
+        path:'historial',
+        component:HistorialComponent
       }
     ]
   },{

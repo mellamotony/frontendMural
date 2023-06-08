@@ -1,0 +1,21 @@
+<div class="card">
+  <p-table [value]="product" [tableStyle]="{'min-width': '50rem'}">
+      <ng-template pTemplate="header">
+          <tr>
+              <th>Nombre del Mural</th>
+              <th>Fecha de Creación</th>
+              <th>Acción</th>
+
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-product>
+          <tr [ngClass]="{'row-accessories': product.category === 'Accessories'}">
+              <td>{{product.nombre}}</td>
+              <td>{{product.fecha}}</td>
+              <td>
+                 <p-button (onClick)="redirigir()">Ver</p-button>
+              </td>
+          </tr>
+      </ng-template>
+  </p-table>
+</div>

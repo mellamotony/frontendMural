@@ -22,7 +22,7 @@ export class LayoutComponent implements OnInit {
       {
         label: 'Historial',
         icon: 'pi pi-fw pi-book',
-
+        routerLink:'/main/historial'
       },
       {
         separator: true,

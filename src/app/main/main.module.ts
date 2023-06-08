@@ -11,6 +11,7 @@ import { DragDropPanelComponent } from '../drag-drop-panel/drag-drop-panel.compo
 import { PrimeNModule } from '../prime-n/prime-n.module';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { EstadoComponent } from './pages/estado/estado.component';
+import { HistorialComponent } from './pages/historial/historial.component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { EstadoComponent } from './pages/estado/estado.component';
     LayoutComponent,
      CreateMuralComponent,
      DashboardComponent,
-     EstadoComponent
+     EstadoComponent,
+     HistorialComponent
   ],
   imports: [
     CommonModule,
