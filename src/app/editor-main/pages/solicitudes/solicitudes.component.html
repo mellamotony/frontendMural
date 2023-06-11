@@ -1,0 +1,28 @@
+<p-table [value]="products" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{ 'min-width': '15rem' }">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Nombre del Mural</th>
+      <th>Fecha</th>
+      <th>Estado</th>
+      <th>Acción</th>
+      <th>Acción</th>
+      <th>Acción</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-product>
+    <tr>
+      <td>{{ product.nombre_mural }}</td>
+      <td>{{ product.fecha}}</td>
+      <td>{{ product.estado | titlecase }}</td>
+      <td>
+        <p-button (onClick)="onPublic()" styleClass="p-button-success">Aprobar / publicar</p-button>
+      </td>
+      <td>
+        <p-button (onClick)="onDelete()" styleClass="p-button-danger"> Rechazar</p-button>
+      </td>
+      <td>
+        <p-button (onClick)="onEdit()">Editar</p-button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

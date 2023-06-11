@@ -14,6 +14,11 @@ const routes: Routes = [
   },
 
   {
+    path:'editormain',
+    loadChildren: () => import('./editor-main/editor-main.module').then(m => m.EditorMainModule)
+  },
+
+  {
     path:"**",
     redirectTo:"auth"
   }
