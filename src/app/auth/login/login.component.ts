@@ -2,6 +2,7 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { LoginService } from '../services/login.service';
 // import { LoginService } from '../services/login.service';
 
 @Component({
@@ -17,7 +18,7 @@ export class LoginComponent {
 
   constructor(
     private router:Router,
-    // private logService:LoginService,
+    private logService:LoginService,
     private fb:FormBuilder){}
 
 
@@ -34,8 +35,23 @@ export class LoginComponent {
 
     console.log('datos enviados: ',{email,password});
 
-    this.router.navigate(['/main']);
-    // this.logService.EnviarLogin(user,contra).subscribe(data => console.log(data));
+
+    this.logService.EnviarLogin(email,password).subscribe(data => {
+      console.log(data);
+      if(!data){
+        alert('usuario o contraseña incorrectos');
+        this.body.reset();
+        return;
+      }
+
+      console.log('logeado con exito',data.token)
+
+      const token:string | undefined = data.token?.toString()
+      this.router.navigate(['/main']);
+      localStorage.setItem("token",token!);
+
+
+    });
 
 
 

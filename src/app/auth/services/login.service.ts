@@ -1,27 +1,28 @@
 
-// import { Observable, catchError,of } from 'rxjs';
-// import { Injectable } from '@angular/core';
-// import { HttpClient } from '@angular/common/http';
-// import { Logresponse } from '../interfaces/login.inteface';
+import { Observable, catchError,of } from 'rxjs';
+import { Injectable } from '@angular/core';
+
+import { Logresponse } from '../interfaces/login.inteface';
+import { HttpClient } from '@angular/common/http';
 
 
 
-// @Injectable({ providedIn: 'root' })
-// export class LoginService {
+@Injectable({ providedIn: 'root' })
+export class LoginService {
+  //http://localhost:8098/codeigniter4-framework-5d3d4b2/login
+  private url:string = '/api/login';
 
-//   public url:string = '';
 
+  constructor(private http: HttpClient) { }
 
-//   constructor(private http: HttpClient) { }
+  EnviarLogin(email:string,password:string):Observable< Logresponse | null>{
+    const body = {
+      "email":email,
+      "contrasenia":password
+    }
+    return this.http.post(this.url,body).pipe(
+      catchError( () => of(null))
+    )
+  }
 
-//   EnviarLogin(usuario:string,password:string):Observable< Logresponse| null>{
-//     const body = {
-//       user:usuario,
-//       contra:password
-//     }
-//     return this.http.post(this.url,body).pipe(
-//       catchError(() => of(null))
-//     )
-//   }
-
-// }
+}

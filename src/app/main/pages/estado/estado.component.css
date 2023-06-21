@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Kanit&family=Merriweather:wght@300&family=Open+Sans&family=Oswald:wght@400;700&display=swap');
+.card{
+  font-family:'Kanit', sans-serif;
+}
+.outofstock{
+  color:red;
+
+}
+.lowstock{
+  color:orange;
+}
+.instock{
+  color:green;
+}
