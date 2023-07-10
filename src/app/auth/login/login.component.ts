@@ -1,8 +1,9 @@
-
+import jwt_decode from 'jwt-decode';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from '../services/login.service';
+import { guardToken } from '../interfaces/login.inteface';
 // import { LoginService } from '../services/login.service';
 
 @Component({
@@ -47,8 +48,19 @@ export class LoginComponent {
       console.log('logeado con exito',data.token)
 
       const token:string | undefined = data.token?.toString()
-      this.router.navigate(['/main']);
+
       localStorage.setItem("token",token!);
+      const rolEncrypted = localStorage.getItem('token');
+
+      const rolDesencrypted:guardToken = jwt_decode(rolEncrypted!)
+
+      if(rolDesencrypted.rol == 'diseñador'){
+        this.router.navigate(['/main']);
+      }else if(rolDesencrypted.rol == 'editor'){
+        this.router.navigate(['/editormain'])
+      }
+
+
 
 
     });

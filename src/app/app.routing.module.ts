@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes} from '@angular/router';
+import { DesignerGuard } from './guards/DesignerGuard.guard';
+import { EditorGuard } from './guards/Editor.guard';
 
 const routes: Routes = [
   {
@@ -10,12 +12,15 @@ const routes: Routes = [
 
   {
     path:"main",
-    loadChildren: () => import('./main/main.module').then((m)=>m.MainModule)
+    loadChildren: () => import('./main/main.module').then((m)=>m.MainModule),
+    canActivate:[DesignerGuard]
+
   },
 
   {
     path:'editormain',
-    loadChildren: () => import('./editor-main/editor-main.module').then(m => m.EditorMainModule)
+    loadChildren: () => import('./editor-main/editor-main.module').then(m => m.EditorMainModule),
+    canActivate:[EditorGuard]
   },
 
   {

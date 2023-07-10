@@ -1,7 +1,81 @@
-<div class="image-container">
-  <img src="https://via.placeholder.com/100x100?text=Image1" width="100" cdkDrag />
-  <img src="https://via.placeholder.com/100x100?text=Image2" width="100" cdkDrag />
-  <img src="https://via.placeholder.com/100x100?text=Image3" width="100" cdkDrag />
-</div>
-<app-drag-drop-panel></app-drag-drop-panel>
+<p-megaMenu [model]="items"></p-megaMenu>
+<div class="panel-container" #contPanel>
+  <!--
+cdkDropList
+[cdkDropListData]="images"
+(cdkDropListDropped)="drop($event)"
+(cdkDropListEntered)="entered($event)" -->
+  <!-- <div class="element" *ngFor="let image of images" cdkDrag>
+    <img [src]="image" width="100" />
+  </div> -->
 
+  <textarea *ngFor="let item of valueInputs" cdkDragBoundary=".panel-container" cdkDrag class="cdk-drag" [value]="item"
+    type="text" (click)="handleClick($event)">
+    </textarea>
+
+  <input type="file" style="display: none" id="fileInput" (change)="handleFileInput($event)">
+  <div class="panel-i" *ngFor="let item of panelItems" cdkDrag cdkDragBoundary=".panel-container">
+    <ng-container class="contVideo" *ngIf="item.type.startsWith('video/')">
+      <video [src]="item.url" controls></video>
+    </ng-container>
+    <ng-container class="contImg" *ngIf="item.type.startsWith('image/')">
+      <img [src]="item.url" [alt]="item.file.name">
+    </ng-container>
+
+  </div>
+
+</div>
+
+<div *ngIf="isActive">
+  <form (ngSubmit)="getChangesStyles()" [formGroup]="toolsForm">
+    <div>
+
+      <h2>Color de fondo</h2>
+      <input formControlName="background" type="text">
+      <h1>Color:</h1>
+      <input formControlName="color" type="text">
+    </div>
+
+    <div>
+      <div>
+        <h2>Ancho</h2>
+        <input formControlName="width" type="text">
+
+      </div>
+      <div>
+        <h2>Alto</h2>
+        <input formControlName="height" type="text">
+      </div>
+
+      <div>
+        <h2>Negritas</h2>
+        <input formControlName="negrita" type="checkbox">
+      </div>
+
+      <div>
+        <label for="alignment">Alineación: </label>
+        <select formControlName="alignment" id="alignment">
+          <option value="center">Centro</option>
+          <option value="justify">Justificado</option>
+        </select>
+
+      </div>
+
+      <div>
+        <label for="fonts">Fuentes: </label>
+        <select formControlName="fonts" id="fonts" >
+          <option *ngFor="let font of fontFamilies" [value]="font">{{font}}</option>
+        </select>
+      </div>
+      <h2>Tamaño de la fuente</h2>
+      <input formControlName="fontSize" type="text">
+      <div>
+
+      </div>
+
+    </div>
+
+    <button type="submit">Guardar</button>
+
+  </form>
+</div>

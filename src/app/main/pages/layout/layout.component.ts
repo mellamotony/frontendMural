@@ -30,8 +30,20 @@ export class LayoutComponent implements OnInit {
       {
         label: 'Quit',
         icon: 'pi pi-fw pi-power-off',
-        routerLink:'/auth/login'
+        routerLink:'/auth/login',
+        command: () => {
+          this.closeSession();
+        }
+
       },
     ];
+  }
+
+  closeSession(){
+    //borra los datos en el localStorga
+    //borra los datos en el //borra lga
+
+    localStorage['removeItem']('token');
+    console.log('sesion cerrada')
   }
 }

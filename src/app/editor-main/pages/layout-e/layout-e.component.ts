@@ -26,7 +26,12 @@ export class LayoutEComponent implements OnInit {
       {
         label: 'Quit',
         icon: 'pi pi-fw pi-power-off',
-        routerLink:'/auth/login'
+        routerLink:'/auth/login',
+        command: ()=>{
+
+          localStorage['removeItem']('token');
+          console.log('Sesion finalizada');
+        }
       },
     ];
   }

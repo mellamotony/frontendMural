@@ -5,6 +5,8 @@ import { PasswordModule } from 'primeng/password';
 import { SlideMenuModule } from 'primeng/slidemenu';
 import { MenubarModule } from 'primeng/menubar';
 import { TableModule } from 'primeng/table';
+import { TabMenuModule } from 'primeng/tabmenu';
+import { MegaMenuModule } from 'primeng/megamenu';
 
 @NgModule({
   exports:[
@@ -13,7 +15,9 @@ import { TableModule } from 'primeng/table';
     PasswordModule,
     SlideMenuModule,
     MenubarModule,
-    TableModule
+    TableModule,
+    TabMenuModule,
+    MegaMenuModule
   ]
 })
 export class PrimeNModule { }

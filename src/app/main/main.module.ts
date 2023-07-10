@@ -1,3 +1,4 @@
+import { ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -12,6 +13,8 @@ import { PrimeNModule } from '../prime-n/prime-n.module';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { EstadoComponent } from './pages/estado/estado.component';
 import { HistorialComponent } from './pages/historial/historial.component';
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+
 
 
 @NgModule({
@@ -27,7 +30,9 @@ import { HistorialComponent } from './pages/historial/historial.component';
     CommonModule,
     MainRoutingModule,
     DragDropModule,
-    PrimeNModule
+    PrimeNModule,
+    ReactiveFormsModule,
+    NgxExtendedPdfViewerModule
   ]
 })
 export class MainModule { }
