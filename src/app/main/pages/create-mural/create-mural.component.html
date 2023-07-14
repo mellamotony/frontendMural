@@ -14,18 +14,26 @@ cdkDropList
     </textarea>
 
   <input type="file" style="display: none" id="fileInput" (change)="handleFileInput($event)">
-  <div class="panel-i" *ngFor="let item of panelItems" cdkDrag cdkDragBoundary=".panel-container">
+  <div class="panel-i" *ngFor="let item of panelItems" cdkDrag cdkDragBoundary=".panel-container"
+    (click)="handleClickMultimedia($event)">
     <ng-container class="contVideo" *ngIf="item.type.startsWith('video/')">
       <video [src]="item.url" controls></video>
     </ng-container>
     <ng-container class="contImg" *ngIf="item.type.startsWith('image/')">
       <img [src]="item.url" [alt]="item.file.name">
     </ng-container>
+    <ng-container *ngIf="item.type.startsWith('application/')">
+      <pdf-viewer  [src]="item.url" [render-text]="true" alt="item.file.name"
+      [original-size]="false"
+      ></pdf-viewer>
+    </ng-container>
 
   </div>
 
-</div>
 
+</div>
+<p-button (click)="OnSaveMural()" >Guardar</p-button>
+<!-- Barra de herramientas para textos -->
 <div *ngIf="isActive">
   <form (ngSubmit)="getChangesStyles()" [formGroup]="toolsForm">
     <div>
@@ -34,6 +42,17 @@ cdkDropList
       <input formControlName="background" type="text">
       <h1>Color:</h1>
       <input formControlName="color" type="text">
+      <h2>Color de Borde</h2>
+      <input formControlName="borderColor" type="text">
+      <div>
+        <label for="fonts">Estilos de borde: </label>
+        <select formControlName="borderStyle" id="fonts">
+          <option *ngFor="let brdStyles of borderStyles" [value]="brdStyles">{{brdStyles}}</option>
+        </select>
+      </div>
+
+      <h2>Radio de bordes</h2>
+      <input formControlName="borderRadius" type="text"><span> %</span>
     </div>
 
     <div>
@@ -61,16 +80,58 @@ cdkDropList
 
       </div>
 
+
       <div>
         <label for="fonts">Fuentes: </label>
-        <select formControlName="fonts" id="fonts" >
+        <select formControlName="fonts" id="fonts">
           <option *ngFor="let font of fontFamilies" [value]="font">{{font}}</option>
         </select>
       </div>
       <h2>Tamaño de la fuente</h2>
       <input formControlName="fontSize" type="text">
-      <div>
+      <div class="btnDelete" (click)="DeleteElement()">
+        <span>X</span>
+      </div>
 
+    </div>
+
+    <button type="submit">Guardar</button>
+
+  </form>
+</div>
+
+<!-- Barra de herramientas para imagens y videos y pdfs -->
+
+<div *ngIf="IsVidActive">
+  <form (ngSubmit)="changeStyles()" [formGroup]="toolsForm">
+    <div>
+
+      <h2>Color de Borde</h2>
+      <input formControlName="borderColor" type="text">
+      <div>
+        <label for="fonts">Estilos de borde: </label>
+        <select formControlName="borderStyle" id="fonts">
+          <option *ngFor="let brdStyles of borderStyles" [value]="brdStyles">{{brdStyles}}</option>
+        </select>
+      </div>
+
+      <h2>Radio de bordes</h2>
+      <input formControlName="borderRadius" type="text"><span> %</span>
+    </div>
+
+    <div>
+      <div>
+        <h2>Ancho</h2>
+        <input formControlName="width" type="text">
+
+      </div>
+      <div>
+        <h2>Alto</h2>
+        <input formControlName="height" type="text">
+      </div>
+
+      <div class="btnDelete" (click)="DeleteParent()">
+        <span>X</span>
       </div>
 
     </div>

@@ -13,7 +13,7 @@ import { PrimeNModule } from '../prime-n/prime-n.module';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { EstadoComponent } from './pages/estado/estado.component';
 import { HistorialComponent } from './pages/historial/historial.component';
-import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 
 
@@ -32,7 +32,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
     DragDropModule,
     PrimeNModule,
     ReactiveFormsModule,
-    NgxExtendedPdfViewerModule
+    PdfViewerModule
   ]
 })
 export class MainModule { }

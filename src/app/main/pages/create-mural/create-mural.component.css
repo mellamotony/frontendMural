@@ -16,8 +16,8 @@
 }
 
 .panel-i{
-  width: 200px;
-  height: 300px;
+  width: 400px;
+  height: 600px;
 }
 
 .panel-i video{
@@ -27,6 +27,13 @@
 
 .panel-i img{
   width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.panel-i pdf-viewer{
+  width:  100%;
   height: 100%;
 }
 
@@ -50,19 +57,26 @@
 }
 
 .cdk-drag{
-  border:0;
+  border:1px solid black;
+  outline:none;
   cursor: pointer;
   color:red;
   height:100px;
   width:200px;
-  margin: 0 auto
+  margin: 0 auto;
+  font-size:16px;
+  resize: none;
 }
 
 .btnDelete{
-  color: Red;
+  color: white;
+  background-color:red;
+  width:50%;
+  cursor:pointer;
   border:0px;
   border-radius:8px;
   padding:4px;
   max-height:25px;
+  text-align:center;
 }
 
