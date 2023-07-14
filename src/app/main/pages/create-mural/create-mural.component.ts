@@ -251,7 +251,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
     this.isActive = false;
     console.log('El elemento fue presionado');
     console.log(e);
-    const element = e.target as HTMLElement;
+
 
     this.IsVidActive = true;
 
@@ -270,8 +270,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
 
     element.style.borderStyle = this.toolsForm.controls['borderStyle'].value;
 
-    element.style.borderRadius =
-      this.toolsForm.controls['borderRadius'].value + '%';
+    element.style.borderRadius = this.toolsForm.controls['borderRadius'].value + '%';
 
     element.style.width = this.toolsForm.controls['width'].value + 'px';
 
