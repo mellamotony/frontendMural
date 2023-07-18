@@ -8,4 +8,9 @@ import { Component } from '@angular/core';
 export class DashboardComponent {
   public list:number [] = [1,2,3];
 
+
+  generarId(){
+
+  }
+
 }

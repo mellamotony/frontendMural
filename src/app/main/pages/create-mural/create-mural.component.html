@@ -39,11 +39,11 @@ cdkDropList
     <div>
 
       <h2>Color de fondo</h2>
-      <input formControlName="background" type="text">
+      <p-colorPicker formControlName="background"></p-colorPicker>
       <h1>Color:</h1>
-      <input formControlName="color" type="text">
+      <p-colorPicker formControlName="color"></p-colorPicker>
       <h2>Color de Borde</h2>
-      <input formControlName="borderColor" type="text">
+      <p-colorPicker formControlName="borderColor"></p-colorPicker>
       <div>
         <label for="fonts">Estilos de borde: </label>
         <select formControlName="borderStyle" id="fonts">
@@ -100,14 +100,15 @@ cdkDropList
   </form>
 </div>
 
-<!-- Barra de herramientas para imagens y videos y pdfs -->
+<!-- Barra de herramientas para imagens y videos  -->
 
 <div *ngIf="IsVidActive">
   <form (ngSubmit)="changeStyles()" [formGroup]="toolsForm">
     <div>
 
       <h2>Color de Borde</h2>
-      <input formControlName="borderColor" type="text">
+      <p-colorPicker formControlName="borderColor"></p-colorPicker>
+
       <div>
         <label for="fonts">Estilos de borde: </label>
         <select formControlName="borderStyle" id="fonts">
@@ -137,6 +138,48 @@ cdkDropList
     </div>
 
     <button type="submit">Guardar</button>
+
+  </form>
+</div>
+
+
+<!-- Barra de herramientas para Pdfs  -->
+
+<div *ngIf="isPdfActive">
+  <form (ngSubmit)="changeStylesPdfs()" [formGroup]="toolsForm">
+    <div>
+
+      <h2>Color de Borde</h2>
+      <p-colorPicker  formControlName="borderColor"></p-colorPicker>
+      <div>
+        <label for="fonts">Estilos de borde: </label>
+        <select formControlName="borderStyle" id="fonts">
+          <option *ngFor="let brdStyles of borderStyles" [value]="brdStyles">{{brdStyles}}</option>
+        </select>
+      </div>
+
+      <h2>Radio de bordes</h2>
+      <input formControlName="borderRadius" type="text"><span> %</span>
+    </div>
+
+    <div>
+      <div>
+        <h2>Ancho</h2>
+        <input formControlName="width" type="text">
+
+      </div>
+      <div>
+        <h2>Alto</h2>
+        <input formControlName="height" type="text">
+      </div>
+
+      <div class="btnDelete" (click)="DeletePdfs()">
+        <span>X</span>
+      </div>
+
+    </div>
+
+    <button type="submit">Guardar Pdfs</button>
 
   </form>
 </div>

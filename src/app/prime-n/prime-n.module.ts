@@ -7,6 +7,7 @@ import { MenubarModule } from 'primeng/menubar';
 import { TableModule } from 'primeng/table';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { MegaMenuModule } from 'primeng/megamenu';
+import { ColorPickerModule } from 'primeng/colorpicker';
 
 @NgModule({
   exports:[
@@ -17,7 +18,8 @@ import { MegaMenuModule } from 'primeng/megamenu';
     MenubarModule,
     TableModule,
     TabMenuModule,
-    MegaMenuModule
+    MegaMenuModule,
+    ColorPickerModule
   ]
 })
 export class PrimeNModule { }

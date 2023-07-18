@@ -18,7 +18,13 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MegaMenuItem, MenuItem } from 'primeng/api';
-import { PanelItem } from '../../interfaces/mural.interfaces';
+import {
+  ImageDatasetItem,
+  MuralDataSetItem,
+  PanelItem,
+  TextDatasetItem,
+  VideoDatasetItem,
+} from '../../interfaces/mural.interfaces';
 
 @Component({
   selector: 'app-create-mural',
@@ -30,7 +36,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
 
   //Array para almacenar todos los datos del mural
 
-  private DataMural: [] = [];
+  private DataMural?: MuralDataSetItem;
 
   // Variables para almacenar el texto por defecto de textArea
   valueInputs: string[] = [];
@@ -40,6 +46,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
   //variable para validar la aparcion de la herramienta
   isActive: boolean = false;
   IsVidActive: boolean = false;
+  isPdfActive: boolean = false;
   //Variables para cambiar estilos del texto
   color: string = '';
   //variable para familias de textos
@@ -72,15 +79,15 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
 
   //formularios
   public toolsForm: FormGroup = this.fb.group({
-    color: this.fb.control(''),
+    color: this.fb.control('black'),
     width: this.fb.control(''),
     height: this.fb.control(''),
     negrita: this.fb.control(false),
-    background: this.fb.control(''),
+    background: this.fb.control('black'),
     alignment: this.fb.control('center'),
     fonts: this.fb.control(''),
     fontSize: this.fb.control(''),
-    borderColor: this.fb.control(''),
+    borderColor: this.fb.control('black'),
     borderStyle: this.fb.control(''),
     borderRadius: this.fb.control(''),
   });
@@ -225,7 +232,6 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
   }
 
   uploadFile(acceptedType: string): void {
-    alert('click');
     const inputElement: HTMLInputElement | null =
       document.querySelector('#fileInput');
     if (inputElement) {
@@ -237,6 +243,9 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
   //click al elemento ContainerTxt
   handleClick(e: MouseEvent) {
     this.IsVidActive = false;
+    if ((this.isPdfActive = true)) {
+      this.isPdfActive = false;
+    }
     console.log('El elemento fue presionado');
     console.log(e);
     const element = e.target as HTMLElement;
@@ -249,10 +258,17 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
   //click a los elementos de video,pdf e imagenes
   handleClickMultimedia(e: MouseEvent) {
     this.isActive = false;
+    if ((this.isPdfActive = true)) {
+      this.isPdfActive = false;
+    }
     console.log('El elemento fue presionado');
-    console.log(e);
-
-
+    const newElement = e.target as HTMLElement;
+    if (newElement.className == 'textLayer') {
+      this.isPdfActive = true;
+      this.IsVidActive = false;
+      this.e = e;
+      return;
+    }
     this.IsVidActive = true;
 
     this.e = e;
@@ -261,7 +277,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
   //funcion para cambiar cambiar la barra de herramientas de texto
   getChangesStyles() {
     const element = this.e?.target as HTMLElement;
-    console.log('el elemento:', element)
+    console.log('el elemento:', element);
     element.style.color = this.toolsForm.controls['color'].value;
 
     element.style.backgroundColor = this.toolsForm.controls['background'].value;
@@ -270,7 +286,8 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
 
     element.style.borderStyle = this.toolsForm.controls['borderStyle'].value;
 
-    element.style.borderRadius = this.toolsForm.controls['borderRadius'].value + '%';
+    element.style.borderRadius =
+      this.toolsForm.controls['borderRadius'].value + '%';
 
     element.style.width = this.toolsForm.controls['width'].value + 'px';
 
@@ -310,6 +327,31 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
     this.IsVidActive = false;
   }
 
+  //funcion para cambiar cambiar la barra de herramientas Pdfs
+  changeStylesPdfs() {
+    const element = this.e?.target as HTMLElement;
+    console.log(element);
+    //obtenemos el elemento padre
+    const parentElement = element.parentElement;
+    const raiz =
+      parentElement?.parentElement?.parentElement?.parentElement?.parentElement;
+
+    console.log('asdsad', raiz);
+
+    raiz!.style.borderColor = this.toolsForm.controls['borderColor'].value;
+
+    raiz!.style.borderStyle = this.toolsForm.controls['borderStyle'].value;
+
+    raiz!.style.borderRadius =
+      this.toolsForm.controls['borderRadius'].value + '%';
+
+    raiz!.style.width = this.toolsForm.controls['width'].value + 'px';
+
+    raiz!.style.height = this.toolsForm.controls['height'].value + 'px';
+
+    this.isPdfActive = false;
+  }
+
   //borrar cualquier elemento
   DeleteElement() {
     const element = this.e?.target as HTMLElement;
@@ -329,48 +371,114 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
     //desaparece la barra de herramientas
     this.IsVidActive = false;
   }
+  //borrar el elemento padre del pdf
+  DeletePdfs() {
+    const element = this.e?.target as HTMLElement;
+
+    if (element.parentElement) {
+      element.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.remove();
+    }
+
+    //desaparece la barra de herramientas
+    this.IsVidActive = false;
+  }
 
   //funcion para enviar los datos
   OnSaveMural() {
     //obtener valores del mural
-    const textAreas = this.containerRef.nativeElement.querySelectorAll('textarea');
+    const MuralData = this.containerRef.nativeElement;
+
+    const textAreas =
+      this.containerRef.nativeElement.querySelectorAll('textarea');
     const images = this.containerRef.nativeElement.querySelectorAll('img');
     const videos = this.containerRef.nativeElement.querySelectorAll('video');
+    const pdfs = this.containerRef.nativeElement.querySelectorAll('pdf-viewer');
+    console.log(pdfs)
     //Array de cada elemento
 
-    const Videos:string[] = [];
-
+    const Videos: VideoDatasetItem[] = [];
+    const Texts: TextDatasetItem[] = [];
+    const DataImagenes: ImageDatasetItem[] = [];
 
     // Recorrer los textAreas y obtener sus valores
     textAreas.forEach((textArea: HTMLTextAreaElement) => {
-      const valueTexts = {
-        value: textArea,
+      const valueTexts: TextDatasetItem = {
+        valor: textArea.value,
+        font: textArea.style.fontFamily,
+        font_size: textArea.style.fontSize,
+        posX: textArea.offsetLeft,
+        posY: textArea.offsetTop,
+        height: parseInt(textArea.style.height),
+        width: parseInt( textArea.style.width),
+        color: textArea.style.color,
+        borderColor: textArea.style.borderColor,
+        backgroundColor: textArea.style.backgroundColor,
+        fontWeight:  textArea.style.fontWeight,
+        sangria:  textArea.style.textAlign,
       };
-      console.log('Valor del textarea:', valueTexts);
-      // Puedes hacer algo con el valor, como almacenarlo en una variable o enviarlo a través de una función
+      console.log('alto:',textArea.style.height)
+      Texts.push(valueTexts);
+
     });
 
     // Recorrer las imágenes y obtener sus atributos o valores
     images.forEach((image: HTMLImageElement) => {
-      const valueImages = {
-        src: image.src,
+      const valueImages: ImageDatasetItem = {
+        url: image.src,
         alt: image.alt,
+        height: image.height,
+        width: image.width,
+        posX: image.x,
+        posY: image.y,
       };
+      DataImagenes.push(valueImages);
+      console.log('las imagenes:', image.width);
 
-      console.log('las imagenes:', valueImages);
-      // Puedes hacer algo con los atributos, como mostrarlos en la interfaz o enviarlos a través de una función
     });
 
     // Recorrer los videos y obtener sus atributos o valores
     videos.forEach((video: HTMLVideoElement) => {
-      const DataVideo = {
+      const rect = video.getBoundingClientRect();
+      const posX = rect.left;
+      const posY = rect.top;
+
+      const DataVideo: VideoDatasetItem = {
         src: video.src,
+        height: video.offsetHeight,
+        width: video.offsetWidth,
+        posX: posX,
+        posY: posY,
       };
-      // Videos.push(DataVideo)
+
+      Videos.push(DataVideo);
       console.log('Src del video:', DataVideo);
-      // Puedes hacer algo con los atributos, como mostrarlos en la interfaz o enviarlos a través de una función
+
     });
 
-    console.log(videos);
+    pdfs.forEach((pdf: Element)=>{
+      //para obtener la posX  y en Y
+      const computedStyle = window.getComputedStyle(pdf);
+
+      const DataPdf = {
+        src:pdf.getAttribute('src'),
+        height:pdf.getAttribute('height'),
+        width:pdf.getAttribute('width'),
+        posX:computedStyle.getPropertyValue('left'),
+        posY:computedStyle.getPropertyValue('top')
+      }
+
+      console.log(DataPdf)
+    })
+
+    //se guardan en el array el objeto con todo sus elementos
+    this.DataMural = {
+      height: MuralData.offsetWidth,
+      width: MuralData.offsetHeight,
+      textos: Texts,
+      imagenes: DataImagenes,
+      videos: Videos,
+      estado: 'en espera',
+    };
+    console.log('Enviando datos:', this.DataMural);
   }
 }
