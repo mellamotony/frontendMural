@@ -44,12 +44,15 @@ export class LoginComponent {
         this.body.reset();
         return;
       }
-
+      console.log('data',data)
       console.log('logeado con exito',data.token)
+
+      const id_user:string | undefined = data.id_user?.toString()
 
       const token:string | undefined = data.token?.toString()
 
       localStorage.setItem("token",token!);
+      localStorage.setItem("id_user",id_user!)
       const rolEncrypted = localStorage.getItem('token');
 
       const rolDesencrypted:guardToken = jwt_decode(rolEncrypted!)

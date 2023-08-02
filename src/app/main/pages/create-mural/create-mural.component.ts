@@ -1,4 +1,5 @@
 import { style } from '@angular/animations';
+import { PdfViewerComponent,PDFSource ,PDFProgressData} from 'ng2-pdf-viewer';
 import {
   CdkDragDrop,
   CdkDragEnter,
@@ -15,16 +16,20 @@ import {
   AfterViewInit,
   ComponentFactoryResolver,
   ViewContainerRef,
+  Input,QueryList, ViewChildren
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MegaMenuItem, MenuItem } from 'primeng/api';
+
 import {
   ImageDatasetItem,
   MuralDataSetItem,
   PanelItem,
+  PdfsItem,
   TextDatasetItem,
   VideoDatasetItem,
 } from '../../interfaces/mural.interfaces';
+import { MuralService } from '../../services/main.services';
 
 @Component({
   selector: 'app-create-mural',
@@ -33,8 +38,10 @@ import {
 })
 export class CreateMuralComponent implements OnInit, AfterViewInit {
   @ViewChild('prueba') ContainerPrueba!: ElementRef<HTMLElement>;
+  @ViewChildren(PdfViewerComponent) pdfViewers!: QueryList<PdfViewerComponent>;
 
   //Array para almacenar todos los datos del mural
+  public IdMural:string = ''
 
   private DataMural?: MuralDataSetItem;
 
@@ -107,7 +114,8 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
     private elementRef: ElementRef,
     renderer: Renderer2,
     private componentFactoryResolver: ComponentFactoryResolver,
-    private viewContainerRef: ViewContainerRef
+    private viewContainerRef: ViewContainerRef,
+    private mService: MuralService
   ) {
     this.renderer = renderer;
   }
@@ -117,6 +125,9 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+
+
+
     this.items = [
       {
         label: 'Texto',
@@ -385,6 +396,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
 
   //funcion para enviar los datos
   OnSaveMural() {
+
     //obtener valores del mural
     const MuralData = this.containerRef.nativeElement;
 
@@ -393,27 +405,32 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
     const images = this.containerRef.nativeElement.querySelectorAll('img');
     const videos = this.containerRef.nativeElement.querySelectorAll('video');
     const pdfs = this.containerRef.nativeElement.querySelectorAll('pdf-viewer');
-    console.log(pdfs)
+
+
     //Array de cada elemento
 
     const Videos: VideoDatasetItem[] = [];
     const Texts: TextDatasetItem[] = [];
     const DataImagenes: ImageDatasetItem[] = [];
+    const DataPdfs:PdfsItem[] = [];
 
     // Recorrer los textAreas y obtener sus valores
     textAreas.forEach((textArea: HTMLTextAreaElement) => {
       const valueTexts: TextDatasetItem = {
+        id_mural:localStorage.getItem('id_mural'),
         valor: textArea.value,
         font: textArea.style.fontFamily,
         font_size: textArea.style.fontSize,
-        posX: textArea.offsetLeft,
-        posY: textArea.offsetTop,
+        posx: textArea.offsetLeft,
+        posy: textArea.offsetTop,
         height: parseInt(textArea.style.height),
         width: parseInt( textArea.style.width),
         color: textArea.style.color,
-        borderColor: textArea.style.borderColor,
-        backgroundColor: textArea.style.backgroundColor,
-        fontWeight:  textArea.style.fontWeight,
+        border_color: textArea.style.borderColor,
+        border_radius:textArea.style.borderRadius,
+        backgroundcolor: textArea.style.backgroundColor,
+        border_style:textArea.style.borderStyle,
+        font_weight:  textArea.style.fontWeight,
         sangria:  textArea.style.textAlign,
       };
       console.log('alto:',textArea.style.height)
@@ -424,15 +441,19 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
     // Recorrer las imágenes y obtener sus atributos o valores
     images.forEach((image: HTMLImageElement) => {
       const valueImages: ImageDatasetItem = {
+        id_mural:localStorage.getItem('id_mural'),
         url: image.src,
         alt: image.alt,
         height: image.height,
         width: image.width,
-        posX: image.x,
-        posY: image.y,
+        posx: image.x,
+        posy: image.y,
+        border_color:image.parentElement!.style.borderColor,
+        border_radius:image.parentElement!.style.borderRadius,
+        border_style:image.parentElement!.style.borderStyle,
       };
       DataImagenes.push(valueImages);
-      console.log('las imagenes:', image.width);
+
 
     });
 
@@ -441,44 +462,99 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
       const rect = video.getBoundingClientRect();
       const posX = rect.left;
       const posY = rect.top;
+      const videoSrc = video.currentSrc;
+      const formatoVideo = videoSrc.split('.').pop()?.toLowerCase() || '';
+      console.log('video: ',formatoVideo)
 
       const DataVideo: VideoDatasetItem = {
-        src: video.src,
+        id_mural:localStorage.getItem('id_mural'),
+        url_video: video.src,
         height: video.offsetHeight,
         width: video.offsetWidth,
-        posX: posX,
-        posY: posY,
+        posx: posX,
+        posy: posY,
+        formato:'mp4',
+        duration:video.duration,
+        border_color:video.parentElement!.style.borderColor,
+        border_radius:video.parentElement!.style.borderRadius,
+        border_style:video.parentElement!.style.borderStyle
       };
 
       Videos.push(DataVideo);
-      console.log('Src del video:', DataVideo);
+
 
     });
 
-    pdfs.forEach((pdf: Element)=>{
+
+
+    // Se recorre los pdfViewer y se almacena sus valores en un objeto
+
+    pdfs.forEach((pdf: PDFSource)=>{
+
       //para obtener la posX  y en Y
-      const computedStyle = window.getComputedStyle(pdf);
 
-      const DataPdf = {
-        src:pdf.getAttribute('src'),
-        height:pdf.getAttribute('height'),
-        width:pdf.getAttribute('width'),
-        posX:computedStyle.getPropertyValue('left'),
-        posY:computedStyle.getPropertyValue('top')
+      const computedStyle = pdf as HTMLElement;
+      const {x,y,height,width} = computedStyle.getBoundingClientRect()
+
+      const DataPdf:PdfsItem = {
+        id_mural:localStorage.getItem('id_mural'),
+        url_pdfs:'',
+        height:height,
+        width:width,
+        posx:x,
+        posy:y,
+        border_color:computedStyle.parentElement!.style.borderColor,
+        border_style:computedStyle.parentElement!.style.borderStyle,
+        border_radius:computedStyle.parentElement!.style.borderRadius
       }
+      DataPdfs.push(DataPdf)
+    });
 
-      console.log(DataPdf)
-    })
+    if (this.pdfViewers.length === DataPdfs.length) {
+      let pdfViewersArray = this.pdfViewers.toArray();
+      for (let i = 0; i < pdfViewersArray.length; i++) {
+        DataPdfs[i].url_pdfs = pdfViewersArray[i].src as string;
+      }
+    } else {
+      console.error('Los arrays pdfViewers y DataPdfs no tienen la misma longitud');
+    }
+
 
     //se guardan en el array el objeto con todo sus elementos
     this.DataMural = {
+      id_mural:localStorage.getItem('id_mural'),
+      id_user:localStorage.getItem('id_user'),
       height: MuralData.offsetWidth,
       width: MuralData.offsetHeight,
       textos: Texts,
       imagenes: DataImagenes,
       videos: Videos,
+      pdfs:DataPdfs,
       estado: 'en espera',
     };
     console.log('Enviando datos:', this.DataMural);
+    console.log(this.panelItems)
+    this.mService.postData(this.DataMural).subscribe((data)=>{
+      console.log(data)
+    }  );
+
   }
+
+
+  //boton para ocultar
+  ocultarToolbarTxt(){
+
+    this.isActive = !this.isActive;
+
+
+  }
+
+  ocultarToolbarMulti(){
+    this.IsVidActive = !this.IsVidActive;
+  }
+
+  ocultarToolbarPdf(){
+     this.isPdfActive = !this.isPdfActive
+  }
+
 }

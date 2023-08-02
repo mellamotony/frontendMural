@@ -23,8 +23,8 @@ cdkDropList
       <img [src]="item.url" [alt]="item.file.name">
     </ng-container>
     <ng-container *ngIf="item.type.startsWith('application/')">
-      <pdf-viewer  [src]="item.url" [render-text]="true" alt="item.file.name"
-      [original-size]="false"
+      <pdf-viewer   [src]="item.url" [render-text]="true" alt="item.file.name"
+      [original-size]="true" [fit-to-page]="true"
       ></pdf-viewer>
     </ng-container>
 
@@ -34,7 +34,8 @@ cdkDropList
 </div>
 <p-button (click)="OnSaveMural()" >Guardar</p-button>
 <!-- Barra de herramientas para textos -->
-<div *ngIf="isActive">
+<div class="MenuBarEdicionTexto" *ngIf="isActive">
+  <button class="hidenbuttom" (click)="ocultarToolbarTxt()" >Ocultar</button>
   <form (ngSubmit)="getChangesStyles()" [formGroup]="toolsForm">
     <div>
 
@@ -90,7 +91,7 @@ cdkDropList
       <h2>Tamaño de la fuente</h2>
       <input formControlName="fontSize" type="text">
       <div class="btnDelete" (click)="DeleteElement()">
-        <span>X</span>
+        <i class="pi pi-trash"></i>
       </div>
 
     </div>
@@ -102,7 +103,8 @@ cdkDropList
 
 <!-- Barra de herramientas para imagens y videos  -->
 
-<div *ngIf="IsVidActive">
+<div  class="MenuBarEdicionTexto" *ngIf="IsVidActive">
+  <button (click)="ocultarToolbarMulti()" >Ocultar</button>
   <form (ngSubmit)="changeStyles()" [formGroup]="toolsForm">
     <div>
 
@@ -132,7 +134,7 @@ cdkDropList
       </div>
 
       <div class="btnDelete" (click)="DeleteParent()">
-        <span>X</span>
+        <i class="pi pi-trash"></i>
       </div>
 
     </div>
@@ -145,7 +147,8 @@ cdkDropList
 
 <!-- Barra de herramientas para Pdfs  -->
 
-<div *ngIf="isPdfActive">
+<div  class="MenuBarEdicionTexto" *ngIf="isPdfActive">
+  <button (click)="ocultarToolbarPdf()" >Ocultar</button>
   <form (ngSubmit)="changeStylesPdfs()" [formGroup]="toolsForm">
     <div>
 
@@ -174,7 +177,7 @@ cdkDropList
       </div>
 
       <div class="btnDelete" (click)="DeletePdfs()">
-        <span>X</span>
+        <i class="pi pi-trash"></i>
       </div>
 
     </div>
@@ -182,4 +185,8 @@ cdkDropList
     <button type="submit">Guardar Pdfs</button>
 
   </form>
+</div>
+
+<div>
+  <span> </span>
 </div>

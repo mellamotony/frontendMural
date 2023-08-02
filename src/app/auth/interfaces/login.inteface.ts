@@ -1,5 +1,6 @@
 export interface Logresponse{
-  token?:string
+  token?:string,
+  id_user?:string
 }
 
 export interface guardToken{
