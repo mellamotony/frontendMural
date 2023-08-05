@@ -1,3 +1,4 @@
+
 import { style } from '@angular/animations';
 import { PdfViewerComponent,PDFSource ,PDFProgressData} from 'ng2-pdf-viewer';
 import {
@@ -24,6 +25,7 @@ import { MegaMenuItem, MenuItem } from 'primeng/api';
 import {
   ImageDatasetItem,
   MuralDataSetItem,
+  myFile,
   PanelItem,
   PdfsItem,
   TextDatasetItem,
@@ -405,8 +407,21 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
     const images = this.containerRef.nativeElement.querySelectorAll('img');
     const videos = this.containerRef.nativeElement.querySelectorAll('video');
     const pdfs = this.containerRef.nativeElement.querySelectorAll('pdf-viewer');
-
-
+    //copia del array con los archivos subidos en el mural separados por tipo
+    let imgArray:PanelItem [] = []
+    let videoArray:PanelItem [] = []
+    let pdfArray:PanelItem [] = []
+    this.panelItems.forEach((item)=>{
+      if(item.type == "image/jpeg" || item.type == "image/png" ){
+        imgArray.push(item)
+      }
+      if(item.type == "video/mp4" ){
+        videoArray.push(item)
+      }
+      if(item.type == "application/pdf" ){
+        pdfArray.push(item)
+      }
+    })
     //Array de cada elemento
 
     const Videos: VideoDatasetItem[] = [];
@@ -438,33 +453,54 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
 
     });
 
+    // recorrer el Array de panelItems y guardar en un formData
+    const arrayDatos: FormData[] = []
+    this.panelItems.forEach((item) =>{
+      const formData = new FormData();
+      formData.append('file', item.file);
+
+      formData.append('type', item.type);
+      formData.append('url', item.url);
+      arrayDatos.push(formData)
+
+    })
+    console.log('archivos: ',arrayDatos)
+
     // Recorrer las imágenes y obtener sus atributos o valores
-    images.forEach((image: HTMLImageElement) => {
-      const valueImages: ImageDatasetItem = {
-        id_mural:localStorage.getItem('id_mural'),
-        url: image.src,
-        alt: image.alt,
-        height: image.height,
-        width: image.width,
-        posx: image.x,
-        posy: image.y,
-        border_color:image.parentElement!.style.borderColor,
-        border_radius:image.parentElement!.style.borderRadius,
-        border_style:image.parentElement!.style.borderStyle,
-      };
-      DataImagenes.push(valueImages);
+    images.forEach((image: HTMLImageElement,i:number ) => {
+          const panelItem = imgArray[i]
+          const valueImages: ImageDatasetItem = {
+            id_mural:localStorage.getItem('id_mural'),
+            file: panelItem.file,
+            url: image.src,
+            alt: image.alt,
+            height: image.height,
+            width: image.width,
+            posx: image.x,
+            posy: image.y,
+            border_color:image.parentElement!.style.borderColor,
+            border_radius:image.parentElement!.style.borderRadius,
+            border_style:image.parentElement!.style.borderStyle,
+          };
+          DataImagenes.push(valueImages);
+
+
+
 
 
     });
 
     // Recorrer los videos y obtener sus atributos o valores
-    videos.forEach((video: HTMLVideoElement) => {
+    videos.forEach((video: HTMLVideoElement, i:number) => {
+      const panelItem = videoArray[i];
+
+
       const rect = video.getBoundingClientRect();
       const posX = rect.left;
       const posY = rect.top;
       const videoSrc = video.currentSrc;
-      const formatoVideo = videoSrc.split('.').pop()?.toLowerCase() || '';
-      console.log('video: ',formatoVideo)
+
+
 
       const DataVideo: VideoDatasetItem = {
         id_mural:localStorage.getItem('id_mural'),
@@ -477,7 +513,8 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
         duration:video.duration,
         border_color:video.parentElement!.style.borderColor,
         border_radius:video.parentElement!.style.borderRadius,
-        border_style:video.parentElement!.style.borderStyle
+        border_style:video.parentElement!.style.borderStyle,
+        file:panelItem.file
       };
 
       Videos.push(DataVideo);
@@ -489,12 +526,15 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
 
     // Se recorre los pdfViewer y se almacena sus valores en un objeto
 
-    pdfs.forEach((pdf: PDFSource)=>{
+    pdfs.forEach((pdf: PDFSource, i:number)=>{
 
       //para obtener la posX  y en Y
 
       const computedStyle = pdf as HTMLElement;
       const {x,y,height,width} = computedStyle.getBoundingClientRect()
+
+      const panelItem = pdfArray[i];
+
 
       const DataPdf:PdfsItem = {
         id_mural:localStorage.getItem('id_mural'),
@@ -505,11 +545,12 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
         posy:y,
         border_color:computedStyle.parentElement!.style.borderColor,
         border_style:computedStyle.parentElement!.style.borderStyle,
-        border_radius:computedStyle.parentElement!.style.borderRadius
+        border_radius:computedStyle.parentElement!.style.borderRadius,
+        file:panelItem.file
       }
       DataPdfs.push(DataPdf)
     });
-
+    //agregar los enlaces a la url del pdf
     if (this.pdfViewers.length === DataPdfs.length) {
       let pdfViewersArray = this.pdfViewers.toArray();
       for (let i = 0; i < pdfViewersArray.length; i++) {
@@ -534,9 +575,9 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
     };
     console.log('Enviando datos:', this.DataMural);
     console.log(this.panelItems)
-    this.mService.postData(this.DataMural).subscribe((data)=>{
-      console.log(data)
-    }  );
+    // this.mService.postData(this.DataMural).subscribe((data)=>{
+    //   console.log(data)
+    // }  );
 
   }
 

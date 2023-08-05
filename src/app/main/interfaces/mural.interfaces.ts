@@ -4,6 +4,15 @@ export  interface PanelItem {
   url: string;
 }
 
+export interface myFile extends File {
+  lastModified: number;
+  name: string;
+  size: number;
+  type: string;
+}
+
+
+
 export interface MuralDataSetItem {
   id_mural:string |null,
   id_user:string |null,
@@ -36,6 +45,7 @@ export interface TextDatasetItem{
 }
 
 export interface ImageDatasetItem{
+  file:File,
   id_mural:string |null,
   url: string,
   alt:string,
@@ -49,6 +59,7 @@ export interface ImageDatasetItem{
 }
 
 export interface VideoDatasetItem{
+  file:File,
   id_mural:string |null,
   url_video: string,
   height:number,
@@ -63,6 +74,7 @@ export interface VideoDatasetItem{
 }
 
 export interface PdfsItem{
+  file:File,
   id_mural:string |null,
   url_pdfs?:string,
   posx?:number,
