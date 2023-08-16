@@ -18,6 +18,7 @@ export interface MuralDataSetItem {
   id_user:string |null,
   height:number,
   width:number,
+  nombrem?:string,
   textos:TextDatasetItem[],
   imagenes:ImageDatasetItem[],
   videos:VideoDatasetItem[],
@@ -92,4 +93,12 @@ export interface PdfsItem{
 
 export interface IDmural {
   id_mural: string;
+}
+
+
+//interfaces para mostrar en el dashbord
+export interface MuralByUser{
+  nombrem:string,
+  numeroM?:number,
+  id_mural:string
 }

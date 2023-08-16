@@ -5,9 +5,11 @@
       <span>Crear un nuevo mural</span>
   </div>
 
-  <div class="card_body" *ngFor="let item of list">
-    <h1>Plantilla</h1>
-    <span>{{item}}</span>
+  <div [routerLink]="['/main/edit', item.id_mural]"  class="card_body" *ngFor="let item of listName">
+    <h1>{{item.nombrem}}</h1>
+    <span>{{item.numeroM}}</span>
+
+
   </div>
 
 

@@ -1,44 +1,19 @@
-
-import { style } from '@angular/animations';
-import { PdfViewerComponent,PDFSource ,PDFProgressData} from 'ng2-pdf-viewer';
-import {
-  CdkDragDrop,
-  CdkDragEnter,
-  copyArrayItem,
-  moveItemInArray,
-  CdkDrag,
-} from '@angular/cdk/drag-drop';
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-  Renderer2,
-  AfterViewInit,
-  ComponentFactoryResolver,
-  ViewContainerRef,
-  Input,QueryList, ViewChildren
-} from '@angular/core';
+import { CdkDragDrop, CdkDragEnter, copyArrayItem, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Component, ComponentFactoryResolver, ElementRef, OnInit, QueryList, Renderer2, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MegaMenuItem, MenuItem } from 'primeng/api';
-
-import {
-  ImageDatasetItem,
-  MuralDataSetItem,
-  myFile,
-  PanelItem,
-  PdfsItem,
-  TextDatasetItem,
-  VideoDatasetItem,
-} from '../../interfaces/mural.interfaces';
+import { ActivatedRoute } from '@angular/router';
+import { PDFSource, PdfViewerComponent } from 'ng2-pdf-viewer';
+import { MegaMenuItem } from 'primeng/api';
+import { ImageDatasetItem, MuralDataSetItem, PanelItem, PdfsItem, TextDatasetItem, VideoDatasetItem } from '../../interfaces/mural.interfaces';
 import { MuralService } from '../../services/main.services';
 
 @Component({
-  selector: 'app-create-mural',
-  templateUrl: './create-mural.component.html',
-  styleUrls: ['./create-mural.component.css'],
+  selector: 'app-edit-mural',
+  templateUrl: './edit-mural.component.html',
+  styleUrls: ['./edit-mural.component.css']
 })
-export class CreateMuralComponent implements OnInit, AfterViewInit {
+export class EditMuralComponent implements OnInit {
+
   @ViewChild('prueba') ContainerPrueba!: ElementRef<HTMLElement>;
   @ViewChildren(PdfViewerComponent) pdfViewers!: QueryList<PdfViewerComponent>;
 
@@ -115,25 +90,36 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
 
   @ViewChild('contPanel') containerRef!: ElementRef<HTMLElement>;
 
-  //constructor
+
   constructor(
+    private mService:MuralService,
+    private activateRoute:ActivatedRoute,
     private fb: FormBuilder,
     private elementRef: ElementRef,
     renderer: Renderer2,
     private componentFactoryResolver: ComponentFactoryResolver,
     private viewContainerRef: ViewContainerRef,
-    private mService: MuralService
-  ) {
-    this.renderer = renderer;
-  }
-
-  ngAfterViewInit(): void {
-    console.log('cargado');
-  }
+    ){ this.renderer = renderer;}
 
   ngOnInit(): void {
+    //
+    let nombreMural:string = '';
+    this.activateRoute.paramMap.subscribe(params => {
+      const idMural:string = params.get('id')!;
+      console.log('ID actual:', idMural);
+      this.mService.postIdmurl(idMural).subscribe((mural) =>{
+        console.log(mural)
+        //ingresando nombre del mural
+        nombreMural = mural[0].nombrem!
+        this.MuralnameForm.controls['Muralname'].setValue(nombreMural)
+        //ingresando los textos
 
+        mural[0].textos.forEach(()=>{
 
+        })
+
+      })
+    });
 
     this.items = [
       {
@@ -196,9 +182,14 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
         // }
       },
     ];
-
-    // this.activeItem = this.items[0];
   }
+
+
+  ngAfterViewInit(): void {
+    console.log('cargado');
+  }
+
+
   //propio de cdk angular
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
@@ -235,6 +226,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
 
   handleFileInput(event: any): void {
     const files: File[] = Array.from(event.target.files);
+    console.log('archivos: ',event.target.files);
     files.forEach((file) => {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -573,10 +565,10 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
     };
     console.log('Enviando datos:', this.DataMural);
     console.log(this.panelItems)
-
-    this.mService.postData(this.DataMural).subscribe((data)=>{
-      console.log(data)
-    }  );
+    //Endepoint para actualizar
+    // //this.mService.postData(this.DataMural).subscribe((data)=>{
+    //   console.log(data)
+    // }  );
 
   }
 

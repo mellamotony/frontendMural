@@ -1,5 +1,5 @@
-import { Component, Output } from '@angular/core';
-import { IDmural } from '../../interfaces/mural.interfaces';
+import { Component, OnInit, Output } from '@angular/core';
+import { IDmural, MuralByUser } from '../../interfaces/mural.interfaces';
 import { MuralService } from '../../services/main.services';
 import { v4 as uuidv4 } from 'uuid';
 import { Router } from '@angular/router';
@@ -9,12 +9,30 @@ import { Router } from '@angular/router';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
-export class DashboardComponent {
-  public list: number[] = [1, 2, 3];
+export class DashboardComponent implements OnInit {
+  public list = [1, 2, 3];
+
+  public listName:MuralByUser[] = []
+
 
   constructor(
     private router:Router,
     private mService: MuralService) {}
+  ngOnInit(): void {
+    const idUser = localStorage.getItem('id_user')
+
+    this.mService.postIdUser(parseInt(idUser!)).subscribe((data) =>{
+      console.log('datos recibidos: ',data)
+
+      data.forEach((item:MuralByUser,i:number ) => {
+        const obj = {nombrem:item.nombrem,numeroM:i+1,id_mural:item.id_mural}
+        this.listName.push(obj)
+      });
+
+
+
+    })
+  }
 
   generarId() {
     this.mService.getId().subscribe((data) => {
@@ -32,9 +50,7 @@ export class DashboardComponent {
               console.log('ya existe el id');
               return
             }
-            console.log(
-              'Agregando id al mural lo que quiere decir que es un mural nuevo'
-            );
+
             repeat= false
             //agrega el id al localStorage para usarlo en la aplicacion
             localStorage.setItem('id_mural', nuevoUUID);
@@ -43,9 +59,12 @@ export class DashboardComponent {
           }
         });
       } else {
-        console.log('no hubo datos ');
-
-
+        console.log('no hubo datos, entonces es un nuevo mural ');
+        const nuevoUUID: string = uuidv4();
+         //agrega el id al localStorage para usarlo en la aplicacion
+         localStorage.setItem('id_mural', nuevoUUID);
+         //reenvia a la ruta donde esta el componente mural
+         this.router.navigate(['/main/mural'])
       }
     });
   }
