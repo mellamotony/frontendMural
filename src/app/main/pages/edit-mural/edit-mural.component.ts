@@ -2,6 +2,7 @@ import { CdkDragDrop, CdkDragEnter, copyArrayItem, moveItemInArray } from '@angu
 import { Component, ComponentFactoryResolver, ElementRef, OnInit, QueryList, Renderer2, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+
 import { PDFSource, PdfViewerComponent } from 'ng2-pdf-viewer';
 import { MegaMenuItem } from 'primeng/api';
 import { ImageDatasetItem, MuralDataSetItem, PanelItem, PdfsItem, TextDatasetItem, VideoDatasetItem } from '../../interfaces/mural.interfaces';
@@ -15,6 +16,8 @@ import { MuralService } from '../../services/main.services';
 export class EditMuralComponent implements OnInit {
 
   @ViewChild('prueba') ContainerPrueba!: ElementRef<HTMLElement>;
+
+
   @ViewChildren(PdfViewerComponent) pdfViewers!: QueryList<PdfViewerComponent>;
 
   //Array para almacenar todos los datos del mural
@@ -23,7 +26,7 @@ export class EditMuralComponent implements OnInit {
   private DataMural?: MuralDataSetItem;
 
   // Variables para almacenar el texto por defecto de textArea
-  valueInputs: string[] = [];
+  valueInputs: TextDatasetItem[] = [];
 
   items: MegaMenuItem[] = [];
   //activeItem: MenuItem = {};
@@ -114,7 +117,82 @@ export class EditMuralComponent implements OnInit {
         this.MuralnameForm.controls['Muralname'].setValue(nombreMural)
         //ingresando los textos
 
-        mural[0].textos.forEach(()=>{
+        mural[0].textos.forEach((data)=>{
+          //const {backgroundcolor,border_radius,border_color,border_style,color,font,font_size,font_weight,height,width,id_mural,posx,posy,sangria,valor} = data
+          data.posx = Number(data.posx)
+          data.posy = Number(data.posy)
+          this.valueInputs.push(data)
+          console.log('textos',data.posy)
+
+        })
+
+        //capturando los datos para imagenes
+        mural[0].imagenes.forEach((data)=>{
+          console.log('imagenes: ',data)
+          const arraytype = data.url.split('.')
+          const type = arraytype[1]
+
+          const datas:PanelItem = {
+            file:{
+               lastModified: 0,
+               name: data.alt,
+               size: 1,
+               type: 'image/'+type,
+
+             }as File ,
+            url:data.url,
+            type:'image/'+type,
+            border_style: data.border_style,
+            border_radius:data.border_radius,
+            border_color:data.border_color,
+            posx: Number(data.posx),
+            posy:Number(data.posy),
+            height:Number(data.height),
+            width: Number(data.width)
+          }
+          console.log('datas: ',datas)
+          this.panelItems.push(datas)
+        })
+
+        //capturando los videos
+        mural[0].videos.forEach((data)=>{
+          const arraytype = data.url_video.split('.')
+          const type = arraytype[1]
+          console.log('videos: ',data)
+          let datas:PanelItem = {
+            file:{
+               lastModified: 0,
+               name: '',
+               size: 1,
+               type: 'video/'+type,
+             }as File ,
+            url:data.url_video,
+            type:'video/'+type,
+            videos:data
+          }
+          console.log('tipo: ',type)
+          this.panelItems.push(datas)
+        })
+
+        //capturando los pdfs
+        mural[0].pdfs.forEach((data)=>{
+          console.log('pdfs: ',data)
+          const arraytype = data.url_pdfs!.split('.')
+          const type = arraytype[1]
+          let datas:PanelItem = {
+            file:{
+               lastModified: 0,
+               name: '',
+               size: 1,
+               type: 'application/'+type,
+             }as File ,
+            url:data.url_pdfs!,
+            type:'application/'+type,
+            pdfs:data
+          }
+          console.log('tipo: ',type)
+          this.panelItems.push(datas)
+
 
         })
 
@@ -217,7 +295,24 @@ export class EditMuralComponent implements OnInit {
 
   //crear
   createTxt() {
-    this.valueInputs.push('valor por defecto');
+    const txt:TextDatasetItem = {
+      id_mural:'',
+      valor: 'Ingrese el texto',
+      font:'',
+      font_size:'',
+      posx:0,
+      posy:0,
+      height:0,
+      width:0,
+      color:'',
+      border_color:'',
+      border_radius:'',
+      border_style:'',
+      backgroundcolor:'',
+      font_weight:'',
+      sangria:''
+    }
+    this.valueInputs.push(txt);
   }
   //Crear archivos
   createFileInput() {
@@ -267,19 +362,27 @@ export class EditMuralComponent implements OnInit {
 
   //click a los elementos de video,pdf e imagenes
   handleClickMultimedia(e: MouseEvent) {
+    const newElement = e.target as HTMLElement;
     this.isActive = false;
-    if ((this.isPdfActive = true)) {
+    if (this.isPdfActive = true) {
       this.isPdfActive = false;
+
     }
     console.log('El elemento fue presionado');
-    const newElement = e.target as HTMLElement;
+
+    console.log('debuger: ',newElement);
     if (newElement.className == 'textLayer') {
+
       this.isPdfActive = true;
       this.IsVidActive = false;
       this.e = e;
       return;
     }
-    this.IsVidActive = true;
+    //si se cumple quiere decir que es video o imagen
+    if(newElement.className == 'ng-star-inserted'){
+      this.IsVidActive = true;
+    }
+
 
     this.e = e;
   }
@@ -373,6 +476,7 @@ export class EditMuralComponent implements OnInit {
   //borrar el elemento padre
   DeleteParent() {
     const element = this.e?.target as HTMLElement;
+    console.log('eliminado de elementos')
     console.log({ file: this.panelItems, elemento: element });
     if (element.parentElement) {
       element.parentElement.remove();
@@ -385,12 +489,16 @@ export class EditMuralComponent implements OnInit {
   DeletePdfs() {
     const element = this.e?.target as HTMLElement;
 
+    console.log(this.e)
+    console.log(this.panelItems)
     if (element.parentElement) {
       element.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.remove();
     }
 
     //desaparece la barra de herramientas
-    this.IsVidActive = false;
+    this.isPdfActive = false;
+
+
   }
 
   //funcion para enviar los datos

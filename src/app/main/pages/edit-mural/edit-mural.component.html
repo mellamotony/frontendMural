@@ -12,19 +12,50 @@ cdkDropList
     <img [src]="image" width="100" />
   </div> -->
 
-  <textarea *ngFor="let item of valueInputs" cdkDragBoundary=".panel-container" cdkDrag class="cdk-drag" [value]="item"
+  <textarea #textArea *ngFor="let item of valueInputs"
+
+    cdkDragBoundary=".panel-container" cdkDrag class="cdk-drag" [value]="item.valor"
+    [ngStyle]="{
+      'color':item.color ,
+      'backgroundColor':item.backgroundcolor ,
+      'font-family':item.font,
+      'font-size':item.font_size,
+       'border': '1px '+item.border_style+' '+item.border_color,
+       'border-radius':item.border_radius,
+       'font-weight':item.font_weight,
+       'left':item.posx+'px',
+       'top':item.posy+'px',
+       'height':item.height+'px',
+       'width':item.width+'px',
+       'text-align':item.sangria
+      } "
     type="text" (click)="handleClick($event)">
     </textarea>
 
   <input type="file" style="display: none" id="fileInput" (change)="handleFileInput($event)">
-  <div class="panel-i" *ngFor="let item of panelItems" cdkDrag cdkDragBoundary=".panel-container"
+  <div class="panel-i" *ngFor="let item of panelItems; let i = index " cdkDrag cdkDragBoundary=".panel-container"
     (click)="handleClickMultimedia($event)">
-    <ng-container class="contVideo" *ngIf="item.type.startsWith('video/')">
+    <span>{{item.imagenes?.border_radius}}</span>
+    <ng-container
+      class="contVideo multimedia"
+
+      *ngIf="item.type.startsWith('video/')">
       <video [src]="item.url" controls></video>
     </ng-container>
-    <ng-container class="contImg" *ngIf="item.type.startsWith('image/')">
+    <ng-container
+      class="contImg multimedia"
+      [ngStyle]="{
+        'border': '1px ' + item.border_style + ' ' + item.border_color,
+        'border-radius': item.border_radius + 'px',
+        'left': item.posx + 'px',
+        'top': item.posy + 'px',
+        'height': item.height + 'px',
+        'width': item.width + 'px'
+      }"
+      *ngIf="item.type.startsWith('image/') && panelItems.length > 0">
       <img [src]="item.url" [alt]="item.file.name">
     </ng-container>
+
     <ng-container *ngIf="item.type.startsWith('application/')">
       <pdf-viewer   [src]="item.url" [render-text]="true" alt="item.file.name"
       [original-size]="true" [fit-to-page]="true"
@@ -151,6 +182,7 @@ cdkDropList
 <!-- Barra de herramientas para Pdfs  -->
 
 <div  class="MenuBarEdicionTexto" *ngIf="isPdfActive">
+  <h1>Barra de pdfs</h1>
   <button (click)="ocultarToolbarPdf()" >Ocultar</button>
   <form (ngSubmit)="changeStylesPdfs()" [formGroup]="toolsForm">
     <div>

@@ -1,7 +1,18 @@
 export  interface PanelItem {
+
   file: File;
   type: string;
   url: string;
+  imagenes?:ImageDatasetItem,
+  videos?:VideoDatasetItem,
+  pdfs?:PdfsItem
+  border_style?:string,
+  border_radius?:string,
+  border_color?:string,
+  posx?: number,
+  posy?:number,
+  height?:number,
+  width?: number
 }
 
 export interface myFile extends File {
@@ -9,6 +20,7 @@ export interface myFile extends File {
   name: string;
   size: number;
   type: string;
+
 }
 
 
@@ -27,7 +39,7 @@ export interface MuralDataSetItem {
 }
 
 export interface TextDatasetItem{
-  id_mural:string |null,
+  id_mural?:string |null,
   valor: string,
   font:string,
   font_size:string,
@@ -46,7 +58,7 @@ export interface TextDatasetItem{
 }
 
 export interface ImageDatasetItem{
-  file:File,
+  file?:File,
   id_mural:string |null,
   url: string,
   alt:string,
