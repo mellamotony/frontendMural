@@ -1,4 +1,4 @@
-<form  [formGroup]="MuralnameForm">
+<form [formGroup]="MuralnameForm">
   <input class="forName" type="text" formControlName="Muralname" placeholder="Nombre de Mural">
 </form>
 <p-megaMenu [model]="items"></p-megaMenu>
@@ -12,10 +12,8 @@ cdkDropList
     <img [src]="image" width="100" />
   </div> -->
 
-  <textarea #textArea *ngFor="let item of valueInputs"
-
-    cdkDragBoundary=".panel-container" cdkDrag class="cdk-drag" [value]="item.valor"
-    [ngStyle]="{
+  <textarea #textArea *ngFor="let item of valueInputs" cdkDragBoundary=".panel-container" cdkDrag class="cdk-drag"
+    [value]="item.valor" [ngStyle]="{
       'color':item.color ,
       'backgroundColor':item.backgroundcolor ,
       'font-family':item.font,
@@ -28,48 +26,39 @@ cdkDropList
        'height':item.height+'px',
        'width':item.width+'px',
        'text-align':item.sangria
-      } "
-    type="text" (click)="handleClick($event)">
+      } " type="text" (click)="handleClick($event)">
     </textarea>
 
   <input type="file" style="display: none" id="fileInput" (change)="handleFileInput($event)">
-  <div class="panel-i" *ngFor="let item of panelItems; let i = index " cdkDrag cdkDragBoundary=".panel-container"
-    (click)="handleClickMultimedia($event)">
+  <div class="panel-i" *ngFor="let item of panelItems; let i = index " [ngStyle]="{
+    'border': '1px ' + item.border_style + ' ' + item.border_color,
+    'border-radius': item.border_radius + 'px',
+    'left': item.posx + 'px',
+    'top': item.posy + 'px',
+    'height': item.height + 'px',
+    'width': item.width + 'px'
+    }" cdkDrag cdkDragBoundary=".panel-container" (click)="handleClickMultimedia($event)">
     <span>{{item.imagenes?.border_radius}}</span>
-    <ng-container
-      class="contVideo multimedia"
-
-      *ngIf="item.type.startsWith('video/')">
+    <ng-container class="contVideo multimedia" *ngIf="item.type.startsWith('video/')">
       <video [src]="item.url" controls></video>
     </ng-container>
-    <ng-container
-      class="contImg multimedia"
-      [ngStyle]="{
-        'border': '1px ' + item.border_style + ' ' + item.border_color,
-        'border-radius': item.border_radius + 'px',
-        'left': item.posx + 'px',
-        'top': item.posy + 'px',
-        'height': item.height + 'px',
-        'width': item.width + 'px'
-      }"
-      *ngIf="item.type.startsWith('image/') && panelItems.length > 0">
+    <ng-container class="contImg multimedia" *ngIf="item.type.startsWith('image/') && panelItems.length > 0">
       <img [src]="item.url" [alt]="item.file.name">
     </ng-container>
 
     <ng-container *ngIf="item.type.startsWith('application/')">
-      <pdf-viewer   [src]="item.url" [render-text]="true" alt="item.file.name"
-      [original-size]="true" [fit-to-page]="true"
-      ></pdf-viewer>
+      <pdf-viewer [src]="item.url" [render-text]="true" alt="item.file.name" [original-size]="true"
+        [fit-to-page]="true"></pdf-viewer>
     </ng-container>
 
   </div>
 
 
 </div>
-<p-button (click)="OnSaveMural()" >Guardar</p-button>
+<p-button (click)="OnSaveMural()">Guardar</p-button>
 <!-- Barra de herramientas para textos -->
 <div class="MenuBarEdicionTexto" *ngIf="isActive">
-  <button class="hidenbuttom" (click)="ocultarToolbarTxt()" >Ocultar</button>
+  <button class="hidenbuttom" (click)="ocultarToolbarTxt()">Ocultar</button>
   <form (ngSubmit)="getChangesStyles()" [formGroup]="toolsForm">
     <div>
 
@@ -137,8 +126,8 @@ cdkDropList
 
 <!-- Barra de herramientas para imagens y videos  -->
 
-<div  class="MenuBarEdicionTexto" *ngIf="IsVidActive">
-  <button (click)="ocultarToolbarMulti()" >Ocultar</button>
+<div class="MenuBarEdicionTexto" *ngIf="IsVidActive">
+  <button (click)="ocultarToolbarMulti()">Ocultar</button>
   <form (ngSubmit)="changeStyles()" [formGroup]="toolsForm">
     <div>
 
@@ -181,14 +170,14 @@ cdkDropList
 
 <!-- Barra de herramientas para Pdfs  -->
 
-<div  class="MenuBarEdicionTexto" *ngIf="isPdfActive">
+<div class="MenuBarEdicionTexto" *ngIf="isPdfActive">
   <h1>Barra de pdfs</h1>
-  <button (click)="ocultarToolbarPdf()" >Ocultar</button>
+  <button (click)="ocultarToolbarPdf()">Ocultar</button>
   <form (ngSubmit)="changeStylesPdfs()" [formGroup]="toolsForm">
     <div>
 
       <h2>Color de Borde</h2>
-      <p-colorPicker  formControlName="borderColor"></p-colorPicker>
+      <p-colorPicker formControlName="borderColor"></p-colorPicker>
       <div>
         <label for="fonts">Estilos de borde: </label>
         <select formControlName="borderStyle" id="fonts">

@@ -168,7 +168,13 @@ export class EditMuralComponent implements OnInit {
              }as File ,
             url:data.url_video,
             type:'video/'+type,
-            videos:data
+            border_style: data.border_style,
+            border_radius:data.border_radius,
+            border_color:data.border_color,
+            posx: Number(data.posx),
+            posy:Number(data.posy),
+            height:Number(data.height),
+            width: Number(data.width)
           }
           console.log('tipo: ',type)
           this.panelItems.push(datas)
@@ -188,7 +194,14 @@ export class EditMuralComponent implements OnInit {
              }as File ,
             url:data.url_pdfs!,
             type:'application/'+type,
-            pdfs:data
+            border_style: data.border_style,
+            border_radius:data.border_radius,
+            border_color:data.border_color,
+            posx: Number(data.posx),
+            posy:Number(data.posy),
+            height:Number(data.height),
+            width: Number(data.width)
+
           }
           console.log('tipo: ',type)
           this.panelItems.push(datas)
