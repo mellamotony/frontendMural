@@ -28,5 +28,8 @@
 
   type="submit">Ingresar</p-button>
   </form>
+  <div *ngIf="exito" class="card">
+    <p-messages [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
+</div>
 
 </div>

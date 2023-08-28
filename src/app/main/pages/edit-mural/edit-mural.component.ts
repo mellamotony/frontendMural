@@ -20,8 +20,12 @@ export class EditMuralComponent implements OnInit {
 
   @ViewChildren(PdfViewerComponent) pdfViewers!: QueryList<PdfViewerComponent>;
 
+
+
   //Array para almacenar todos los datos del mural
   public IdMural:string = ''
+
+
 
   private DataMural?: MuralDataSetItem;
 
@@ -176,7 +180,7 @@ export class EditMuralComponent implements OnInit {
             height:Number(data.height),
             width: Number(data.width)
           }
-          console.log('tipo: ',type)
+          console.log('tipo: ',datas)
           this.panelItems.push(datas)
         })
 
@@ -203,7 +207,7 @@ export class EditMuralComponent implements OnInit {
             width: Number(data.width)
 
           }
-          console.log('tipo: ',type)
+          console.log('tipo: ',datas)
           this.panelItems.push(datas)
 
 
@@ -555,8 +559,8 @@ export class EditMuralComponent implements OnInit {
         valor: textArea.value,
         font: textArea.style.fontFamily,
         font_size: textArea.style.fontSize,
-        posx: textArea.offsetLeft,
-        posy: textArea.offsetTop,
+        posx: parseInt(textArea.style.left),
+        posy: parseInt(textArea.style.top),
         height: parseInt(textArea.style.height),
         width: parseInt( textArea.style.width),
         color: textArea.style.color,
@@ -568,6 +572,7 @@ export class EditMuralComponent implements OnInit {
         sangria:  textArea.style.textAlign,
       };
       console.log('alto:',textArea.style.height)
+      console.log('elemento: ',textArea.offsetTop)
       Texts.push(valueTexts);
 
     });
@@ -709,5 +714,10 @@ export class EditMuralComponent implements OnInit {
   ocultarToolbarPdf(){
      this.isPdfActive = !this.isPdfActive
   }
+
+
+
+
+
 
 }

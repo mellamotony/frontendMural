@@ -1,0 +1,57 @@
+.BodyTime{
+  width:100%;
+  height: 100%;
+  text-align:center;
+  position:fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro con opacidad */
+  color: white; /* Color de texto contrastante */
+  text-align: center; /* Centrar el contenido del elemento */
+  padding: 20px; /* Espacio interno para mejorar la legibilidad */
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+}
+
+.cardTime{
+  width:600px;
+  height:400px;
+  display:flex;
+  gap:5%;
+}
+
+.BodyTime form{
+  width:500px;
+  height:100%;
+  background-color:white;
+  border-radius:5%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:2%;
+}
+.BodyTime form h1{
+  color:black;
+  font-size:25px;
+  font-family:Arial;
+
+ }
+
+.BodyTime form span{
+ color:blue;
+}
+
+.cardTime button{
+  width:100px;
+  height:50px;
+  border:0;
+  color:blue;
+  font-size:20px;
+  font-family:Times;
+  border-radius:5%;
+}
+

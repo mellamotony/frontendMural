@@ -25,7 +25,8 @@ cdkDropList
        'top':item.posy+'px',
        'height':item.height+'px',
        'width':item.width+'px',
-       'text-align':item.sangria
+       'text-align':item.sangria,
+       'position': 'absolute'
       } " type="text" (click)="handleClick($event)">
     </textarea>
 
@@ -36,7 +37,8 @@ cdkDropList
     'left': item.posx + 'px',
     'top': item.posy + 'px',
     'height': item.height + 'px',
-    'width': item.width + 'px'
+    'width': item.width + 'px',
+    'position': 'absolute'
     }" cdkDrag cdkDragBoundary=".panel-container" (click)="handleClickMultimedia($event)">
     <span>{{item.imagenes?.border_radius}}</span>
     <ng-container class="contVideo multimedia" *ngIf="item.type.startsWith('video/')">
@@ -211,6 +213,3 @@ cdkDropList
   </form>
 </div>
 
-<div>
-  <span> </span>
-</div>

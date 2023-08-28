@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, Message } from 'primeng/api';
 @Component({
   selector: 'app-layout',
   templateUrl: './layout.component.html',
@@ -7,6 +7,7 @@ import { MenuItem } from 'primeng/api';
 })
 export class LayoutComponent implements OnInit {
   items: MenuItem[] = [];
+  messages: Message[] = [{ severity: 'error', summary: 'Error', detail: 'Closable Message Content' }];
   ngOnInit(): void {
     this.items = [
       {

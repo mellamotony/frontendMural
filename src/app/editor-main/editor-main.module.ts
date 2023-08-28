@@ -1,3 +1,5 @@
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -17,7 +19,9 @@ import { PrimeNModule } from '../prime-n/prime-n.module';
   imports: [
     CommonModule,
     EditorMainRoutingModule,
-    PrimeNModule
+    PrimeNModule,
+    HttpClientModule,
+    ReactiveFormsModule
   ]
 })
 export class EditorMainModule { }

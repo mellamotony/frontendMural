@@ -8,6 +8,8 @@ import { TableModule } from 'primeng/table';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { MegaMenuModule } from 'primeng/megamenu';
 import { ColorPickerModule } from 'primeng/colorpicker';
+import { MessagesModule } from 'primeng/messages';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
   exports:[
@@ -19,7 +21,9 @@ import { ColorPickerModule } from 'primeng/colorpicker';
     TableModule,
     TabMenuModule,
     MegaMenuModule,
-    ColorPickerModule
+    ColorPickerModule,
+    MessagesModule,
+    CalendarModule
   ]
 })
 export class PrimeNModule { }

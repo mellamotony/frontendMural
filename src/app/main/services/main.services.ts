@@ -1,7 +1,7 @@
 import { catchError, Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { IDmural, MuralDataSetItem } from '../interfaces/mural.interfaces';
+import { IDmural, MuralDataSetItem, Solicitud } from '../interfaces/mural.interfaces';
 
 @Injectable({providedIn: 'root'})
 export class MuralService {
@@ -35,6 +35,13 @@ postIdmurl(id:string):Observable<MuralDataSetItem []> {
   return this.http.post<MuralDataSetItem[]>(this.url+'/mural/edit',body)
 }
 
+//servicio para recibir solicituds by usuario
+postIdsolicitud(id:number):Observable<Solicitud[]>{
+  const body = {
+    id_user:id
+  }
+  return this.http.post<Solicitud[]>(this.url+'/mural/solbyuser',body)
+}
 
 
 

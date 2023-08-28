@@ -10,12 +10,12 @@
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-product>
-    <tr>
+    <tr class="rowT" [id]="product.id_mural">
       <td>{{ product.nombre_mural }}</td>
-      <td>{{ product.fecha}}</td>
+      <td>{{ product.fecha | date:'yyyy-MM-dd'}}</td>
       <td>{{ product.estado | titlecase }}</td>
       <td>
-        <p-button (onClick)="onPublic()" styleClass="p-button-success">Aprobar / publicar</p-button>
+        <p-button (onClick)="onPublic($event)" styleClass="p-button-success">Aprobar / publicar</p-button>
       </td>
       <td>
         <p-button (onClick)="onDelete()" styleClass="p-button-danger"> Rechazar</p-button>
@@ -26,3 +26,25 @@
     </tr>
   </ng-template>
 </p-table>
+
+<div *ngIf="activeMessage" class="BodyTime">
+
+  <div class="cardTime">
+
+
+    <form [formGroup]="dataTime">
+      <h1>Horarios de publicación del mural</h1>
+      <span>INICIO DE PUBLICACION</span>
+      <div class="card flex justify-content-center">
+        <p-calendar formControlName=inicio [showTime]="true" [showSeconds]="true"></p-calendar>
+      </div>
+      <span>FIN DE PUBLICACION</span>
+      <div class="card flex justify-content-center">
+        <p-calendar formControlName=fin [showTime]="true" [showSeconds]="true"></p-calendar>
+      </div>
+
+      <p-button (click)="enviarInfo()">Aceptar</p-button>
+    </form>
+    <button (click)="onPublic($event)">X</button>
+  </div>
+</div>

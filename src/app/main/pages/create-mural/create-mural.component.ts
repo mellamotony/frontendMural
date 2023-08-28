@@ -1,3 +1,5 @@
+import { Router } from '@angular/router';
+
 
 import { style } from '@angular/animations';
 import { PdfViewerComponent,PDFSource ,PDFProgressData} from 'ng2-pdf-viewer';
@@ -122,7 +124,8 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
     renderer: Renderer2,
     private componentFactoryResolver: ComponentFactoryResolver,
     private viewContainerRef: ViewContainerRef,
-    private mService: MuralService
+    private mService: MuralService,
+    private ruta:Router
   ) {
     this.renderer = renderer;
   }
@@ -576,6 +579,8 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
 
     this.mService.postData(this.DataMural).subscribe((data)=>{
       console.log(data)
+      //TO DO  mensaje de guardado con éxito
+      this.ruta.navigate(['/main/dashboard'])
     }  );
 
   }

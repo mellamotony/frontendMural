@@ -1,6 +1,6 @@
 
 <div class="card">
-  <p-table [value]="product" [tableStyle]="{'min-width': '50rem'}">
+  <p-table [value]="listName" [tableStyle]="{'min-width': '50rem'}">
       <ng-template pTemplate="header">
           <tr>
               <th>Nombre del Mural</th>
@@ -11,10 +11,10 @@
       </ng-template>
       <ng-template pTemplate="body" let-product>
           <tr [ngClass]="{'row-accessories': product.category === 'Accessories'}">
-              <td>{{product.nombre}}</td>
-              <td>{{product.fecha}}</td>
+              <td>{{product.nombrem}}</td>
+              <td>{{product.fecha_solicitud | date:'yyyy-MM-dd'}}</td>
               <td>
-                  <div [ngClass]="{'outofstock': product.estado == 'en espera', 'lowstock': product.estado == 'rechazado','instock': product.estado == 'aprobado'}">
+                  <div [ngClass]="{'outofstock': product.estado == 'rechazado', 'lowstock': product.estado == 'en espera','instock': product.estado == 'aprobado'}">
                       {{product.estado | titlecase}}
                   </div>
               </td>
