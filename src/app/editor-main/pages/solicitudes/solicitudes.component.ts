@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SolicituMural } from '../../interfaces/solicitudes.interface';
+import { AprobeMural, RejectMural, SolicituMural } from '../../interfaces/solicitudes.interface';
 import { EditorService } from '../../services/editor-services';
 
 @Component({
@@ -50,8 +50,26 @@ export class SolicitudesComponent implements OnInit {
   }
 
 
-  onDelete(){
-    alert('Eliminando...')
+  onDelete(el:Event){
+     //obtenemos el padre
+     const parentElement = (el.target as HTMLElement).closest('.rowT');
+     console.log(parentElement)
+     //asignamos el event para obtener unos valores
+     this.e = parentElement as HTMLElement
+
+    const body:RejectMural = {
+      id_mural:this.e.id,
+      estado:'rechazado'
+    }
+    console.log(body)
+    //enviando datos
+    this.mService.rejectMural(body).subscribe((data)=>{
+      console.log(data)
+      if(data.mensaje == 'actualización de estado exitosamente'){
+        alert('Mural actualizado con éxito')
+        window.location.reload();
+      }
+    })
   }
   onPublic(el:Event){
     this.activeMessage = !this.activeMessage
@@ -65,19 +83,49 @@ export class SolicitudesComponent implements OnInit {
   }
 
   enviarInfo(){
-    const body = {
-      id_mural:'',
-      id_user:'',
+
+    //obtenemos las fechas del formulario y lo convertimos en date
+    const fecha_inicio:Date = new Date(this.dataTime.controls['inicio'].value)
+    const fecha_fin:Date = new Date(this.dataTime.controls['fin'].value)
+
+
+    const body:AprobeMural = {
+      id_mural:this.e!.id,
+      id_user:Number(localStorage.getItem('id_user')),
       estado:'aprobado',
-      fecha_publicacion: this.dataTime.controls['inicio'].value,
-      fin_publicacion: this.dataTime.controls['fin'].value
+      fecha_publicacion: this.cambiarFormato(fecha_inicio),
+      fin_publicacion: this.cambiarFormato(fecha_fin)
     }
     console.log(body)
-    console.log(this.e?.id)
+
+    //enviando los datos
+    this.mService.setAprove(body).subscribe((data)=>{
+      console.log(data)
+      if(data.mensaje == 'actualización de estado exitosamente'){
+        alert('Mural actualizado con éxito')
+        window.location.reload();
+      }
+    })
+
   }
+
+
 
   onEdit(){
     alert('Editando... pasa id')
     this.router.navigate(['/main/mural'])
   }
+
+  cambiarFormato(date: Date): string {
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    const hours = ('0' + date.getHours()).slice(-2);
+    const minutes = ('0' + date.getMinutes()).slice(-2);
+    const seconds = ('0' + date.getSeconds()).slice(-2);
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  }
+
+
 }

@@ -12,11 +12,11 @@ cdkDropList
     <img [src]="image" width="100" />
   </div> -->
 
-  <textarea *ngFor="let item of valueInputs" cdkDragBoundary=".panel-container" cdkDrag class="cdk-drag" [value]="item"
+  <textarea [ngStyle]="{'position':'fixed'}" *ngFor="let item of valueInputs" cdkDragBoundary=".panel-container" cdkDrag class="cdk-drag" [value]="item"
     type="text" (click)="handleClick($event)">
     </textarea>
 
-  <input type="file" style="display: none" id="fileInput" (change)="handleFileInput($event)">
+  <input [ngStyle]="{'position':'fixed'}" type="file" style="display: none" id="fileInput" (change)="handleFileInput($event)">
   <div class="panel-i" *ngFor="let item of panelItems" cdkDrag cdkDragBoundary=".panel-container"
     (click)="handleClickMultimedia($event)">
     <ng-container class="contVideo" *ngIf="item.type.startsWith('video/')">

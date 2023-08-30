@@ -2,7 +2,7 @@ import { catchError, Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Solicitud } from 'src/app/main/interfaces/mural.interfaces';
-import { AprobeMural } from '../interfaces/solicitudes.interface';
+import { AprobeMural, RejectMural } from '../interfaces/solicitudes.interface';
 
 
 @Injectable({providedIn: 'root'})
@@ -18,10 +18,14 @@ export class EditorService {
     }
 
     //servicio para aprobar/publicar el mural
-    setAprove(datos:AprobeMural):any{
+    setAprove(datos:AprobeMural):Observable<any>{
       return this.http.patch(this.url+'/mural/aprobar',datos)
     }
 
+    //servicio para rechazar mural
+    rejectMural(body:RejectMural):Observable<any>{
+      return this.http.patch(this.url+'/mural/rechazar',body)
+    }
 
 
 
