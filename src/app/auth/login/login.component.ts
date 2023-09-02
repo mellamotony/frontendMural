@@ -53,17 +53,15 @@ export class LoginComponent {
         this.body.reset();
         return;
       }
-      if(this.messages.length >= 0){
-        console.log('detalles: '+this.messages[0].detail)
-      }
 
 
-      const condicion = this.messages[0]!.detail
 
-      if( condicion =='Usuario o contraseña incorrecto'){
-        this.messages.pop();
-        this.messages.push({ severity: 'success', summary: 'Success', detail: 'Logeado con éxito' })
-      }
+
+
+
+      this.messages.pop();
+      this.messages.push({ severity: 'success', summary: 'Success', detail: 'Logeado con éxito' })
+
       this.exito = true;
       console.log('estado: ',this.messages);
       const id_user:string | undefined = data.id_user?.toString()

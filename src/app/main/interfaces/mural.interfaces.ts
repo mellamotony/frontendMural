@@ -58,7 +58,7 @@ export interface TextDatasetItem{
 }
 
 export interface ImageDatasetItem{
-  file?:File,
+
   id_mural:string |null,
   url: string,
   alt:string,
@@ -72,7 +72,7 @@ export interface ImageDatasetItem{
 }
 
 export interface VideoDatasetItem{
-  file:File,
+
   id_mural:string |null,
   url_video: string,
   height:number,
@@ -87,7 +87,7 @@ export interface VideoDatasetItem{
 }
 
 export interface PdfsItem{
-  file:File,
+
   id_mural:string |null,
   url_pdfs?:string,
   posx?:number,

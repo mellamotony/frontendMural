@@ -317,17 +317,17 @@ export class EditMuralComponent implements OnInit {
       valor: 'Ingrese el texto',
       font:'',
       font_size:'',
-      posx:0,
-      posy:0,
-      height:0,
-      width:0,
+      posx:602,
+      posy:237,
+      height:100,
+      width:200,
       color:'',
-      border_color:'',
+      border_color:'rgb(9, 9, 54)',
       border_radius:'',
       border_style:'',
       backgroundcolor:'',
       font_weight:'',
-      sangria:''
+      sangria:'center'
     }
     this.valueInputs.push(txt);
   }
@@ -535,7 +535,8 @@ export class EditMuralComponent implements OnInit {
     let pdfArray:PanelItem [] = []
 
     this.panelItems.forEach((item)=>{
-      if(item.type == "image/jpeg" || item.type == "image/png" ){
+      console.log(item.type)
+      if(item.type == "image/jpeg" || item.type == "image/png" || item.type == "image/jpg" ){
         imgArray.push(item)
       }
       if(item.type == "video/mp4" ){
@@ -545,6 +546,7 @@ export class EditMuralComponent implements OnInit {
         pdfArray.push(item)
       }
     })
+
     //Array de cada elemento
 
     const Videos: VideoDatasetItem[] = [];
@@ -554,13 +556,17 @@ export class EditMuralComponent implements OnInit {
 
     // Recorrer los textAreas y obtener sus valores
     textAreas.forEach((textArea: HTMLTextAreaElement) => {
+
+      const computedStyle = textArea as HTMLElement;
+      const {x,y,height,width} = computedStyle.getBoundingClientRect()
+
       const valueTexts: TextDatasetItem = {
         id_mural:localStorage.getItem('id_mural'),
         valor: textArea.value,
         font: textArea.style.fontFamily,
         font_size: textArea.style.fontSize,
-        posx: parseInt(textArea.style.left),
-        posy: parseInt(textArea.style.top),
+        posx: /*parseInt(textArea.style.left)*/x,
+        posy: /*parseInt(textArea.style.top)*/y,
         height: parseInt(textArea.style.height),
         width: parseInt( textArea.style.width),
         color: textArea.style.color,
@@ -582,9 +588,10 @@ export class EditMuralComponent implements OnInit {
     // Recorrer las imágenes y obtener sus atributos o valores
     images.forEach((image: HTMLImageElement,i:number ) => {
           const panelItem = imgArray[i]
+
           const valueImages: ImageDatasetItem = {
             id_mural:localStorage.getItem('id_mural'),
-            file: panelItem.file,
+
             url: panelItem.url,
             alt: image.alt,
             height: image.height,
@@ -623,7 +630,7 @@ export class EditMuralComponent implements OnInit {
         border_color:video.parentElement!.style.borderColor,
         border_radius:video.parentElement!.style.borderRadius,
         border_style:video.parentElement!.style.borderStyle,
-        file:panelItem.file
+
       };
 
       Videos.push(DataVideo);
@@ -655,7 +662,7 @@ export class EditMuralComponent implements OnInit {
         border_color:computedStyle.parentElement!.style.borderColor,
         border_style:computedStyle.parentElement!.style.borderStyle,
         border_radius:computedStyle.parentElement!.style.borderRadius,
-        file:panelItem.file
+
       }
       DataPdfs.push(DataPdf)
     });

@@ -53,18 +53,21 @@
 }
 
 .image-container{
-  border: 1px solid black;
+  border: 1px solid rgb(0, 0, 0);
 }
 
 .cdk-drag{
-  border:1px solid black;
+  border:1px solid rgb(0, 0, 0);
   outline:none;
   cursor: pointer;
-  color:red;
+  color:rgb(255, 0, 0);
   height:100px;
   width:200px;
   margin: 0 auto;
   font-size:16px;
+  text-align:center;
+  font-family:arial;
+  font-weight:500;
   resize: none;
 }
 

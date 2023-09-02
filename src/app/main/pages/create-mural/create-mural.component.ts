@@ -440,13 +440,16 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
 
     // Recorrer los textAreas y obtener sus valores
     textAreas.forEach((textArea: HTMLTextAreaElement) => {
+      const computedStyle = textArea as HTMLElement;
+      const {x,y,height,width} = computedStyle.getBoundingClientRect()
+
       const valueTexts: TextDatasetItem = {
         id_mural:localStorage.getItem('id_mural'),
         valor: textArea.value,
         font: textArea.style.fontFamily,
         font_size: textArea.style.fontSize,
-        posx: textArea.offsetLeft,
-        posy: textArea.offsetTop,
+        posx: /*textArea.offsetLeft*/x,
+        posy: /*textArea.offsetTop*/y,
         height: parseInt(textArea.style.height),
         width: parseInt( textArea.style.width),
         color: textArea.style.color,
@@ -467,15 +470,20 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
     // Recorrer las imágenes y obtener sus atributos o valores
     images.forEach((image: HTMLImageElement,i:number ) => {
           const panelItem = imgArray[i]
+
+          const rect = image.getBoundingClientRect();
+          const posX = rect.left;
+          const posY = rect.top;
+
           const valueImages: ImageDatasetItem = {
             id_mural:localStorage.getItem('id_mural'),
-            file: panelItem.file,
+
             url: panelItem.url,
             alt: image.alt,
             height: image.height,
             width: image.width,
-            posx: image.x,
-            posy: image.y,
+            posx: posX,
+            posy: posY,
             border_color:image.parentElement!.style.borderColor,
             border_radius:image.parentElement!.style.borderRadius,
             border_style:image.parentElement!.style.borderStyle,
@@ -507,8 +515,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
         duration:video.duration,
         border_color:video.parentElement!.style.borderColor,
         border_radius:video.parentElement!.style.borderRadius,
-        border_style:video.parentElement!.style.borderStyle,
-        file:panelItem.file
+        border_style:video.parentElement!.style.borderStyle
       };
 
       Videos.push(DataVideo);
@@ -539,8 +546,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
         posy:y,
         border_color:computedStyle.parentElement!.style.borderColor,
         border_style:computedStyle.parentElement!.style.borderStyle,
-        border_radius:computedStyle.parentElement!.style.borderRadius,
-        file:panelItem.file
+        border_radius:computedStyle.parentElement!.style.borderRadius
       }
       DataPdfs.push(DataPdf)
     });
