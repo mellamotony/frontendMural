@@ -43,8 +43,13 @@ postIdsolicitud(id:number):Observable<Solicitud[]>{
   return this.http.post<Solicitud[]>(this.url+'/mural/solbyuser',body)
 }
 
+//servicio para actualizar el mural /mural/updateM
+updateMural(body:MuralDataSetItem):Observable<any>{
+  return this.http.patch<any>(this.url+'/mural/updateM',body)
+}
 
 
+//http://localhost:8098
 
 
 }

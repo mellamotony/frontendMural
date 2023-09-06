@@ -1,6 +1,6 @@
 import { catchError, Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Solicitud } from 'src/app/main/interfaces/mural.interfaces';
 import { AprobeMural, RejectMural } from '../interfaces/solicitudes.interface';
 
@@ -14,6 +14,7 @@ export class EditorService {
   //servicio para obtener los id disponibles
 
     getSolicitudes():Observable<Solicitud[]>{
+
       return this.http.get<Solicitud[]>(this.url+'/mural/solicitudes')
     }
 

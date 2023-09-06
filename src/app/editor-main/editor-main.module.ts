@@ -8,6 +8,7 @@ import { LayoutEComponent } from './pages/layout-e/layout-e.component';
 import { SolicitudesComponent } from './pages/solicitudes/solicitudes.component';
 import { HistorialComponent } from './pages/historial/historial.component';
 import { PrimeNModule } from '../prime-n/prime-n.module';
+import { MainModule } from '../main/main.module';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { PrimeNModule } from '../prime-n/prime-n.module';
     EditorMainRoutingModule,
     PrimeNModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MainModule
   ]
 })
 export class EditorMainModule { }

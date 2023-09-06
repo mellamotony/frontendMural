@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { PDFSource, PdfViewerComponent } from 'ng2-pdf-viewer';
-import { MegaMenuItem } from 'primeng/api';
+import { MegaMenuItem, Message } from 'primeng/api';
 import { ImageDatasetItem, MuralDataSetItem, PanelItem, PdfsItem, TextDatasetItem, VideoDatasetItem } from '../../interfaces/mural.interfaces';
 import { MuralService } from '../../services/main.services';
 
@@ -33,6 +33,10 @@ export class EditMuralComponent implements OnInit {
   valueInputs: TextDatasetItem[] = [];
 
   items: MegaMenuItem[] = [];
+  //variables para mostrar mensajes
+  exito:boolean = false;
+  messages: Message[] = [{ severity: 'success', summary: 'Success', detail: 'Mural actualizado con éxito' }]
+
   //activeItem: MenuItem = {};
   //variable para validar la aparcion de la herramienta
   isActive: boolean = false;
@@ -90,6 +94,13 @@ export class EditMuralComponent implements OnInit {
   )
   // Declara la propiedad renderer con el tipo Renderer2
   private renderer!: Renderer2;
+  //id para usar
+  public idTxt:string [] = [];
+  public idImg:string [] = [];
+  public idPdf:string [] = [];
+  public idVideo:string [] = [];
+  private idMural:string =''
+  private idUser:string = ''
 
   images: string[] = [];
 
@@ -113,9 +124,11 @@ export class EditMuralComponent implements OnInit {
     let nombreMural:string = '';
     this.activateRoute.paramMap.subscribe(params => {
       const idMural:string = params.get('id')!;
+      this.idMural = idMural
       console.log('ID actual:', idMural);
       this.mService.postIdmurl(idMural).subscribe((mural) =>{
         console.log(mural)
+        this.idUser = mural[0].id_user!;
         //ingresando nombre del mural
         nombreMural = mural[0].nombrem!
         this.MuralnameForm.controls['Muralname'].setValue(nombreMural)
@@ -126,7 +139,8 @@ export class EditMuralComponent implements OnInit {
           data.posx = Number(data.posx)
           data.posy = Number(data.posy)
           this.valueInputs.push(data)
-          console.log('textos',data.posy)
+          console.log('textos',data.id_txt)
+          this.idTxt.push(data.id_txt!)
 
         })
 
@@ -154,6 +168,7 @@ export class EditMuralComponent implements OnInit {
             height:Number(data.height),
             width: Number(data.width)
           }
+          this.idImg.push(data.id_imagenes!)
           console.log('datas: ',datas)
           this.panelItems.push(datas)
         })
@@ -181,6 +196,7 @@ export class EditMuralComponent implements OnInit {
             width: Number(data.width)
           }
           console.log('tipo: ',datas)
+          this.idVideo.push(data.id_video!)
           this.panelItems.push(datas)
         })
 
@@ -207,6 +223,7 @@ export class EditMuralComponent implements OnInit {
             width: Number(data.width)
 
           }
+          this.idPdf.push(data.id_pdfs!)
           console.log('tipo: ',datas)
           this.panelItems.push(datas)
 
@@ -387,7 +404,7 @@ export class EditMuralComponent implements OnInit {
     }
     console.log('El elemento fue presionado');
 
-    console.log('debuger: ',newElement);
+
     if (newElement.className == 'textLayer') {
 
       this.isPdfActive = true;
@@ -561,7 +578,7 @@ export class EditMuralComponent implements OnInit {
       const {x,y,height,width} = computedStyle.getBoundingClientRect()
 
       const valueTexts: TextDatasetItem = {
-        id_mural:localStorage.getItem('id_mural'),
+        id_mural:this.idMural,
         valor: textArea.value,
         font: textArea.style.fontFamily,
         font_size: textArea.style.fontSize,
@@ -576,7 +593,12 @@ export class EditMuralComponent implements OnInit {
         border_style:textArea.style.borderStyle,
         font_weight:  textArea.style.fontWeight,
         sangria:  textArea.style.textAlign,
+        id_txt: textArea.id !== undefined ? textArea.id : undefined
       };
+      if (valueTexts.id_txt == "undefined") {
+        delete valueTexts.id_txt;
+        console.log('eliminando')
+      }
       console.log('alto:',textArea.style.height)
       console.log('elemento: ',textArea.offsetTop)
       Texts.push(valueTexts);
@@ -588,20 +610,27 @@ export class EditMuralComponent implements OnInit {
     // Recorrer las imágenes y obtener sus atributos o valores
     images.forEach((image: HTMLImageElement,i:number ) => {
           const panelItem = imgArray[i]
+          const computedStyle = image as HTMLElement;
+      const {x,y,height,width} = computedStyle.getBoundingClientRect()
 
           const valueImages: ImageDatasetItem = {
-            id_mural:localStorage.getItem('id_mural'),
-
+            id_mural:this.idMural,
+            id_imagenes: this.idImg[i] !== undefined ?this.idImg[i] : undefined,
             url: panelItem.url,
             alt: image.alt,
-            height: image.height,
-            width: image.width,
-            posx: image.x,
-            posy: image.y,
+            height: Number(computedStyle.parentElement?.clientHeight) + 2,
+            width: Number(computedStyle.parentElement?.clientWidth) + 2,
+            posx:x,
+            posy: y,
             border_color:image.parentElement!.style.borderColor,
             border_radius:image.parentElement!.style.borderRadius,
             border_style:image.parentElement!.style.borderStyle,
           };
+          if (valueImages.id_imagenes == undefined) {
+            delete valueImages.id_imagenes;
+            console.log('eliminando')
+          }
+
           DataImagenes.push(valueImages);
 
     });
@@ -619,20 +648,23 @@ export class EditMuralComponent implements OnInit {
 
 
       const DataVideo: VideoDatasetItem = {
-        id_mural:localStorage.getItem('id_mural'),
+        id_mural:this.idMural,
         url_video:panelItem.url,
         height: video.offsetHeight,
         width: video.offsetWidth,
         posx: posX,
         posy: posY,
         formato:'mp4',
-        duration:video.duration,
+        duration:!Number.isNaN(video.duration) ? video.duration : 50,
         border_color:video.parentElement!.style.borderColor,
         border_radius:video.parentElement!.style.borderRadius,
         border_style:video.parentElement!.style.borderStyle,
-
+        id_video:this.idVideo[i] !== undefined ? this.idVideo[i] : undefined
       };
-
+      if (DataVideo.id_video == undefined) {
+        delete DataVideo.id_video;
+        console.log('eliminando')
+      }
       Videos.push(DataVideo);
 
 
@@ -653,7 +685,7 @@ export class EditMuralComponent implements OnInit {
 
 
       const DataPdf:PdfsItem = {
-        id_mural:localStorage.getItem('id_mural'),
+        id_mural:this.idMural,
         url_pdfs:panelItem.url,
         height:height,
         width:width,
@@ -662,7 +694,11 @@ export class EditMuralComponent implements OnInit {
         border_color:computedStyle.parentElement!.style.borderColor,
         border_style:computedStyle.parentElement!.style.borderStyle,
         border_radius:computedStyle.parentElement!.style.borderRadius,
-
+        id_pdfs:this.idPdf[i] !== undefined ? this.idPdf[i] : undefined
+      }
+      if (DataPdf.id_pdfs == undefined) {
+        delete DataPdf.id_pdfs;
+        console.log('eliminando')
       }
       DataPdfs.push(DataPdf)
     });
@@ -685,8 +721,8 @@ export class EditMuralComponent implements OnInit {
     }
 
     this.DataMural = {
-      id_mural:localStorage.getItem('id_mural'),
-      id_user:localStorage.getItem('id_user'),
+      id_mural:this.idMural,
+      id_user: this.idUser,
       nombrem:nombreMural! ,
       height: MuralData.offsetWidth,
       width: MuralData.offsetHeight,
@@ -699,9 +735,15 @@ export class EditMuralComponent implements OnInit {
     console.log('Enviando datos:', this.DataMural);
     console.log(this.panelItems)
     //Endepoint para actualizar
-    // //this.mService.postData(this.DataMural).subscribe((data)=>{
-    //   console.log(data)
-    // }  );
+    this.mService.updateMural(this.DataMural).subscribe((data)=>{
+      console.log(data)
+      if(data.mensaje){
+        this.exito = true;
+        setTimeout(() => {
+          this.exito = false;
+        }, 2000);
+      }
+     }  );
 
   }
 

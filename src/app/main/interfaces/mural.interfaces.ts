@@ -40,6 +40,7 @@ export interface MuralDataSetItem {
 
 export interface TextDatasetItem{
   id_mural?:string |null,
+  id_txt?:string,
   valor: string,
   font:string,
   font_size:string,
@@ -60,6 +61,7 @@ export interface TextDatasetItem{
 export interface ImageDatasetItem{
 
   id_mural:string |null,
+  id_imagenes?:string,
   url: string,
   alt:string,
   height:number,
@@ -74,6 +76,7 @@ export interface ImageDatasetItem{
 export interface VideoDatasetItem{
 
   id_mural:string |null,
+  id_video?:string,
   url_video: string,
   height:number,
   width:number,
@@ -90,6 +93,7 @@ export interface PdfsItem{
 
   id_mural:string |null,
   url_pdfs?:string,
+  id_pdfs?:string,
   posx?:number,
   posy?:number,
   height?:number,

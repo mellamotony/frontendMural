@@ -19,13 +19,13 @@ cdkDropList
   <input [ngStyle]="{'position':'fixed'}" type="file" style="display: none" id="fileInput" (change)="handleFileInput($event)">
   <div class="panel-i" *ngFor="let item of panelItems" cdkDrag cdkDragBoundary=".panel-container"
     (click)="handleClickMultimedia($event)">
-    <ng-container class="contVideo" *ngIf="item.type.startsWith('video/')">
+    <ng-container  class="contVideo" *ngIf="item.type.startsWith('video/')">
       <video [src]="item.url" controls></video>
     </ng-container>
-    <ng-container class="contImg" *ngIf="item.type.startsWith('image/')">
+    <ng-container  class="contImg" *ngIf="item.type.startsWith('image/')">
       <img [src]="item.url" [alt]="item.file.name">
     </ng-container>
-    <ng-container *ngIf="item.type.startsWith('application/')">
+    <ng-container class="contImg"  *ngIf="item.type.startsWith('application/')">
       <pdf-viewer   [src]="item.url" [render-text]="true" alt="item.file.name"
       [original-size]="true" [fit-to-page]="true"
       ></pdf-viewer>

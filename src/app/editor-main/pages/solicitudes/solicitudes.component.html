@@ -21,7 +21,7 @@
         <p-button (onClick)="onDelete($event)" styleClass="p-button-danger"> Rechazar</p-button>
       </td>
       <td>
-        <p-button (onClick)="onEdit()">Editar</p-button>
+        <p-button [routerLink]="['/editormain/edit', product.id_mural]">Editar</p-button>
       </td>
     </tr>
   </ng-template>

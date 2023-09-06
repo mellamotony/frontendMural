@@ -1,3 +1,4 @@
+<p-messages [style]="{'width':'500'+'px','position':'fixed','left':'70'+'%','top':'2'+'px'}"  *ngIf="exito" [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
 <form [formGroup]="MuralnameForm">
   <input class="forName" type="text" formControlName="Muralname" placeholder="Nombre de Mural">
 </form>
@@ -12,7 +13,7 @@ cdkDropList
     <img [src]="image" width="100" />
   </div> -->
 
-  <textarea #textArea *ngFor="let item of valueInputs" cdkDragBoundary=".panel-container" cdkDrag class="cdk-drag"
+  <textarea [id] = 'idTxt[i]' #textArea *ngFor="let item of valueInputs ; let i = index" cdkDragBoundary=".panel-container" cdkDrag class="cdk-drag"
     [value]="item.valor" [ngStyle]="{
       'color':item.color ,
       'backgroundColor':item.backgroundcolor ,
@@ -40,16 +41,16 @@ cdkDropList
     'width': item.width + 'px',
     'position': 'fixed'
     }" cdkDrag cdkDragBoundary=".panel-container" (click)="handleClickMultimedia($event)">
-    <span>{{item.imagenes?.border_radius}}</span>
+
     <ng-container class="contVideo multimedia" *ngIf="item.type.startsWith('video/')">
-      <video [src]="item.url" controls></video>
+      <video   [src]="item.url" controls></video>
     </ng-container>
-    <ng-container class="contImg multimedia" *ngIf="item.type.startsWith('image/') && panelItems.length > 0">
-      <img [src]="item.url" [alt]="item.file.name">
+    <ng-container  class="contImg multimedia" *ngIf="item.type.startsWith('image/') && panelItems.length > 0">
+      <img  [src]="item.url" [alt]="item.file.name">
     </ng-container>
 
-    <ng-container *ngIf="item.type.startsWith('application/')">
-      <pdf-viewer [src]="item.url" [render-text]="true" alt="item.file.name" [original-size]="true"
+    <ng-container class="contImg"  *ngIf="item.type.startsWith('application/')">
+      <pdf-viewer    [src]="item.url" [render-text]="true" alt="item.file.name" [original-size]="true"
         [fit-to-page]="true"></pdf-viewer>
     </ng-container>
 
@@ -57,6 +58,7 @@ cdkDropList
 
 
 </div>
+
 <p-button (click)="OnSaveMural()">Guardar</p-button>
 <!-- Barra de herramientas para textos -->
 <div class="MenuBarEdicionTexto" *ngIf="isActive">
