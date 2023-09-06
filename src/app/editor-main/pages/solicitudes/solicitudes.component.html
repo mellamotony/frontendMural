@@ -36,11 +36,11 @@
       <h1>Horarios de publicación del mural</h1>
       <span>INICIO DE PUBLICACION</span>
       <div class="card flex justify-content-center">
-        <p-calendar formControlName=inicio [showTime]="true" [showSeconds]="true"></p-calendar>
+        <p-calendar formControlName=inicio  [showTime]="true" [showIcon]="true" [showSeconds]="true" [minDate]="minDate" [maxDate]="maxDate"></p-calendar>
       </div>
       <span>FIN DE PUBLICACION</span>
       <div class="card flex justify-content-center">
-        <p-calendar formControlName=fin [showTime]="true" [showSeconds]="true"></p-calendar>
+        <p-calendar formControlName=fin  [showTime]="true" [showIcon]="true" [showSeconds]="true" [minDate]="minDate" [maxDate]="maxDate"></p-calendar>
       </div>
 
       <p-button (click)="enviarInfo()">Aceptar</p-button>

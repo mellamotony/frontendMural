@@ -1,4 +1,4 @@
-import { Idd } from './../../../../../../countryApp/src/app/countries/interfaces/country';
+
 export interface SolicituMural {
   id_mural:string
   nombre_mural:string,
