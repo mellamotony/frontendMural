@@ -21,7 +21,7 @@ import { AppRoutingModule } from './app.routing.module';
     DragDropModule,
     RouterModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -10,6 +10,8 @@ import { MegaMenuModule } from 'primeng/megamenu';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { MessagesModule } from 'primeng/messages';
 import { CalendarModule } from 'primeng/calendar';
+import { AvatarModule } from 'primeng/avatar';
+import { AvatarGroupModule } from 'primeng/avatargroup';
 
 @NgModule({
   exports:[
@@ -23,7 +25,9 @@ import { CalendarModule } from 'primeng/calendar';
     MegaMenuModule,
     ColorPickerModule,
     MessagesModule,
-    CalendarModule
+    CalendarModule,
+    AvatarGroupModule,
+    AvatarModule
   ]
 })
 export class PrimeNModule { }
