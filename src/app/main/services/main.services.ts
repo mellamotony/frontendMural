@@ -1,7 +1,7 @@
 import { catchError, Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { IDmural, MuralDataSetItem, Solicitud } from '../interfaces/mural.interfaces';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { IDmural, logs, MuralDataSetItem, Solicitud } from '../interfaces/mural.interfaces';
 
 @Injectable({providedIn: 'root'})
 export class MuralService {
@@ -46,6 +46,22 @@ postIdsolicitud(id:number):Observable<Solicitud[]>{
 //servicio para actualizar el mural /mural/updateM
 updateMural(body:MuralDataSetItem):Observable<any>{
   return this.http.patch<any>(this.url+'/mural/updateM',body)
+}
+
+//servicio para mostrar el historial de edición
+historial(id_user:number):Observable<logs []>{
+  const body = {
+    id_user: id_user
+  }
+  return this.http.post<logs []>(this.url+'/mural/logs',body)
+}
+
+ //servicio para enviar el id_user para obtener la info del usuario
+ postIdUSER(id:number):Observable<any>{
+  const body = {
+    "id_user" : id
+  }
+  return this.http.post<any>(this.url+'/mural/getUserbyId',body)
 }
 
 

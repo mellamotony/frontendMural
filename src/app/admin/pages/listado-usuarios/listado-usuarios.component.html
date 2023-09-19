@@ -1,11 +1,13 @@
 <div class="nose">
   <p-menubar [model]="items">
     <ng-template pTemplate="start">
-      <p-avatar label="R" size="xlarge"></p-avatar>
-      <span> Ricky Español</span>
+      <p-avatar [label]="avatar" size="xlarge"></p-avatar>
+      <span>{{" "}} {{admindata.nombre}} {{admindata.apellidos}}</span>
     </ng-template>
     <ng-template pTemplate="end">
-      <button class="salir" [routerLink]="['/aut',]">Salir</button>
+      <button (click)="closeSession()" class="salir" [routerLink]="['/aut',]">
+        <img width="25" height="25" src="https://img.icons8.com/ios/50/000000/exit--v1.png" alt="exit--v1"/>
+      </button>
     </ng-template>
   </p-menubar>
 
@@ -18,23 +20,52 @@
       <tr>
         <th>Id del Usuario</th>
         <th>Nombre</th>
+        <th>Apellidos</th>
         <th>Correo</th>
         <th>Rol</th>
-        <th>Acción</th>
-        <th>Acción</th>
+        <th>Editar</th>
+        <th>Eliminar</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-users>
-      <tr class="rowT" [id]="users.id">
-        <td>{{ users.id }}</td>
+      <tr class="rowT">
+        <td>{{ users.id_user }}</td>
         <td>{{ users.nombre }}</td>
+        <td>{{ users.apellidos }}</td>
         <td>{{ users.correo }}</td>
         <td>{{ users.rol}}</td>
         <td>
-          <p-button styleClass="p-button-success">Editar Usuario</p-button>
+          <p-button [id]="users.id_user" (onClick)="editarUsuario($event)" styleClass="p-button-success">
+            <svg [ngStyle]="{'pointer-events':'none'}"  [id]="users.id_user" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0,0,256,256">
+              <g fill="#ffffff" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt"
+                stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0"
+                font-family="none" font-weight="none" font-size="none" text-anchor="none"
+                style="mix-blend-mode: normal">
+                <g transform="scale(5.12,5.12)">
+                  <path
+                    d="M46.57422,3.42578c-0.94922,-0.94922 -2.19531,-1.42578 -3.44141,-1.42578c-1.24609,0 -2.49219,0.47656 -3.44141,1.42578c0,0 -0.07031,0.06641 -0.16016,0.16016c-0.00781,0.00781 -0.01953,0.01172 -0.02734,0.01953l-35.20312,35.19922c-0.12109,0.125 -0.21094,0.27734 -0.25781,0.44922l-2.00781,7.48828c-0.09375,0.34375 0.00391,0.71094 0.25781,0.96484c0.19141,0.19141 0.44531,0.29297 0.70703,0.29297c0.08594,0 0.17188,-0.01172 0.25781,-0.03516l7.48828,-2.00781c0.17188,-0.04687 0.32422,-0.13672 0.44922,-0.26172l35.19922,-35.19531c0.01172,-0.01172 0.01563,-0.02734 0.02344,-0.03906c0.08984,-0.08984 0.15234,-0.15234 0.15234,-0.15234c1.90625,-1.90234 1.90625,-4.98437 0.00391,-6.88281zM45.16016,4.83984c1.11719,1.11719 1.11719,2.9375 0,4.05469c-0.33203,0.32813 -0.61328,0.61328 -0.85547,0.85547l-4.05469,-4.05469c0.46094,-0.46094 0.85547,-0.85547 0.85547,-0.85547c0.53906,-0.54297 1.26172,-0.83984 2.02734,-0.83984c0.76563,0 1.48438,0.30078 2.02734,0.83984zM5.60547,41.15234l3.24219,3.24219l-4.43359,1.19141z">
+                  </path>
+                </g>
+              </g>
+            </svg>
+
+          </p-button>
         </td>
         <td>
-          <p-button styleClass="p-button-danger"> Eliminar Usuario</p-button>
+          <p-button  (onClick)="eliminarUsuario($event)"  [id]="users.id_user" styleClass="p-button-danger">
+            <svg [ngStyle]="{'pointer-events':'none'}"  [id]="users.id_user" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0,0,256,256">
+              <g fill="#ffffff" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt"
+                stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0"
+                font-family="none" font-weight="none" font-size="none" text-anchor="none"
+                style="mix-blend-mode: normal">
+                <g transform="scale(5.12,5.12)">
+                  <path
+                    d="M42,5h-10v-2c0,-1.65234 -1.34766,-3 -3,-3h-8c-1.65234,0 -3,1.34766 -3,3v2h-10c-0.55078,0 -1,0.44922 -1,1c0,0.55078 0.44922,1 1,1h1.08594l3.60938,40.51563c0.125,1.39063 1.30859,2.48438 2.69531,2.48438h19.21484c1.38672,0 2.57031,-1.09375 2.69531,-2.48437l3.61328,-40.51562h1.08594c0.55469,0 1,-0.44922 1,-1c0,-0.55078 -0.44531,-1 -1,-1zM20,44c0,0.55469 -0.44922,1 -1,1c-0.55078,0 -1,-0.44531 -1,-1v-33c0,-0.55078 0.44922,-1 1,-1c0.55078,0 1,0.44922 1,1zM20,3c0,-0.55078 0.44922,-1 1,-1h8c0.55078,0 1,0.44922 1,1v2h-10zM26,44c0,0.55469 -0.44922,1 -1,1c-0.55078,0 -1,-0.44531 -1,-1v-33c0,-0.55078 0.44922,-1 1,-1c0.55078,0 1,0.44922 1,1zM32,44c0,0.55469 -0.44531,1 -1,1c-0.55469,0 -1,-0.44531 -1,-1v-33c0,-0.55078 0.44531,-1 1,-1c0.55469,0 1,0.44922 1,1z">
+                  </path>
+                </g>
+              </g>
+            </svg>
+          </p-button>
         </td>
         <td>
 
@@ -46,24 +77,69 @@
 
   <div class="container" *ngIf="showUserForm">
     <h1>Administrar Usuarios</h1>
-    <form id="user-form">
+    <form [formGroup]="formsUser" (ngSubmit)="crearNuevoUsuario()" id="user-form">
       <label for="name">Nombre:</label>
-      <input type="text" id="name" name="name" required>
+      <input formControlName="nombre" type="text" id="name" name="name" required>
 
-      <label for="lastName">Apellido:</label>
-      <input type="text" id="lastName" name="lastName" required>
+      <label for="lastName">Apellido Paterno:</label>
+      <input formControlName="apellido_p" type="text" id="lastName" name="lastName" required>
+
+      <label for="lastName">Apellido Materno:</label>
+      <input formControlName="apellido_m" type="text" id="lastName" name="lastName" required>
 
       <label for="email">Correo Electrónico:</label>
-      <input type="email" id="email" name="email" required>
+      <input formControlName="correo" type="email" id="email" name="email" required>
 
       <label for="password">Contraseña:</label>
-      <input type="password" id="password" name="password" required>
+      <input formControlName="contrasenia" type="password" id="password" name="password" required>
+
+      <label for="password">Rol:</label>
+      <select formControlName="id_rol" name="roles">
+        <option value="1">Editor</option>
+        <option value="2">Diseñador</option>
+
+      </select>
 
       <div class="botones">
-        <button class="bton"   type="submit">Guardar</button>
-        <button (click)="toggleForm()" class="bton rojo"  type="submit">Cancelar</button>
+        <button class="bton" type="submit">Guardar</button>
+        <button (click)="toggleForm()" class="bton rojo">Cancelar</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- FORMULARIO PARA EDITAR USUSARIO -->
+  <div class="container" *ngIf="showEditForm">
+    <h1>Editar Usuario</h1>
+    <form [formGroup]="formsUser" (ngSubmit)="editNUevoUser()" id="user-form">
+      <label for="name">Nombre:</label>
+      <input formControlName="nombre" type="text" id="name" name="name" required>
+
+      <label for="lastName">Apellido Paterno:</label>
+      <input formControlName="apellido_p" type="text" id="lastName" name="lastName" required>
+
+      <label for="lastName">Apellido Materno:</label>
+      <input formControlName="apellido_m" type="text" id="lastName" name="lastName" required>
+
+      <label for="email">Correo Electrónico:</label>
+      <input formControlName="correo" type="email" id="email" name="email" required>
+
+      <label for="password">Contraseña:</label>
+      <input formControlName="contrasenia" type="password" id="password" name="password" required>
+
+      <label for="password">Rol:</label>
+      <select formControlName="id_rol" name="roles">
+        <option value="1">Editor</option>
+        <option value="2">Diseñador</option>
+
+      </select>
+
+      <div class="botones">
+        <button class="bton" type="submit">Guardar</button>
+        <button (click)="toggleditform()" class="bton rojo">Cancelar</button>
       </div>
     </form>
   </div>
 
 </div>
+<p-messages [style]="{'width':'500'+'px','position':'fixed','left':'70'+'%','top':'2'+'px'}" *ngIf="exito"
+  [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>

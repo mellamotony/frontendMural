@@ -20,6 +20,10 @@ const routes: Routes = [
         path: "listado",
         component: ListadoUsuariosComponent
 
+      },
+      {
+        path:'**',
+        redirectTo:'/admin/listado'
       }
     ],
 

@@ -5,25 +5,27 @@ import { guardToken } from '../auth/interfaces/login.inteface';
 
 
 
-@Injectable({providedIn: 'root'})
-export class EditorGuard implements CanActivate {
-  constructor(private route:Router) { }
+@Injectable({ providedIn: 'root' })
+export class AdminGuard implements CanActivate {
+  constructor(private route: Router) { }
 
-  canActivate():boolean {
+  canActivate(): boolean {
 
     if(!localStorage.getItem('token')){
       this.route.navigate(['/auth']);
       return false;
     }
     const rolSincoded = localStorage.getItem('token');
-    const token:guardToken = jwt_decode(rolSincoded!)
-    console.log('guard: ',token.rol);
-  if(token.rol == 'editor'){
-    return true;
-  }else{
-    this.route.navigate(['/auth/login']);
-    return false;
-  }
+    const token: guardToken = jwt_decode(rolSincoded!)
+    console.log('guard: ', token.rol);
+    if (token.rol == 'admin') {
+      console.log('si tenemos la feria')
+      return true;
+    } else {
+
+      this.route.navigate(['/auth']);
+      return false;
+    }
 
 
   }

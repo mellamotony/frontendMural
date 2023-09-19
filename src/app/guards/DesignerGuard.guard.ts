@@ -10,6 +10,11 @@ export class DesignerGuard implements CanActivate {
   constructor(private route:Router) { }
 
   canActivate():boolean {
+
+    if(!localStorage.getItem('token')){
+      this.route.navigate(['/auth']);
+      return false;
+    }
     const rolSincoded = localStorage.getItem('token');
     const token:guardToken = jwt_decode(rolSincoded!)
     console.log('guard: ',token.rol);

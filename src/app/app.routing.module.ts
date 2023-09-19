@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes} from '@angular/router';
 import { DesignerGuard } from './guards/DesignerGuard.guard';
 import { EditorGuard } from './guards/Editor.guard';
+import { AdminGuard } from './guards/admin.guard';
 
 const routes: Routes = [
   {
@@ -11,7 +12,8 @@ const routes: Routes = [
 
   {
     path:"admin",
-    loadChildren: ()=> import('./admin/admin.module').then(m => m.AdminModule)
+    loadChildren: ()=> import('./admin/admin.module').then(m => m.AdminModule),
+    canActivate:[AdminGuard]
   },
 
 

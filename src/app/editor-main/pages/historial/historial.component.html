@@ -2,23 +2,29 @@
   <ng-template pTemplate="header">
     <tr>
       <th>Nombre del Mural</th>
-      <th>Fecha de Aprobación</th>
-      <th>Acción</th>
-      <th>Acción</th>
+      <th>Fecha de {{aprobado}}</th>
+      <th>Hora</th>
+      <th>Estado</th>
+      <th>
+        <form [formGroup]="formEstado">
+          <select   formControlName="option" name="op" id="op" (change)="cambiarStatus()">
+            <option  disabled selected>Selecciona una opción</option>
+            <option value="aprobado">Aprobado</option>
+            <option value="rechazado">Rechazado</option>
+          </select>
+        </form>
+    </th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-product>
     <tr>
       <td>{{ product.nombre_mural |titlecase }}</td>
-      <td>{{ product.fecha_aprobado}}</td>
+      <td>{{ product.fecha.slice(0, 10)}}</td>
+      <td>{{product.fecha.slice(10, 19)}}</td>
+      <td>{{product.estado | titlecase}}</td>
+      <td> </td>
 
-      <td>
-        <p-button (onClick)="onVer()"  styleClass="p-button-success">Ver</p-button>
-      </td>
-      <td>
-        <p-button (onClick)="onDelete()" styleClass="p-button-danger"> Eliminar</p-button>
-      </td>
     </tr>
   </ng-template>
 </p-table>
-
+<div *ngIf="exito" class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>

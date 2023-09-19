@@ -30,6 +30,7 @@ export interface MuralDataSetItem {
   id_user:string |null,
   height:number,
   width:number,
+  fecha_modificacion?:string,
   nombrem?:string,
   textos:TextDatasetItem[],
   imagenes:ImageDatasetItem[],
@@ -129,4 +130,11 @@ export interface Solicitud {
   estado:          string;
   diseñador:       string;
   fecha_solicitud: string;
+  fecha_respuesta?: string;
+}
+
+export interface logs {
+  fecha_modificacion:string,
+  modificado:string,
+  nombre_mural:string
 }

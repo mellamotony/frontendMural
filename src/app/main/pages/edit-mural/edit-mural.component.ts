@@ -23,7 +23,7 @@ export class EditMuralComponent implements OnInit {
 
 
   //Array para almacenar todos los datos del mural
-  public IdMural:string = ''
+  public IdMural: string = ''
 
 
 
@@ -34,7 +34,7 @@ export class EditMuralComponent implements OnInit {
 
   items: MegaMenuItem[] = [];
   //variables para mostrar mensajes
-  exito:boolean = false;
+  exito: boolean = false;
   messages: Message[] = [{ severity: 'success', summary: 'Success', detail: 'Mural actualizado con éxito' }]
 
   //activeItem: MenuItem = {};
@@ -89,18 +89,18 @@ export class EditMuralComponent implements OnInit {
   //variable para obtener el nombre del formulario
   public MuralnameForm = this.fb.group(
     {
-      Muralname:this.fb.control('')
+      Muralname: this.fb.control('')
     }
   )
   // Declara la propiedad renderer con el tipo Renderer2
   private renderer!: Renderer2;
   //id para usar
-  public idTxt:string [] = [];
-  public idImg:string [] = [];
-  public idPdf:string [] = [];
-  public idVideo:string [] = [];
-  private idMural:string =''
-  private idUser:string = ''
+  public idTxt: string[] = [];
+  public idImg: string[] = [];
+  public idPdf: string[] = [];
+  public idVideo: string[] = [];
+  private idMural: string = ''
+  private idUser: string = ''
 
   images: string[] = [];
 
@@ -110,23 +110,23 @@ export class EditMuralComponent implements OnInit {
 
 
   constructor(
-    private mService:MuralService,
-    private activateRoute:ActivatedRoute,
+    private mService: MuralService,
+    private activateRoute: ActivatedRoute,
     private fb: FormBuilder,
     private elementRef: ElementRef,
     renderer: Renderer2,
     private componentFactoryResolver: ComponentFactoryResolver,
     private viewContainerRef: ViewContainerRef,
-    ){ this.renderer = renderer;}
+  ) { this.renderer = renderer; }
 
   ngOnInit(): void {
     //
-    let nombreMural:string = '';
+    let nombreMural: string = '';
     this.activateRoute.paramMap.subscribe(params => {
-      const idMural:string = params.get('id')!;
+      const idMural: string = params.get('id')!;
       this.idMural = idMural
       console.log('ID actual:', idMural);
-      this.mService.postIdmurl(idMural).subscribe((mural) =>{
+      this.mService.postIdmurl(idMural).subscribe((mural) => {
         console.log(mural)
         this.idUser = mural[0].id_user!;
         //ingresando nombre del mural
@@ -134,97 +134,97 @@ export class EditMuralComponent implements OnInit {
         this.MuralnameForm.controls['Muralname'].setValue(nombreMural)
         //ingresando los textos
 
-        mural[0].textos.forEach((data)=>{
+        mural[0].textos.forEach((data) => {
           //const {backgroundcolor,border_radius,border_color,border_style,color,font,font_size,font_weight,height,width,id_mural,posx,posy,sangria,valor} = data
           data.posx = Number(data.posx)
           data.posy = Number(data.posy)
           this.valueInputs.push(data)
-          console.log('textos',data.id_txt)
+          console.log('textos', data.id_txt)
           this.idTxt.push(data.id_txt!)
 
         })
 
         //capturando los datos para imagenes
-        mural[0].imagenes.forEach((data)=>{
-          console.log('imagenes: ',data)
+        mural[0].imagenes.forEach((data) => {
+          console.log('imagenes: ', data)
           const arraytype = data.url.split('.')
           const type = arraytype[1]
 
-          const datas:PanelItem = {
-            file:{
-               lastModified: 0,
-               name: data.alt,
-               size: 1,
-               type: 'image/'+type,
+          const datas: PanelItem = {
+            file: {
+              lastModified: 0,
+              name: data.alt,
+              size: 1,
+              type: 'image/' + type,
 
-             }as File ,
-            url:data.url,
-            type:'image/'+type,
+            } as File,
+            url: data.url,
+            type: 'image/' + type,
             border_style: data.border_style,
-            border_radius:data.border_radius,
-            border_color:data.border_color,
+            border_radius: data.border_radius,
+            border_color: data.border_color,
             posx: Number(data.posx),
-            posy:Number(data.posy),
-            height:Number(data.height),
+            posy: Number(data.posy),
+            height: Number(data.height),
             width: Number(data.width)
           }
           this.idImg.push(data.id_imagenes!)
-          console.log('datas: ',datas)
+          console.log('datas: ', datas)
           this.panelItems.push(datas)
         })
 
         //capturando los videos
-        mural[0].videos.forEach((data)=>{
+        mural[0].videos.forEach((data) => {
           const arraytype = data.url_video.split('.')
           const type = arraytype[1]
-          console.log('videos: ',data)
-          let datas:PanelItem = {
-            file:{
-               lastModified: 0,
-               name: '',
-               size: 1,
-               type: 'video/'+type,
-             }as File ,
-            url:data.url_video,
-            type:'video/'+type,
+          console.log('videos: ', data)
+          let datas: PanelItem = {
+            file: {
+              lastModified: 0,
+              name: '',
+              size: 1,
+              type: 'video/' + type,
+            } as File,
+            url: data.url_video,
+            type: 'video/' + type,
             border_style: data.border_style,
-            border_radius:data.border_radius,
-            border_color:data.border_color,
+            border_radius: data.border_radius,
+            border_color: data.border_color,
             posx: Number(data.posx),
-            posy:Number(data.posy),
-            height:Number(data.height),
+            posy: Number(data.posy),
+            height: Number(data.height),
             width: Number(data.width)
           }
-          console.log('tipo: ',datas)
+          console.log('tipo: ', datas)
           this.idVideo.push(data.id_video!)
           this.panelItems.push(datas)
         })
 
         //capturando los pdfs
-        mural[0].pdfs.forEach((data)=>{
-          console.log('pdfs: ',data)
+        mural[0].pdfs.forEach((data) => {
+          console.log('pdfs: ', data)
           const arraytype = data.url_pdfs!.split('.')
           const type = arraytype[1]
-          let datas:PanelItem = {
-            file:{
-               lastModified: 0,
-               name: '',
-               size: 1,
-               type: 'application/'+type,
-             }as File ,
-            url:data.url_pdfs!,
-            type:'application/'+type,
+          let datas: PanelItem = {
+            file: {
+              lastModified: 0,
+              name: '',
+              size: 1,
+              type: 'application/' + type,
+            } as File,
+            url: data.url_pdfs!,
+            type: 'application/' + type,
             border_style: data.border_style,
-            border_radius:data.border_radius,
-            border_color:data.border_color,
+            border_radius: data.border_radius,
+            border_color: data.border_color,
             posx: Number(data.posx),
-            posy:Number(data.posy),
-            height:Number(data.height),
+            posy: Number(data.posy),
+            height: Number(data.height),
             width: Number(data.width)
 
           }
           this.idPdf.push(data.id_pdfs!)
-          console.log('tipo: ',datas)
+          console.log('tipo: ', datas)
           this.panelItems.push(datas)
 
 
@@ -329,22 +329,22 @@ export class EditMuralComponent implements OnInit {
 
   //crear
   createTxt() {
-    const txt:TextDatasetItem = {
-      id_mural:'',
+    const txt: TextDatasetItem = {
+      id_mural: '',
       valor: 'Ingrese el texto',
-      font:'',
-      font_size:'',
-      posx:602,
-      posy:237,
-      height:100,
-      width:200,
-      color:'',
-      border_color:'rgb(9, 9, 54)',
-      border_radius:'',
-      border_style:'',
-      backgroundcolor:'',
-      font_weight:'',
-      sangria:'center'
+      font: '',
+      font_size: '',
+      posx: 602,
+      posy: 237,
+      height: 100,
+      width: 200,
+      color: '',
+      border_color: 'rgb(9, 9, 54)',
+      border_radius: '',
+      border_style: '',
+      backgroundcolor: '',
+      font_weight: '',
+      sangria: 'center'
     }
     this.valueInputs.push(txt);
   }
@@ -355,7 +355,7 @@ export class EditMuralComponent implements OnInit {
 
   handleFileInput(event: any): void {
     const files: File[] = Array.from(event.target.files);
-    console.log('archivos: ',event.target.files);
+    console.log('archivos: ', event.target.files);
     files.forEach((file) => {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -413,7 +413,7 @@ export class EditMuralComponent implements OnInit {
       return;
     }
     //si se cumple quiere decir que es video o imagen
-    if(newElement.className == 'ng-star-inserted'){
+    if (newElement.className == 'ng-star-inserted') {
       this.IsVidActive = true;
     }
 
@@ -547,19 +547,19 @@ export class EditMuralComponent implements OnInit {
     const videos = this.containerRef.nativeElement.querySelectorAll('video');
     const pdfs = this.containerRef.nativeElement.querySelectorAll('pdf-viewer');
     //copia del array con los archivos subidos en el mural separados por tipo
-    let imgArray:PanelItem [] = []
-    let videoArray:PanelItem [] = []
-    let pdfArray:PanelItem [] = []
+    let imgArray: PanelItem[] = []
+    let videoArray: PanelItem[] = []
+    let pdfArray: PanelItem[] = []
 
-    this.panelItems.forEach((item)=>{
+    this.panelItems.forEach((item) => {
       console.log(item.type)
-      if(item.type == "image/jpeg" || item.type == "image/png" || item.type == "image/jpg" ){
+      if (item.type == "image/jpeg" || item.type == "image/png" || item.type == "image/jpg") {
         imgArray.push(item)
       }
-      if(item.type == "video/mp4" ){
+      if (item.type == "video/mp4") {
         videoArray.push(item)
       }
-      if(item.type == "application/pdf" ){
+      if (item.type == "application/pdf") {
         pdfArray.push(item)
       }
     })
@@ -569,38 +569,38 @@ export class EditMuralComponent implements OnInit {
     const Videos: VideoDatasetItem[] = [];
     const Texts: TextDatasetItem[] = [];
     const DataImagenes: ImageDatasetItem[] = [];
-    const DataPdfs:PdfsItem[] = [];
+    const DataPdfs: PdfsItem[] = [];
 
     // Recorrer los textAreas y obtener sus valores
     textAreas.forEach((textArea: HTMLTextAreaElement) => {
 
       const computedStyle = textArea as HTMLElement;
-      const {x,y,height,width} = computedStyle.getBoundingClientRect()
+      const { x, y, height, width } = computedStyle.getBoundingClientRect()
 
       const valueTexts: TextDatasetItem = {
-        id_mural:this.idMural,
+        id_mural: this.idMural,
         valor: textArea.value,
         font: textArea.style.fontFamily,
         font_size: textArea.style.fontSize,
         posx: /*parseInt(textArea.style.left)*/x,
         posy: /*parseInt(textArea.style.top)*/y,
         height: parseInt(textArea.style.height),
-        width: parseInt( textArea.style.width),
+        width: parseInt(textArea.style.width),
         color: textArea.style.color,
         border_color: textArea.style.borderColor,
-        border_radius:textArea.style.borderRadius,
+        border_radius: textArea.style.borderRadius,
         backgroundcolor: textArea.style.backgroundColor,
-        border_style:textArea.style.borderStyle,
-        font_weight:  textArea.style.fontWeight,
-        sangria:  textArea.style.textAlign,
+        border_style: textArea.style.borderStyle,
+        font_weight: textArea.style.fontWeight,
+        sangria: textArea.style.textAlign,
         id_txt: textArea.id !== undefined ? textArea.id : undefined
       };
       if (valueTexts.id_txt == "undefined") {
         delete valueTexts.id_txt;
         console.log('eliminando')
       }
-      console.log('alto:',textArea.style.height)
-      console.log('elemento: ',textArea.offsetTop)
+      console.log('alto:', textArea.style.height)
+      console.log('elemento: ', textArea.offsetTop)
       Texts.push(valueTexts);
 
     });
@@ -608,35 +608,35 @@ export class EditMuralComponent implements OnInit {
 
 
     // Recorrer las imágenes y obtener sus atributos o valores
-    images.forEach((image: HTMLImageElement,i:number ) => {
-          const panelItem = imgArray[i]
-          const computedStyle = image as HTMLElement;
-      const {x,y,height,width} = computedStyle.getBoundingClientRect()
+    images.forEach((image: HTMLImageElement, i: number) => {
+      const panelItem = imgArray[i]
+      const computedStyle = image as HTMLElement;
+      const { x, y, height, width } = computedStyle.getBoundingClientRect()
 
-          const valueImages: ImageDatasetItem = {
-            id_mural:this.idMural,
-            id_imagenes: this.idImg[i] !== undefined ?this.idImg[i] : undefined,
-            url: panelItem.url,
-            alt: image.alt,
-            height: Number(computedStyle.parentElement?.clientHeight) + 2,
-            width: Number(computedStyle.parentElement?.clientWidth) + 2,
-            posx:x,
-            posy: y,
-            border_color:image.parentElement!.style.borderColor,
-            border_radius:image.parentElement!.style.borderRadius,
-            border_style:image.parentElement!.style.borderStyle,
-          };
-          if (valueImages.id_imagenes == undefined) {
-            delete valueImages.id_imagenes;
-            console.log('eliminando')
-          }
+      const valueImages: ImageDatasetItem = {
+        id_mural: this.idMural,
+        id_imagenes: this.idImg[i] !== undefined ? this.idImg[i] : undefined,
+        url: panelItem.url,
+        alt: image.alt,
+        height: Number(computedStyle.parentElement?.clientHeight) + 2,
+        width: Number(computedStyle.parentElement?.clientWidth) + 2,
+        posx: x,
+        posy: y,
+        border_color: image.parentElement!.style.borderColor,
+        border_radius: image.parentElement!.style.borderRadius,
+        border_style: image.parentElement!.style.borderStyle,
+      };
+      if (valueImages.id_imagenes == undefined) {
+        delete valueImages.id_imagenes;
+        console.log('eliminando')
+      }
 
-          DataImagenes.push(valueImages);
+      DataImagenes.push(valueImages);
 
     });
 
     // Recorrer los videos y obtener sus atributos o valores
-    videos.forEach((video: HTMLVideoElement, i:number) => {
+    videos.forEach((video: HTMLVideoElement, i: number) => {
       const panelItem = videoArray[i];
 
 
@@ -648,18 +648,18 @@ export class EditMuralComponent implements OnInit {
 
 
       const DataVideo: VideoDatasetItem = {
-        id_mural:this.idMural,
-        url_video:panelItem.url,
+        id_mural: this.idMural,
+        url_video: panelItem.url,
         height: video.offsetHeight,
         width: video.offsetWidth,
         posx: posX,
         posy: posY,
-        formato:'mp4',
-        duration:!Number.isNaN(video.duration) ? video.duration : 50,
-        border_color:video.parentElement!.style.borderColor,
-        border_radius:video.parentElement!.style.borderRadius,
-        border_style:video.parentElement!.style.borderStyle,
-        id_video:this.idVideo[i] !== undefined ? this.idVideo[i] : undefined
+        formato: 'mp4',
+        duration: !Number.isNaN(video.duration) ? video.duration : 50,
+        border_color: video.parentElement!.style.borderColor,
+        border_radius: video.parentElement!.style.borderRadius,
+        border_style: video.parentElement!.style.borderStyle,
+        id_video: this.idVideo[i] !== undefined ? this.idVideo[i] : undefined
       };
       if (DataVideo.id_video == undefined) {
         delete DataVideo.id_video;
@@ -674,27 +674,27 @@ export class EditMuralComponent implements OnInit {
 
     // Se recorre los pdfViewer y se almacena sus valores en un objeto
 
-    pdfs.forEach((pdf: PDFSource, i:number)=>{
+    pdfs.forEach((pdf: PDFSource, i: number) => {
 
       //para obtener la posX  y en Y
 
       const computedStyle = pdf as HTMLElement;
-      const {x,y,height,width} = computedStyle.getBoundingClientRect()
+      const { x, y, height, width } = computedStyle.getBoundingClientRect()
 
       const panelItem = pdfArray[i];
 
 
-      const DataPdf:PdfsItem = {
-        id_mural:this.idMural,
-        url_pdfs:panelItem.url,
-        height:height,
-        width:width,
-        posx:x,
-        posy:y,
-        border_color:computedStyle.parentElement!.style.borderColor,
-        border_style:computedStyle.parentElement!.style.borderStyle,
-        border_radius:computedStyle.parentElement!.style.borderRadius,
-        id_pdfs:this.idPdf[i] !== undefined ? this.idPdf[i] : undefined
+      const DataPdf: PdfsItem = {
+        id_mural: this.idMural,
+        url_pdfs: panelItem.url,
+        height: height,
+        width: width,
+        posx: x,
+        posy: y,
+        border_color: computedStyle.parentElement!.style.borderColor,
+        border_style: computedStyle.parentElement!.style.borderStyle,
+        border_radius: computedStyle.parentElement!.style.borderRadius,
+        id_pdfs: this.idPdf[i] !== undefined ? this.idPdf[i] : undefined
       }
       if (DataPdf.id_pdfs == undefined) {
         delete DataPdf.id_pdfs;
@@ -716,52 +716,66 @@ export class EditMuralComponent implements OnInit {
     //se guardan en el array el objeto con todo sus elementos
     let nombreMural = this.MuralnameForm.controls['Muralname'].value
     //verificamos si se le puso nombre al mural
-    if(!nombreMural){
-        nombreMural = 'sin nombre'
+    if (!nombreMural) {
+      nombreMural = 'sin nombre'
     }
+    //obetenemos la fecha de modificacion actual
+    const fecha_actual = new Date();
+    const year = fecha_actual.getFullYear();
+    const month = (fecha_actual.getMonth() + 1).toString().padStart(2, '0'); // +1 porque los meses comienzan desde 0
+    const day = fecha_actual.getDate().toString().padStart(2, '0');
+    const hours = fecha_actual.getHours().toString().padStart(2, '0');
+    const minutes = fecha_actual.getMinutes().toString().padStart(2, '0');
+    const seconds = fecha_actual.getSeconds().toString().padStart(2, '0');
 
+    // Formatear la fecha y hora en el formato deseado
+    const fechaModificacion = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+    console.log(fechaModificacion)
+
+    //ordenamos en un objeto todos los datos necesarios para enviar al backend
     this.DataMural = {
-      id_mural:this.idMural,
+      id_mural: this.idMural,
       id_user: this.idUser,
-      nombrem:nombreMural! ,
+      nombrem: nombreMural!,
       height: MuralData.offsetWidth,
       width: MuralData.offsetHeight,
+      fecha_modificacion: fechaModificacion!,
       textos: Texts,
       imagenes: DataImagenes,
       videos: Videos,
-      pdfs:DataPdfs,
+      pdfs: DataPdfs,
       estado: 'en espera',
     };
     console.log('Enviando datos:', this.DataMural);
     console.log(this.panelItems)
     //Endepoint para actualizar
-    this.mService.updateMural(this.DataMural).subscribe((data)=>{
+    this.mService.updateMural(this.DataMural).subscribe((data) => {
       console.log(data)
-      if(data.mensaje){
+      if (data.mensaje) {
         this.exito = true;
         setTimeout(() => {
           this.exito = false;
         }, 2000);
       }
-     }  );
+    });
 
   }
 
 
   //boton para ocultar
-  ocultarToolbarTxt(){
+  ocultarToolbarTxt() {
 
     this.isActive = !this.isActive;
 
 
   }
 
-  ocultarToolbarMulti(){
+  ocultarToolbarMulti() {
     this.IsVidActive = !this.IsVidActive;
   }
 
-  ocultarToolbarPdf(){
-     this.isPdfActive = !this.isPdfActive
+  ocultarToolbarPdf() {
+    this.isPdfActive = !this.isPdfActive
   }
 
 

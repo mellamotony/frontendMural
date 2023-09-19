@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   AprobeMural,
@@ -16,16 +16,22 @@ import { EditorService } from '../../services/editor-services';
 export class SolicitudesComponent implements OnInit {
   public products: SolicituMural[] = [];
   public activeMessage: boolean = false;
+  public exito:boolean = true;
 
   public e?: HTMLElement;
-  date: Date[] = [];
+  date: Date[] = [
+    new Date(),            // Fecha actual
+    new Date(2023, 8, 15), // 15 de septiembre de 2023
+    new Date(2023, 8, 16)  // 16 de septiembre de 2023
+  ];
   minDate: Date = new Date();
 
   maxDate: Date = new Date();
   //formulario para guardar las fechas de inicio y fin con sus respectivas horas
   public dataTime: FormGroup = this.fb.group({
-    inicio: this.fb.control(['', Validators]),
-    fin: this.fb.control(['', Validators]),
+    inicio: this.fb.control(''),
+    fin: this.fb.control(''),
+    control : this.fb.control(''),
   });
   constructor(
     private router: Router,
@@ -52,11 +58,12 @@ export class SolicitudesComponent implements OnInit {
     this.minDate.setDate(prevDay + 1);
     this.minDate.setMonth(month);
     this.minDate.setFullYear(prevYear);
-    console.log(this.minDate)
+    console.log('miniama: ',this.minDate)
     this.maxDate = new Date();
     this.maxDate.setMonth(nextMonth);
     this.maxDate.setFullYear(nextYear);
 
+    //se hace una peticion para obtener las solucitudes que esten en espera
     this.mService.getSolicitudes().subscribe((datas) => {
       datas.forEach((data) => {
         const objSoli: SolicituMural = {
@@ -65,8 +72,10 @@ export class SolicitudesComponent implements OnInit {
           fecha: data.fecha_solicitud,
           estado: data.estado,
         };
+        this.exito = false
         if (objSoli.estado === 'en espera') {
           this.products.push(objSoli);
+
         }
       });
     });
@@ -79,11 +88,29 @@ export class SolicitudesComponent implements OnInit {
     //asignamos el event para obtener unos valores
     this.e = parentElement as HTMLElement;
 
+    //obetenemos la fecha de modificacion actual
+    const fecha_actual = new Date();
+    const year = fecha_actual.getFullYear();
+    const month = (fecha_actual.getMonth() + 1).toString().padStart(2, '0'); // +1 porque los meses comienzan desde 0
+    const day = fecha_actual.getDate().toString().padStart(2, '0');
+    const hours = fecha_actual.getHours().toString().padStart(2, '0');
+    const minutes = fecha_actual.getMinutes().toString().padStart(2, '0');
+    const seconds = fecha_actual.getSeconds().toString().padStart(2, '0');
+
+    // Formatear la fecha y hora en el formato deseado
+    const fechaRechazado = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+    console.log(fechaRechazado)
+
     const body: RejectMural = {
       id_mural: this.e.id,
+      id_user: Number(localStorage.getItem('id_user')),
       estado: 'rechazado',
+      fechaRechazado:fechaRechazado
     };
     console.log(body);
+
+
+
     //enviando datos
     this.mService.rejectMural(body).subscribe((data) => {
       console.log(data);
@@ -108,12 +135,26 @@ export class SolicitudesComponent implements OnInit {
     const fecha_inicio: Date = new Date(this.dataTime.controls['inicio'].value);
     const fecha_fin: Date = new Date(this.dataTime.controls['fin'].value);
 
+    //obetenemos la fecha de modificacion actual
+    const fecha_actual = new Date();
+    const year = fecha_actual.getFullYear();
+    const month = (fecha_actual.getMonth() + 1).toString().padStart(2, '0'); // +1 porque los meses comienzan desde 0
+    const day = fecha_actual.getDate().toString().padStart(2, '0');
+    const hours = fecha_actual.getHours().toString().padStart(2, '0');
+    const minutes = fecha_actual.getMinutes().toString().padStart(2, '0');
+    const seconds = fecha_actual.getSeconds().toString().padStart(2, '0');
+
+    // Formatear la fecha y hora en el formato deseado
+    const fechaAprobado = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+    console.log(fechaAprobado)
+
     const body: AprobeMural = {
       id_mural: this.e!.id,
       id_user: Number(localStorage.getItem('id_user')),
       estado: 'aprobado',
       fecha_publicacion: this.cambiarFormato(fecha_inicio),
       fin_publicacion: this.cambiarFormato(fecha_fin),
+      fechaAprobado:fechaAprobado
     };
     console.log(body);
 

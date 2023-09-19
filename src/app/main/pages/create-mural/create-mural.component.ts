@@ -22,7 +22,7 @@ import {
   Input,QueryList, ViewChildren
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MegaMenuItem, MenuItem } from 'primeng/api';
+import { MegaMenuItem, MenuItem, Message } from 'primeng/api';
 
 import {
   ImageDatasetItem,
@@ -43,6 +43,11 @@ import { MuralService } from '../../services/main.services';
 export class CreateMuralComponent implements OnInit, AfterViewInit {
   @ViewChild('prueba') ContainerPrueba!: ElementRef<HTMLElement>;
   @ViewChildren(PdfViewerComponent) pdfViewers!: QueryList<PdfViewerComponent>;
+  @ViewChild('menu', { static: false }) Menu!: ElementRef<HTMLElement>
+
+  messages: Message[] = [{ severity: 'success', summary: 'Success', detail: 'Mural guardado con éxito' }]
+  exito: boolean = false;
+  isBlock = false;
 
   //Array para almacenar todos los datos del mural
   public IdMural:string = ''
@@ -197,7 +202,13 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
         // command:()=>{
         //   alert('subiendo_:...')
         // }
-      },
+      },{
+        label: 'Guardar/Enviar solicitud',
+        icon: 'pi pi-fw pi-save',
+        command: () => {
+          this.OnSaveMural();
+        },
+      }
     ];
 
     // this.activeItem = this.items[0];
@@ -586,6 +597,11 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
     this.mService.postData(this.DataMural).subscribe((data)=>{
       console.log(data)
       //TO DO  mensaje de guardado con éxito
+      this.exito = !this.exito
+
+      setTimeout(() => {
+        this.exito = !this.exito
+      }, 2000);
       this.ruta.navigate(['/main/dashboard'])
     }  );
 

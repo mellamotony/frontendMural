@@ -1,20 +1,23 @@
-<p-messages [style]="{'width':'500'+'px','position':'fixed','left':'70'+'%','top':'2'+'px'}"  *ngIf="exito" [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
-<form [formGroup]="MuralnameForm">
-  <input class="forName" type="text" formControlName="Muralname" placeholder="Nombre de Mural">
-</form>
-<p-megaMenu [model]="items"></p-megaMenu>
-<div class="panel-container" #contPanel>
-  <!--
+<p-messages [style]="{'width':'500'+'px','position':'fixed','left':'70'+'%','top':'2'+'px'}" *ngIf="exito"
+  [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
+<div class="mainContainer">
+  <h1>TO DO: enviar en el obj al backend fecha_modificacion</h1>
+  <form [formGroup]="MuralnameForm">
+    <input class="forName" type="text" formControlName="Muralname" placeholder="Nombre de Mural">
+  </form>
+  <p-megaMenu [model]="items"></p-megaMenu>
+  <div class="panel-container"  #contPanel>
+    <!--
 cdkDropList
 [cdkDropListData]="images"
 (cdkDropListDropped)="drop($event)"
 (cdkDropListEntered)="entered($event)" -->
-  <!-- <div class="element" *ngFor="let image of images" cdkDrag>
+    <!-- <div class="element" *ngFor="let image of images" cdkDrag>
     <img [src]="image" width="100" />
   </div> -->
 
-  <textarea [id] = 'idTxt[i]' #textArea *ngFor="let item of valueInputs ; let i = index" cdkDragBoundary=".panel-container" cdkDrag class="cdk-drag"
-    [value]="item.valor" [ngStyle]="{
+    <textarea [id]='idTxt[i]' #textArea *ngFor="let item of valueInputs ; let i = index"
+      cdkDragBoundary=".panel-container" cdkDrag class="cdk-drag" [value]="item.valor" [ngStyle]="{
       'color':item.color ,
       'backgroundColor':item.backgroundcolor ,
       'font-family':item.font,
@@ -26,13 +29,12 @@ cdkDropList
        'top':item.posy+'px',
        'height':item.height+'px',
        'width':item.width+'px',
-       'text-align':item.sangria,
-       'position': 'fixed'
+       'text-align':item.sangria
       } " type="text" (click)="handleClick($event)">
     </textarea>
 
-  <input type="file" style="display: none" id="fileInput" (change)="handleFileInput($event)">
-  <div class="panel-i" *ngFor="let item of panelItems; let i = index " [ngStyle]="{
+    <input type="file" style="display: none" id="fileInput" (change)="handleFileInput($event)">
+    <div class="panel-i" *ngFor="let item of panelItems; let i = index " [ngStyle]="{
     'border': '1px ' + item.border_style + ' ' + item.border_color,
     'border-radius': item.border_radius + 'px',
     'left': item.posx + 'px',
@@ -42,176 +44,176 @@ cdkDropList
     'position': 'fixed'
     }" cdkDrag cdkDragBoundary=".panel-container" (click)="handleClickMultimedia($event)">
 
-    <ng-container class="contVideo multimedia" *ngIf="item.type.startsWith('video/')">
-      <video   [src]="item.url" controls></video>
-    </ng-container>
-    <ng-container  class="contImg multimedia" *ngIf="item.type.startsWith('image/') && panelItems.length > 0">
-      <img  [src]="item.url" [alt]="item.file.name">
-    </ng-container>
+      <ng-container class="contVideo multimedia" *ngIf="item.type.startsWith('video/')">
+        <video [src]="item.url" controls></video>
+      </ng-container>
+      <ng-container class="contImg multimedia" *ngIf="item.type.startsWith('image/') && panelItems.length > 0">
+        <img [src]="item.url" [alt]="item.file.name">
+      </ng-container>
 
-    <ng-container class="contImg"  *ngIf="item.type.startsWith('application/')">
-      <pdf-viewer    [src]="item.url" [render-text]="true" alt="item.file.name" [original-size]="true"
-        [fit-to-page]="true"></pdf-viewer>
-    </ng-container>
+      <ng-container class="contImg" *ngIf="item.type.startsWith('application/')">
+        <pdf-viewer [src]="item.url" [render-text]="true" alt="item.file.name" [original-size]="true"
+          [fit-to-page]="true"></pdf-viewer>
+      </ng-container>
+
+    </div>
+
 
   </div>
 
+  <p-button (click)="OnSaveMural()">Guardar</p-button>
+  <!-- Barra de herramientas para textos -->
+  <div class="MenuBarEdicionTexto" *ngIf="isActive">
+    <button class="hidenbuttom" (click)="ocultarToolbarTxt()">Ocultar</button>
+    <form (ngSubmit)="getChangesStyles()" [formGroup]="toolsForm">
+      <div>
 
+        <h2>Color de fondo</h2>
+        <p-colorPicker formControlName="background"></p-colorPicker>
+        <h1>Color:</h1>
+        <p-colorPicker formControlName="color"></p-colorPicker>
+        <h2>Color de Borde</h2>
+        <p-colorPicker formControlName="borderColor"></p-colorPicker>
+        <div>
+          <label for="fonts">Estilos de borde: </label>
+          <select formControlName="borderStyle" id="fonts">
+            <option *ngFor="let brdStyles of borderStyles" [value]="brdStyles">{{brdStyles}}</option>
+          </select>
+        </div>
+
+        <h2>Radio de bordes</h2>
+        <input formControlName="borderRadius" type="text"><span> %</span>
+      </div>
+
+      <div>
+        <div>
+          <h2>Ancho</h2>
+          <input formControlName="width" type="text">
+
+        </div>
+        <div>
+          <h2>Alto</h2>
+          <input formControlName="height" type="text">
+        </div>
+
+        <div>
+          <h2>Negritas</h2>
+          <input formControlName="negrita" type="checkbox">
+        </div>
+
+        <div>
+          <label for="alignment">Alineación: </label>
+          <select formControlName="alignment" id="alignment">
+            <option value="center">Centro</option>
+            <option value="justify">Justificado</option>
+          </select>
+
+        </div>
+
+
+        <div>
+          <label for="fonts">Fuentes: </label>
+          <select formControlName="fonts" id="fonts">
+            <option *ngFor="let font of fontFamilies" [value]="font">{{font}}</option>
+          </select>
+        </div>
+        <h2>Tamaño de la fuente</h2>
+        <input formControlName="fontSize" type="text">
+        <div class="btnDelete" (click)="DeleteElement()">
+          <i class="pi pi-trash"></i>
+        </div>
+
+      </div>
+
+      <button type="submit">Guardar</button>
+
+    </form>
+  </div>
+
+  <!-- Barra de herramientas para imagens y videos  -->
+
+  <div class="MenuBarEdicionTexto" *ngIf="IsVidActive">
+    <button (click)="ocultarToolbarMulti()">Ocultar</button>
+    <form (ngSubmit)="changeStyles()" [formGroup]="toolsForm">
+      <div>
+
+        <h2>Color de Borde</h2>
+        <p-colorPicker formControlName="borderColor"></p-colorPicker>
+
+        <div>
+          <label for="fonts">Estilos de borde: </label>
+          <select formControlName="borderStyle" id="fonts">
+            <option *ngFor="let brdStyles of borderStyles" [value]="brdStyles">{{brdStyles}}</option>
+          </select>
+        </div>
+
+        <h2>Radio de bordes</h2>
+        <input formControlName="borderRadius" type="text"><span> %</span>
+      </div>
+
+      <div>
+        <div>
+          <h2>Ancho</h2>
+          <input formControlName="width" type="text">
+
+        </div>
+        <div>
+          <h2>Alto</h2>
+          <input formControlName="height" type="text">
+        </div>
+
+        <div class="btnDelete" (click)="DeleteParent()">
+          <i class="pi pi-trash"></i>
+        </div>
+
+      </div>
+
+      <button type="submit">Guardar</button>
+
+    </form>
+  </div>
+
+
+  <!-- Barra de herramientas para Pdfs  -->
+
+  <div class="MenuBarEdicionTexto" *ngIf="isPdfActive">
+    <h1>Barra de pdfs</h1>
+    <button (click)="ocultarToolbarPdf()">Ocultar</button>
+    <form (ngSubmit)="changeStylesPdfs()" [formGroup]="toolsForm">
+      <div>
+
+        <h2>Color de Borde</h2>
+        <p-colorPicker formControlName="borderColor"></p-colorPicker>
+        <div>
+          <label for="fonts">Estilos de borde: </label>
+          <select formControlName="borderStyle" id="fonts">
+            <option *ngFor="let brdStyles of borderStyles" [value]="brdStyles">{{brdStyles}}</option>
+          </select>
+        </div>
+
+        <h2>Radio de bordes</h2>
+        <input formControlName="borderRadius" type="text"><span> %</span>
+      </div>
+
+      <div>
+        <div>
+          <h2>Ancho</h2>
+          <input formControlName="width" type="text">
+
+        </div>
+        <div>
+          <h2>Alto</h2>
+          <input formControlName="height" type="text">
+        </div>
+
+        <div class="btnDelete" (click)="DeletePdfs()">
+          <i class="pi pi-trash"></i>
+        </div>
+
+      </div>
+
+      <button type="submit">Guardar Pdfs</button>
+
+    </form>
+  </div>
 </div>
-
-<p-button (click)="OnSaveMural()">Guardar</p-button>
-<!-- Barra de herramientas para textos -->
-<div class="MenuBarEdicionTexto" *ngIf="isActive">
-  <button class="hidenbuttom" (click)="ocultarToolbarTxt()">Ocultar</button>
-  <form (ngSubmit)="getChangesStyles()" [formGroup]="toolsForm">
-    <div>
-
-      <h2>Color de fondo</h2>
-      <p-colorPicker formControlName="background"></p-colorPicker>
-      <h1>Color:</h1>
-      <p-colorPicker formControlName="color"></p-colorPicker>
-      <h2>Color de Borde</h2>
-      <p-colorPicker formControlName="borderColor"></p-colorPicker>
-      <div>
-        <label for="fonts">Estilos de borde: </label>
-        <select formControlName="borderStyle" id="fonts">
-          <option *ngFor="let brdStyles of borderStyles" [value]="brdStyles">{{brdStyles}}</option>
-        </select>
-      </div>
-
-      <h2>Radio de bordes</h2>
-      <input formControlName="borderRadius" type="text"><span> %</span>
-    </div>
-
-    <div>
-      <div>
-        <h2>Ancho</h2>
-        <input formControlName="width" type="text">
-
-      </div>
-      <div>
-        <h2>Alto</h2>
-        <input formControlName="height" type="text">
-      </div>
-
-      <div>
-        <h2>Negritas</h2>
-        <input formControlName="negrita" type="checkbox">
-      </div>
-
-      <div>
-        <label for="alignment">Alineación: </label>
-        <select formControlName="alignment" id="alignment">
-          <option value="center">Centro</option>
-          <option value="justify">Justificado</option>
-        </select>
-
-      </div>
-
-
-      <div>
-        <label for="fonts">Fuentes: </label>
-        <select formControlName="fonts" id="fonts">
-          <option *ngFor="let font of fontFamilies" [value]="font">{{font}}</option>
-        </select>
-      </div>
-      <h2>Tamaño de la fuente</h2>
-      <input formControlName="fontSize" type="text">
-      <div class="btnDelete" (click)="DeleteElement()">
-        <i class="pi pi-trash"></i>
-      </div>
-
-    </div>
-
-    <button type="submit">Guardar</button>
-
-  </form>
-</div>
-
-<!-- Barra de herramientas para imagens y videos  -->
-
-<div class="MenuBarEdicionTexto" *ngIf="IsVidActive">
-  <button (click)="ocultarToolbarMulti()">Ocultar</button>
-  <form (ngSubmit)="changeStyles()" [formGroup]="toolsForm">
-    <div>
-
-      <h2>Color de Borde</h2>
-      <p-colorPicker formControlName="borderColor"></p-colorPicker>
-
-      <div>
-        <label for="fonts">Estilos de borde: </label>
-        <select formControlName="borderStyle" id="fonts">
-          <option *ngFor="let brdStyles of borderStyles" [value]="brdStyles">{{brdStyles}}</option>
-        </select>
-      </div>
-
-      <h2>Radio de bordes</h2>
-      <input formControlName="borderRadius" type="text"><span> %</span>
-    </div>
-
-    <div>
-      <div>
-        <h2>Ancho</h2>
-        <input formControlName="width" type="text">
-
-      </div>
-      <div>
-        <h2>Alto</h2>
-        <input formControlName="height" type="text">
-      </div>
-
-      <div class="btnDelete" (click)="DeleteParent()">
-        <i class="pi pi-trash"></i>
-      </div>
-
-    </div>
-
-    <button type="submit">Guardar</button>
-
-  </form>
-</div>
-
-
-<!-- Barra de herramientas para Pdfs  -->
-
-<div class="MenuBarEdicionTexto" *ngIf="isPdfActive">
-  <h1>Barra de pdfs</h1>
-  <button (click)="ocultarToolbarPdf()">Ocultar</button>
-  <form (ngSubmit)="changeStylesPdfs()" [formGroup]="toolsForm">
-    <div>
-
-      <h2>Color de Borde</h2>
-      <p-colorPicker formControlName="borderColor"></p-colorPicker>
-      <div>
-        <label for="fonts">Estilos de borde: </label>
-        <select formControlName="borderStyle" id="fonts">
-          <option *ngFor="let brdStyles of borderStyles" [value]="brdStyles">{{brdStyles}}</option>
-        </select>
-      </div>
-
-      <h2>Radio de bordes</h2>
-      <input formControlName="borderRadius" type="text"><span> %</span>
-    </div>
-
-    <div>
-      <div>
-        <h2>Ancho</h2>
-        <input formControlName="width" type="text">
-
-      </div>
-      <div>
-        <h2>Alto</h2>
-        <input formControlName="height" type="text">
-      </div>
-
-      <div class="btnDelete" (click)="DeletePdfs()">
-        <i class="pi pi-trash"></i>
-      </div>
-
-    </div>
-
-    <button type="submit">Guardar Pdfs</button>
-
-  </form>
-</div>
-

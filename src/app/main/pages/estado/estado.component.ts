@@ -12,7 +12,7 @@ export class EstadoComponent {
 
 
   public listName:Solicitud[] = []
-
+  public isactive:boolean = true;
 
   constructor(
     private router:Router,
@@ -23,7 +23,13 @@ export class EstadoComponent {
     this.mService.postIdsolicitud(parseInt(idUser!)).subscribe((datas) =>{
 
       datas.forEach((data)=>{
-        this.listName.push(data)
+        if(data){
+          setTimeout(()=>{
+            this.isactive = false;
+          },1000)
+          this.listName.push(data)
+        }
+
       })
 
     });

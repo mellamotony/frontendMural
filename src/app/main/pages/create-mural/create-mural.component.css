@@ -1,13 +1,31 @@
+.mainContainer{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+}
 .panel-container {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
   padding: 16px;
   border: 1px solid #ccc;
-  min-height: 400px;
-  max-height:100vh;
+  min-height: 100%;
+  max-height:100%;
 }
 
+.esta{
+  display: flex;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(207, 205, 205);
+  width: 45vh;
+}
+.forName{
+  border-radius:5px;
+  border: solid  #f0f0f0 0px;
+  font-family: arial;
+  text-align: center;
+  font-style: italic;
+}
 .element {
   padding: 16px;
   border: 1px solid #ccc;
@@ -60,7 +78,7 @@
   border:1px solid rgb(0, 0, 0);
   outline:none;
   cursor: pointer;
-  color:rgb(255, 0, 0);
+  color:rgb(4, 48, 35);
   height:100px;
   width:200px;
   margin: 0 auto;
@@ -69,6 +87,8 @@
   font-family:arial;
   font-weight:500;
   resize: none;
+  vertical-align: middle;
+
 }
 
 .btnDelete{
@@ -109,20 +129,6 @@
   margin-bottom: 10px;
 }
 
-.btnDelete {
-  cursor: pointer;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 30px;
-  height: 30px;
-  background-color: #ff0000;
-  color: #fff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 .btnDelete span {
   font-size: 16px;
@@ -138,13 +144,121 @@ html, body {
   padding: 0;
 }
 
-.forName{
-  border-radius:5px;
-  border: solid  #f0f0f0 1px;
-  font-family: arial;
-  text-align: center;
-}
+
 
 .contImg{
   position:fixed;
 }
+
+.pen{
+  max-width: 20px;
+  max-height: 20px;
+
+}
+
+.MenuBarEdicionTexto {
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100vh;
+  width: 300px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  transition: right 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+  z-index: 9999;
+  overflow-y: auto;
+  white-space: nowrap;
+  overflow-x: hidden;
+}
+
+.MenuBarEdicionTexto.active {
+  right: 0;
+}
+
+/* Estilos para la clase .menu-item */
+.MenuBarEdicionTexto .menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* Alineación de etiquetas a la izquierda */
+.MenuBarEdicionTexto label {
+  text-align: left;
+}
+
+/* Estilos para los controles de entrada y select */
+.MenuBarEdicionTexto input[type="text"],
+.MenuBarEdicionTexto select {
+  width: 70%; /* Ajusta el ancho según tus preferencias */
+}
+
+/* Estilos para el botón "Guardar" */
+.MenuBarEdicionTexto button[type="submit"] {
+  width: 100%; /* Ocupa todo el ancho disponible */
+}
+
+/* Alinea verticalmente los elementos */
+.MenuBarEdicionTexto .menu-item select,
+.MenuBarEdicionTexto .menu-item input[type="text"],
+.MenuBarEdicionTexto .menu-item input[type="checkbox"] {
+  align-self: center;
+}
+
+/* Espaciado uniforme para los elementos */
+.MenuBarEdicionTexto .menu-item label,
+.MenuBarEdicionTexto .menu-item select,
+.MenuBarEdicionTexto .menu-item input[type="text"],
+.MenuBarEdicionTexto .menu-item input[type="checkbox"],
+.MenuBarEdicionTexto button[type="submit"] {
+  font-size: 15px; /* Tamaño de fuente uniforme */
+  margin-top: 10px;
+}
+
+/* Separación visual entre elementos */
+.MenuBarEdicionTexto .menu-item:not(:last-child) {
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.botoncito{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hidenbuttom{
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  border: none;
+  background-color: white;
+  padding: 10px;
+}
+
+#borrar{
+  width: 60px;
+  height: 60px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  border: none;
+  background-color: white;
+  color: red;
+  padding: 10px;
+}
+
+::ng-deep .ui-colorPicker-panel {
+  left: auto !important;
+  right: 0 !important;
+  transform: translateX(100%) !important;
+}
+

@@ -14,6 +14,10 @@ export class DashboardComponent implements OnInit {
 
   public listName:MuralByUser[] = []
 
+  //activar desactivar spinner
+  public isactive:boolean = true;
+  public isdata:boolean = false;
+
 
   constructor(
     private router:Router,
@@ -22,12 +26,19 @@ export class DashboardComponent implements OnInit {
     const idUser = localStorage.getItem('id_user')
 
     this.mService.postIdUser(parseInt(idUser!)).subscribe((data) =>{
+      if(data){
+        setTimeout(() => {
+          this.isactive = false
+        }, 100);
+        this.isdata = true;
       console.log('datos recibidos: ',data)
 
       data.forEach((item:MuralByUser,i:number ) => {
         const obj = {nombrem:item.nombrem,numeroM:i+1,id_mural:item.id_mural}
         this.listName.push(obj)
       });
+      }
+
 
 
 

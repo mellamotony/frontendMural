@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent } from './login/login.component';
 import { PrimeNModule } from '../prime-n/prime-n.module';
+import { ShadersModule } from '../shaders/shaders.module';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { PrimeNModule } from '../prime-n/prime-n.module';
     CommonModule,
     AuthRoutingModule,
     ReactiveFormsModule,
-    PrimeNModule
+    PrimeNModule,
+    ShadersModule
   ]
 })
 export class AuthModule { }

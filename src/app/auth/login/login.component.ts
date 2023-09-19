@@ -15,6 +15,7 @@ import { Message } from 'primeng/api';
 export class LoginComponent {
   messages: Message[] = [{ severity: 'success', summary: 'Success', detail: 'Logeado con éxito' }]
   exito:boolean = false;
+  spinner:boolean = false;
 
   public body:FormGroup = this.fb.group({
     usuario:this.fb.control('',[Validators.required]),
@@ -29,6 +30,7 @@ export class LoginComponent {
 
   onLogin(e:Event){
     e.preventDefault();
+    this.spinner = true;
     if(this.body.invalid){
       alert('Faltan datos')
 
@@ -44,9 +46,11 @@ export class LoginComponent {
     this.logService.EnviarLogin(email,password).subscribe(data => {
       console.log(data);
       if(!data){
+        this.spinner = false;
         this.messages.pop()
         this.messages.push({ severity: 'error', summary: 'Error', detail: 'Usuario o contraseña incorrecto'})
         this.exito = true
+
         setTimeout(()=>{
           this.exito = false
         },5000)
@@ -54,7 +58,7 @@ export class LoginComponent {
         return;
       }
 
-
+      this.spinner = false;
 
 
 
@@ -71,7 +75,7 @@ export class LoginComponent {
       localStorage.setItem("token",token!);
       localStorage.setItem("id_user",id_user!)
       const rolEncrypted = localStorage.getItem('token');
-
+      //se desencripta el token para obtener los datos necesarios para la validación de rutas
       const rolDesencrypted:guardToken = jwt_decode(rolEncrypted!)
 
       if(rolDesencrypted.rol == 'diseñador'){
@@ -82,6 +86,11 @@ export class LoginComponent {
       }else if(rolDesencrypted.rol == 'editor'){
         setTimeout(()=>{
           this.router.navigate(['/editormain'])
+        },3000)
+
+      }else if(rolDesencrypted.rol == 'admin'){
+        setTimeout(()=>{
+          this.router.navigate(['/admin'])
         },3000)
 
       }

@@ -1,0 +1,36 @@
+.arrow{
+  width: 35px;
+  position: relative;
+  border: 0;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: large;
+  font-family: fantasy;
+  font-weight: bolder;
+  border-radius:8px ;
+  max-width: 40px;
+
+}
+.arrow svg{
+  width: 45px;
+  color: rgb(6, 84, 148);
+}
+
+#esta{
+  height: 90%;
+}
+#noc{
+  margin-left: -10px;
+}
+
+.block{
+  display: none;
+
+}
+
+.active{
+  display: block;
+
+}

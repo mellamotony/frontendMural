@@ -24,12 +24,13 @@
       <label for="password">Password</label>
   </span>
   <p-button
-  [style]="{'background-color':'#FFF176','color':'black','border':'none','width':'500px','display':'flex','justify-content':'center'}"
+  [style]="{'background-color':'#03420b','color':'white','border':'none','width':'500px','display':'flex','justify-content':'center'}"
 
   type="submit">Ingresar</p-button>
   </form>
 
   <p-messages [style]="{'width':'500'+'px','position':'fixed','left':'70'+'%','top':'2'+'px'}"  *ngIf="exito" [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
 
+  <spinner *ngIf="spinner"></spinner>
 
 </div>

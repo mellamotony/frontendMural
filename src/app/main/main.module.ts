@@ -36,7 +36,8 @@ import { EditMuralComponent } from './pages/edit-mural/edit-mural.component';
     PrimeNModule,
     ReactiveFormsModule,
     PdfViewerModule,
-    HttpClientModule
+    HttpClientModule,
+
   ],
   exports:[
     EditMuralComponent,

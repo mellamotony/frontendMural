@@ -42,8 +42,9 @@ button {
 }
 
 button:hover {
-  background-color: #d80d7c;
+  background-color: #dee3e7;
 }
+
 
 .esta{
   display:flex ;
@@ -58,6 +59,7 @@ button:hover {
 
 .salir{
   font-size: 15px;
+  background-color:#f8f9fa;
 }
 
 
