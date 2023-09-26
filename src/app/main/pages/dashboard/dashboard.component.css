@@ -1,28 +1,101 @@
 .body_dashboard{
   border:1px solid #dee2e6;
-  height:100vh;
+  min-height: 75vh;
+  height:auto;
   display:flex;
   flex-wrap:wrap;
   justify-content:space-evenly;
 }
 
-.card_body{
-  border:1px solid #dee2e6;
-  height:150px;
-  width:150px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  margin-top:2%;
-  padding:10px;
-  border-radius:4px;
 
-}
 .card_body:first-child{
   margin-left:15px;
   text-align:center;
 }
+
+.contImg{
+  width: 100%;
+  height: 80%;
+}
+.contImg img{
+  width: 100%;
+  height: 100%;
+}
+.contdesc{
+  width: 100%;
+  height: 20%;
+}
+
+/*a eliminar*/
+
+.card1 {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+  /* ... (otros estilos de tu tarjeta) */
+  background-color: #fff; /* Color de fondo del card */
+  border-radius: 10px; /* Borde redondeado */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombreado */
+  margin: 10px; /* Espaciado exterior del card */
+  overflow: hidden; /* Evita desbordamiento de contenido interno */
+  width: 300px; /* Ancho del card, ajusta según tus necesidades */
+  height: 250px;
+}
+
+.card_new {
+  text-align: center; /* Alinea el contenido del card_new en el centro */
+}
+
+.center-content {
+  display: flex;
+  flex-direction: column; /* Alinea el contenido verticalmente */
+  align-items: center; /* Centra verticalmente */
+}
+
+
+
+
+.card {
+  background-color: #fff; /* Color de fondo del card */
+  border-radius: 10px; /* Borde redondeado */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombreado */
+  margin: 10px; /* Espaciado exterior del card */
+  overflow: hidden; /* Evita desbordamiento de contenido interno */
+  width: 300px; /* Ancho del card, ajusta según tus necesidades */
+  height: 250px;
+}
+.card_new{
+  margin: 0 auto;
+}
+
+.card-body {
+  display: flex; /* Mostrar contenido en fila (horizontal) */
+  flex-direction: column;
+  align-items: center; /* Centrar verticalmente el contenido */
+  justify-content: center;
+
+}
+
+.contImg img {
+  max-width: 100%; /* Asegura que la imagen no desborde el contenedor */
+  border: 0;
+}
+
+.contdesc {
+  flex-grow: 1; /* Permite que el título ocupe todo el espacio disponible */
+  padding: 10px; /* Espaciado interior del contdesc */
+}
+
+h1 {
+  margin: 0; /* Elimina el margen predeterminado del h1 */
+  white-space: nowrap; /* Evita que el título se divida en varias líneas */
+  overflow: hidden; /* Evita que el título se desborde */
+  text-overflow: ellipsis; /* Agrega puntos suspensivos si el título es largo */
+  font-size: 16px; /* Tamaño de fuente del título, ajusta según tus necesidades */
+  font-weight: bold; /* Texto en negrita, ajusta según tus necesidades */
+}
+
+
 
 /*spiner css*/
 

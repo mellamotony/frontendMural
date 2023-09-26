@@ -1,8 +1,6 @@
 import { Router } from '@angular/router';
-
-
-import { style } from '@angular/animations';
-import { PdfViewerComponent,PDFSource ,PDFProgressData} from 'ng2-pdf-viewer';
+import html2canvas from 'html2canvas';
+import { PdfViewerComponent, PDFSource, PDFProgressData } from 'ng2-pdf-viewer';
 import {
   CdkDragDrop,
   CdkDragEnter,
@@ -19,7 +17,9 @@ import {
   AfterViewInit,
   ComponentFactoryResolver,
   ViewContainerRef,
-  Input,QueryList, ViewChildren
+  Input,
+  QueryList,
+  ViewChildren,
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MegaMenuItem, MenuItem, Message } from 'primeng/api';
@@ -43,14 +43,29 @@ import { MuralService } from '../../services/main.services';
 export class CreateMuralComponent implements OnInit, AfterViewInit {
   @ViewChild('prueba') ContainerPrueba!: ElementRef<HTMLElement>;
   @ViewChildren(PdfViewerComponent) pdfViewers!: QueryList<PdfViewerComponent>;
-  @ViewChild('menu', { static: false }) Menu!: ElementRef<HTMLElement>
+  @ViewChild('menu', { static: false }) Menu!: ElementRef<HTMLElement>;
+  @ViewChild('contPanel') contPanel: ElementRef | undefined;
 
-  messages: Message[] = [{ severity: 'success', summary: 'Success', detail: 'Mural guardado con éxito' }]
+  private isMouseMiddleButtonDown = false;
+  private prevX = 0;
+  private prevY = 0;
+
+  messages: Message[] = [
+    {
+      severity: 'success',
+      summary: 'Success',
+      detail: 'Mural guardado con éxito',
+    },
+  ];
   exito: boolean = false;
   isBlock = false;
+  //manejador de zoom variables
+  zoomLevel: number = 100; // Inicialmente, sin zoom (100%).
 
+  //id para los elementos multimedia
+  public id: number = 0;
   //Array para almacenar todos los datos del mural
-  public IdMural:string = ''
+  public IdMural: string = '';
 
   private DataMural?: MuralDataSetItem;
 
@@ -108,11 +123,9 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
     borderRadius: this.fb.control(''),
   });
   //variable para obtener el nombre del formulario
-  public MuralnameForm = this.fb.group(
-    {
-      Muralname:this.fb.control('')
-    }
-  )
+  public MuralnameForm = this.fb.group({
+    Muralname: this.fb.control(''),
+  });
   // Declara la propiedad renderer con el tipo Renderer2
   private renderer!: Renderer2;
 
@@ -130,7 +143,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
     private componentFactoryResolver: ComponentFactoryResolver,
     private viewContainerRef: ViewContainerRef,
     private mService: MuralService,
-    private ruta:Router
+    private ruta: Router
   ) {
     this.renderer = renderer;
   }
@@ -140,9 +153,6 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-
-
-
     this.items = [
       {
         label: 'Texto',
@@ -202,13 +212,51 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
         // command:()=>{
         //   alert('subiendo_:...')
         // }
-      },{
-        label: 'Guardar/Enviar solicitud',
-        icon: 'pi pi-fw pi-save',
-        command: () => {
-          this.OnSaveMural();
-        },
-      }
+      },
+      {
+        label: 'Guardar/Enviar',
+        items: [
+          [
+            {
+              items: [
+                {
+                  label: 'Guardar mural',
+                  icon: 'pi pi-fw pi-save',
+                  command: () => {
+                    this.OnSaveMural();
+                  },
+                },
+                {
+                  label: 'Enviar solicitud',
+                  icon: 'pi pi-fw pi-save',
+                  command: () => {
+                    alert('subiendo solicitud');
+                  },
+                }
+              ],
+            },
+          ],
+        ],
+      },
+      // {
+      //   // label:this.zoomLevel.toString()+'%',
+      //   icon: 'pi pi-plus-circle',
+      //   command: () => {
+      //     this.zoomIn();
+      //   },
+      // },
+      // {
+      //   // label:this.zoomLevel.toString()+'%',
+      //   icon: 'pi pi-minus-circle',
+      //   command: () => {
+      //     this.zoomOut();
+      //   },
+      // },{
+      //   icon:'pi pi-undo',
+      //   command:() =>{
+      //     this.zoomClear();
+      //   }
+      // }
     ];
 
     // this.activeItem = this.items[0];
@@ -249,6 +297,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
 
   handleFileInput(event: any): void {
     const files: File[] = Array.from(event.target.files);
+    this.id = this.id + 1;
     files.forEach((file) => {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -256,6 +305,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
           file: file,
           type: file.type,
           url: e.target?.result as string,
+          id: this.id,
         };
         this.panelItems.push(item);
       };
@@ -293,9 +343,18 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
     if ((this.isPdfActive = true)) {
       this.isPdfActive = false;
     }
-    console.log('El elemento fue presionado');
+    console.log(this.e);
+
     const newElement = e.target as HTMLElement;
     if (newElement.className == 'textLayer') {
+      console.log(newElement.nodeName);
+      if (newElement.nodeName !== 'DIV') {
+        this.isPdfActive = false;
+        this.IsVidActive = false;
+
+        return;
+      }
+      console.log('El elemento fue presionado');
       this.isPdfActive = true;
       this.IsVidActive = false;
       this.e = e;
@@ -304,6 +363,64 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
     this.IsVidActive = true;
 
     this.e = e;
+  }
+
+  // Define una variable para almacenar el elemento seleccionado
+  private selectedElement: HTMLElement | null = null;
+
+  // Evento para seleccionar un elemento
+  selectElement(e: MouseEvent) {
+    this.selectedElement = e.target as HTMLElement;
+    console.log('heyy');
+  }
+
+  // Función para eliminar el elemento seleccionado
+  deleteSelectedElement() {
+    if (this.selectedElement) {
+      this.selectedElement.remove();
+      this.selectedElement = null; // Restablecer el elemento seleccionado a nulo
+    }
+  }
+
+  // Resto de tu código
+
+  // handleClickMultimedia(e: MouseEvent) {
+  //   this.isActive = false;
+
+  //   const clickedElement = e.target as HTMLElement;
+
+  //   // Verificar el tipo de elemento y aplicar lógica específica si es necesario
+  //   if (clickedElement.nodeName === 'PDF-VIEWER') {
+  //     // Lógica específica para elementos PDF
+  //     // Eliminar el elemento o su padre según la estructura del DOM
+  //     const pdfContainer = clickedElement.parentElement;
+  //     if (pdfContainer) {
+  //       pdfContainer.remove();
+  //     }
+  //   } else if (clickedElement.nodeName === 'VIDEO') {
+  //     // Lógica específica para elementos de video
+  //     // Eliminar el elemento o su padre según la estructura del DOM
+  //     const videoContainer = clickedElement.parentElement;
+  //     if (videoContainer) {
+  //       videoContainer.remove();
+  //     }
+  //   } else if (clickedElement.nodeName === 'IMG') {
+  //     // Lógica específica para elementos de imagen
+  //     // Eliminar el elemento o su padre según la estructura del DOM
+  //     const imgContainer = clickedElement.parentElement;
+  //     if (imgContainer) {
+  //       imgContainer.remove();
+  //     }
+  //   }
+
+  //   // Resto de tu lógica
+  // }
+
+  //eliminar
+  deleteFile() {
+    const element = this.e?.target as HTMLElement;
+    console.log(element);
+    console.log(element.id);
   }
 
   //funcion para cambiar cambiar la barra de herramientas de texto
@@ -340,23 +457,40 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
   changeStyles() {
     const element = this.e?.target as HTMLElement;
     //obtenemos el elemento padre
-    const parentElement = element.parentElement;
 
-    parentElement!.style.borderColor =
-      this.toolsForm.controls['borderColor'].value;
+    if (element.classList.contains('panel-i')) {
+      element!.style.borderColor = this.toolsForm.controls['borderColor'].value;
 
-    parentElement!.style.borderStyle =
-      this.toolsForm.controls['borderStyle'].value;
+      element!.style.borderStyle = this.toolsForm.controls['borderStyle'].value;
 
-    parentElement!.style.borderRadius =
-      this.toolsForm.controls['borderRadius'].value + '%';
+      element!.style.borderRadius =
+        this.toolsForm.controls['borderRadius'].value + '%';
 
-    parentElement!.style.width = this.toolsForm.controls['width'].value + 'px';
+      element!.style.width = this.toolsForm.controls['width'].value + 'px';
 
-    parentElement!.style.height =
-      this.toolsForm.controls['height'].value + 'px';
+      element!.style.height = this.toolsForm.controls['height'].value + 'px';
 
-    this.IsVidActive = false;
+      this.IsVidActive = false;
+    } else {
+      const parentElement = element.parentElement;
+
+      parentElement!.style.borderColor =
+        this.toolsForm.controls['borderColor'].value;
+
+      parentElement!.style.borderStyle =
+        this.toolsForm.controls['borderStyle'].value;
+
+      parentElement!.style.borderRadius =
+        this.toolsForm.controls['borderRadius'].value + '%';
+
+      parentElement!.style.width =
+        this.toolsForm.controls['width'].value + 'px';
+
+      parentElement!.style.height =
+        this.toolsForm.controls['height'].value + 'px';
+
+      this.IsVidActive = false;
+    }
   }
 
   //funcion para cambiar cambiar la barra de herramientas Pdfs
@@ -395,18 +529,32 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
   //borrar el elemento padre
   DeleteParent() {
     const element = this.e?.target as HTMLElement;
-    console.log({ file: this.panelItems, elemento: element });
-    if (element.parentElement) {
-      element.parentElement.remove();
-    }
 
-    //desaparece la barra de herramientas
-    this.IsVidActive = false;
+    if (element.classList.contains('panel-i')) {
+      const idPdf = element.childNodes[2] as HTMLElement
+      // console.log('ELiminados pdfs',idPdf.id);
+      element.remove();
+      this.panelItems = this.panelItems.filter((item)=> item.id !=  Number(idPdf.id))
+      console.log('eliminado archivos',{ file: this.panelItems, elemento: element });
+      //desaparece la barra de herramientas
+      this.IsVidActive = false;
+    } else {
+
+      if (element.parentElement) {
+        element.parentElement.remove();
+        this.panelItems = this.panelItems.filter((item)=> item.id !=  Number(element.id))
+        console.log('eliminado archivos',{ file: this.panelItems, elemento: element });
+      }
+
+      //desaparece la barra de herramientas
+      this.IsVidActive = false;
+    }
   }
   //borrar el elemento padre del pdf
   DeletePdfs() {
     const element = this.e?.target as HTMLElement;
-
+    console.log(this.panelItems);
+    console.log(element.parentElement);
     if (element.parentElement) {
       element.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.remove();
     }
@@ -417,211 +565,281 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
 
   //funcion para enviar los datos
   OnSaveMural() {
-
     //obtener valores del mural
     const MuralData = this.containerRef.nativeElement;
+    //hacemos la captura de la imgen
+    let dataUrl: string[] = [];
+    html2canvas(MuralData).then((canva) => {
+      const textAreas =
+        this.containerRef.nativeElement.querySelectorAll('textarea');
+      const images = this.containerRef.nativeElement.querySelectorAll('img');
+      const videos = this.containerRef.nativeElement.querySelectorAll('video');
+      const pdfs =
+        this.containerRef.nativeElement.querySelectorAll('pdf-viewer');
+      //copia del array con los archivos subidos en el mural separados por tipo
+      let imgArray: PanelItem[] = [];
+      let videoArray: PanelItem[] = [];
+      let pdfArray: PanelItem[] = [];
 
-    const textAreas =
-      this.containerRef.nativeElement.querySelectorAll('textarea');
-    const images = this.containerRef.nativeElement.querySelectorAll('img');
-    const videos = this.containerRef.nativeElement.querySelectorAll('video');
-    const pdfs = this.containerRef.nativeElement.querySelectorAll('pdf-viewer');
-    //copia del array con los archivos subidos en el mural separados por tipo
-    let imgArray:PanelItem [] = []
-    let videoArray:PanelItem [] = []
-    let pdfArray:PanelItem [] = []
+      this.panelItems.forEach((item) => {
+        if (item.type == 'image/jpeg' || item.type == 'image/png') {
+          imgArray.push(item);
+        }
+        if (item.type == 'video/mp4') {
+          videoArray.push(item);
+        }
+        if (item.type == 'application/pdf') {
+          pdfArray.push(item);
+        }
+      });
+      //Array de cada elemento
 
-    this.panelItems.forEach((item)=>{
-      if(item.type == "image/jpeg" || item.type == "image/png" ){
-        imgArray.push(item)
+      const Videos: VideoDatasetItem[] = [];
+      const Texts: TextDatasetItem[] = [];
+      const DataImagenes: ImageDatasetItem[] = [];
+      const DataPdfs: PdfsItem[] = [];
+
+      // Recorrer los textAreas y obtener sus valores
+      textAreas.forEach((textArea: HTMLTextAreaElement) => {
+        const computedStyle = textArea as HTMLElement;
+        const { x, y, height, width } = computedStyle.getBoundingClientRect();
+
+        const valueTexts: TextDatasetItem = {
+          id_mural: localStorage.getItem('id_mural'),
+          valor: textArea.value,
+          font:
+            textArea.style.fontFamily == ''
+              ? 'Arial'
+              : textArea.style.fontFamily,
+          font_size:
+            textArea.style.fontSize == '' ? '16px' : textArea.style.fontSize,
+          posx: /*textArea.offsetLeft*/ x,
+          posy: /*textArea.offsetTop*/ y,
+          height: Number.isNaN(parseInt(textArea.style.height))
+            ? 200
+            : parseInt(textArea.style.height),
+          width: Number.isNaN(parseInt(textArea.style.width))
+            ? 200
+            : parseInt(textArea.style.width),
+          color:
+            !textArea.style.color || textArea.style.color === 'black'
+              ? 'rgb(0,0,0)'
+              : textArea.style.color,
+          border_color:
+            !textArea.style.borderColor || textArea.style.borderColor == 'black'
+              ? 'rgb(0,0,0)'
+              : textArea.style.borderColor,
+          border_radius:
+            textArea.style.borderRadius == ''
+              ? '0%'
+              : textArea.style.borderRadius,
+          backgroundcolor:
+            !textArea.style.backgroundColor ||
+            textArea.style.backgroundColor == 'black'
+              ? 'rgb(0,0,0)'
+              : textArea.style.backgroundColor,
+          border_style:
+            textArea.style.borderStyle == ''
+              ? 'solid'
+              : textArea.style.borderStyle,
+          font_weight: textArea.style.fontWeight || 'bolder',
+          sangria:
+            textArea.style.textAlign == ''
+              ? 'center'
+              : textArea.style.textAlign,
+        };
+        console.log('alto:', textArea.style.height);
+        Texts.push(valueTexts);
+      });
+
+      // Recorrer las imágenes y obtener sus atributos o valores
+      images.forEach((image: HTMLImageElement, i: number) => {
+        const panelItem = imgArray[i];
+
+        const rect = image.getBoundingClientRect();
+        const posX = rect.left;
+        const posY = rect.top;
+
+        const valueImages: ImageDatasetItem = {
+          id_mural: localStorage.getItem('id_mural'),
+
+          url: panelItem.url,
+          alt: image.alt,
+          height: image.height,
+          width: image.width,
+          posx: posX,
+          posy: posY,
+          border_color:
+            !image.parentElement!.style.borderColor ||
+            image.parentElement!.style.borderColor == 'black'
+              ? 'rgb(0,0,0)'
+              : image.parentElement!.style.borderColor,
+          border_radius:
+            image.parentElement!.style.borderRadius == ''
+              ? '1%'
+              : image.parentElement!.style.borderRadius,
+          border_style:
+            image.parentElement!.style.borderStyle == ''
+              ? 'solid'
+              : image.parentElement!.style.borderStyle,
+        };
+        DataImagenes.push(valueImages);
+      });
+
+      // Recorrer los videos y obtener sus atributos o valores
+      videos.forEach((video: HTMLVideoElement, i: number) => {
+        const panelItem = videoArray[i];
+
+        const rect = video.getBoundingClientRect();
+        const posX = rect.left;
+        const posY = rect.top;
+        const videoSrc = video.currentSrc;
+
+        const DataVideo: VideoDatasetItem = {
+          id_mural: localStorage.getItem('id_mural'),
+          url_video: panelItem.url,
+          height: video.offsetHeight,
+          width: video.offsetWidth,
+          posx: posX,
+          posy: posY,
+          formato: 'mp4',
+          duration: video.duration,
+          border_color:
+            !video.parentElement!.style.borderColor ||
+            video.parentElement!.style.borderColor == 'black'
+              ? 'rgb(0,0,0)'
+              : video.parentElement!.style.borderColor,
+          border_radius:
+            video.parentElement!.style.borderRadius == ''
+              ? '0%'
+              : video.parentElement!.style.borderRadius,
+          border_style:
+            video.parentElement!.style.borderStyle == ''
+              ? 'solid'
+              : video.parentElement!.style.borderStyle,
+        };
+
+        Videos.push(DataVideo);
+      });
+
+      // Se recorre los pdfViewer y se almacena sus valores en un objeto
+
+      pdfs.forEach((pdf: PDFSource, i: number) => {
+        //para obtener la posX  y en Y
+
+        const computedStyle = pdf as HTMLElement;
+        const { x, y, height, width } = computedStyle.getBoundingClientRect();
+
+        const panelItem = pdfArray[i];
+
+        const DataPdf: PdfsItem = {
+          id_mural: localStorage.getItem('id_mural'),
+          url_pdfs: panelItem.url,
+          height: height,
+          width: width,
+          posx: x,
+          posy: y,
+          border_color:
+            !computedStyle.parentElement!.style.borderColor ||
+            computedStyle.parentElement!.style.borderColor == 'black'
+              ? 'rgb(0,0,0)'
+              : computedStyle.parentElement!.style.borderColor,
+          border_style:
+            computedStyle.parentElement!.style.borderStyle == ''
+              ? 'solid'
+              : computedStyle.parentElement!.style.borderStyle,
+          border_radius:
+            computedStyle.parentElement!.style.borderRadius == ''
+              ? '1%'
+              : computedStyle.parentElement!.style.borderRadius,
+        };
+        DataPdfs.push(DataPdf);
+      });
+      //agregar los enlaces a la url del pdf
+      // if (this.pdfViewers.length === DataPdfs.length) {
+      //   let pdfViewersArray = this.pdfViewers.toArray();
+      //   for (let i = 0; i < pdfViewersArray.length; i++) {
+      //     DataPdfs[i].url_pdfs = pdfViewersArray[i].src as string;
+      //   }
+      // } else {
+      //   console.error('Los arrays pdfViewers y DataPdfs no tienen la misma longitud');
+      // }
+
+      //se guardan en el array el objeto con todo sus elementos
+      let nombreMural = this.MuralnameForm.controls['Muralname'].value;
+      //verificamos si se le puso nombre al mural
+      if (!nombreMural) {
+        nombreMural = 'sin nombre';
       }
-      if(item.type == "video/mp4" ){
-        videoArray.push(item)
-      }
-      if(item.type == "application/pdf" ){
-        pdfArray.push(item)
-      }
-    })
-    //Array de cada elemento
 
-    const Videos: VideoDatasetItem[] = [];
-    const Texts: TextDatasetItem[] = [];
-    const DataImagenes: ImageDatasetItem[] = [];
-    const DataPdfs:PdfsItem[] = [];
+      //hacemos una captura del mural para usar en un dashbaord
 
-    // Recorrer los textAreas y obtener sus valores
-    textAreas.forEach((textArea: HTMLTextAreaElement) => {
-      const computedStyle = textArea as HTMLElement;
-      const {x,y,height,width} = computedStyle.getBoundingClientRect()
+      const Url = canva.toDataURL('image/png');
+      dataUrl.push(Url);
+      // const downloadLink = document.createElement('a');
+      // downloadLink.href = dataUrl;
+      // downloadLink.download = 'captured_image.png'; // Nombre del archivo de descarga
+      // downloadLink.click();
 
-      const valueTexts: TextDatasetItem = {
-        id_mural:localStorage.getItem('id_mural'),
-        valor: textArea.value,
-        font: textArea.style.fontFamily,
-        font_size: textArea.style.fontSize,
-        posx: /*textArea.offsetLeft*/x,
-        posy: /*textArea.offsetTop*/y,
-        height: parseInt(textArea.style.height),
-        width: parseInt( textArea.style.width),
-        color: textArea.style.color,
-        border_color: textArea.style.borderColor,
-        border_radius:textArea.style.borderRadius,
-        backgroundcolor: textArea.style.backgroundColor,
-        border_style:textArea.style.borderStyle,
-        font_weight:  textArea.style.fontWeight,
-        sangria:  textArea.style.textAlign,
+      this.DataMural = {
+        id_mural: localStorage.getItem('id_mural'),
+        id_user: localStorage.getItem('id_user'),
+        imgMural: dataUrl[0]!,
+        nombrem: nombreMural!,
+        height: MuralData.offsetWidth,
+        width: MuralData.offsetHeight,
+        textos: Texts,
+        imagenes: DataImagenes,
+        videos: Videos,
+        pdfs: DataPdfs,
+        estado: 'en espera',
       };
-      console.log('alto:',textArea.style.height)
-      Texts.push(valueTexts);
+      console.log('Enviando datos:', this.DataMural);
+      console.log(this.panelItems);
 
+      this.mService.postData(this.DataMural).subscribe((data) => {
+        console.log(data);
+        this.exito = !this.exito;
+
+        setTimeout(() => {
+          this.exito = !this.exito;
+        }, 2000);
+        this.ruta.navigate(['/main/dashboard']);
+      });
     });
-
-
-
-    // Recorrer las imágenes y obtener sus atributos o valores
-    images.forEach((image: HTMLImageElement,i:number ) => {
-          const panelItem = imgArray[i]
-
-          const rect = image.getBoundingClientRect();
-          const posX = rect.left;
-          const posY = rect.top;
-
-          const valueImages: ImageDatasetItem = {
-            id_mural:localStorage.getItem('id_mural'),
-
-            url: panelItem.url,
-            alt: image.alt,
-            height: image.height,
-            width: image.width,
-            posx: posX,
-            posy: posY,
-            border_color:image.parentElement!.style.borderColor,
-            border_radius:image.parentElement!.style.borderRadius,
-            border_style:image.parentElement!.style.borderStyle,
-          };
-          DataImagenes.push(valueImages);
-
-    });
-
-    // Recorrer los videos y obtener sus atributos o valores
-    videos.forEach((video: HTMLVideoElement, i:number) => {
-      const panelItem = videoArray[i];
-
-
-      const rect = video.getBoundingClientRect();
-      const posX = rect.left;
-      const posY = rect.top;
-      const videoSrc = video.currentSrc;
-
-
-
-      const DataVideo: VideoDatasetItem = {
-        id_mural:localStorage.getItem('id_mural'),
-        url_video:panelItem.url,
-        height: video.offsetHeight,
-        width: video.offsetWidth,
-        posx: posX,
-        posy: posY,
-        formato:'mp4',
-        duration:video.duration,
-        border_color:video.parentElement!.style.borderColor,
-        border_radius:video.parentElement!.style.borderRadius,
-        border_style:video.parentElement!.style.borderStyle
-      };
-
-      Videos.push(DataVideo);
-
-
-    });
-
-
-
-    // Se recorre los pdfViewer y se almacena sus valores en un objeto
-
-    pdfs.forEach((pdf: PDFSource, i:number)=>{
-
-      //para obtener la posX  y en Y
-
-      const computedStyle = pdf as HTMLElement;
-      const {x,y,height,width} = computedStyle.getBoundingClientRect()
-
-      const panelItem = pdfArray[i];
-
-
-      const DataPdf:PdfsItem = {
-        id_mural:localStorage.getItem('id_mural'),
-        url_pdfs:panelItem.url,
-        height:height,
-        width:width,
-        posx:x,
-        posy:y,
-        border_color:computedStyle.parentElement!.style.borderColor,
-        border_style:computedStyle.parentElement!.style.borderStyle,
-        border_radius:computedStyle.parentElement!.style.borderRadius
-      }
-      DataPdfs.push(DataPdf)
-    });
-    //agregar los enlaces a la url del pdf
-    // if (this.pdfViewers.length === DataPdfs.length) {
-    //   let pdfViewersArray = this.pdfViewers.toArray();
-    //   for (let i = 0; i < pdfViewersArray.length; i++) {
-    //     DataPdfs[i].url_pdfs = pdfViewersArray[i].src as string;
-    //   }
-    // } else {
-    //   console.error('Los arrays pdfViewers y DataPdfs no tienen la misma longitud');
-    // }
-
-
-    //se guardan en el array el objeto con todo sus elementos
-    let nombreMural = this.MuralnameForm.controls['Muralname'].value
-    //verificamos si se le puso nombre al mural
-    if(!nombreMural){
-        nombreMural = 'sin nombre'
-    }
-
-    this.DataMural = {
-      id_mural:localStorage.getItem('id_mural'),
-      id_user:localStorage.getItem('id_user'),
-      nombrem:nombreMural! ,
-      height: MuralData.offsetWidth,
-      width: MuralData.offsetHeight,
-      textos: Texts,
-      imagenes: DataImagenes,
-      videos: Videos,
-      pdfs:DataPdfs,
-      estado: 'en espera',
-    };
-    console.log('Enviando datos:', this.DataMural);
-    console.log(this.panelItems)
-
-    this.mService.postData(this.DataMural).subscribe((data)=>{
-      console.log(data)
-      //TO DO  mensaje de guardado con éxito
-      this.exito = !this.exito
-
-      setTimeout(() => {
-        this.exito = !this.exito
-      }, 2000);
-      this.ruta.navigate(['/main/dashboard'])
-    }  );
-
   }
-
 
   //boton para ocultar
-  ocultarToolbarTxt(){
-
+  ocultarToolbarTxt() {
     this.isActive = !this.isActive;
-
-
   }
 
-  ocultarToolbarMulti(){
+  ocultarToolbarMulti() {
     this.IsVidActive = !this.IsVidActive;
   }
 
-  ocultarToolbarPdf(){
-     this.isPdfActive = !this.isPdfActive
+  ocultarToolbarPdf() {
+    this.isPdfActive = !this.isPdfActive;
   }
+  /*Metodos a futura implementacion */
+  // Método para aumentar el zoom
+  zoomIn() {
+    if (this.zoomLevel > 399) {
+      return;
+    }
+    this.zoomLevel += 10; // Aumenta el zoom en un 10% (puedes ajustarlo).
+  }
+
+  // Método para reducir el zoom
+  zoomOut() {
+    if (this.zoomLevel < 1) {
+      return;
+    }
+    this.zoomLevel -= 10; // Reduce el zoom en un 10% (puedes ajustarlo).
+  }
+  zoomClear(){
+    this.zoomLevel = 100
+  }
+
 
 }

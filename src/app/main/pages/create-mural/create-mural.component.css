@@ -1,7 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Arya&display=swap');
+.padre{
+  display: flex;
+  flex-wrap: wrap;
+
+  width: 1080px;
+  height: 80vh;
+
+
+
+}
+
 .mainContainer{
-  width: 100%;
+  width: 75%;
   height: 100%;
-  position: fixed;
+  /* position: fixed; */
+
+  min-width: 20%; /* Ajusta según tus necesidades */
+
+  padding: 10px;
+
+}
+.formBody{
+  display: flex;
+  gap: 50%;
+
+}
+.padreContainer{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid #ccc;
+  min-height: 90%;
+  overflow: hidden;
+
 }
 .panel-container {
   display: flex;
@@ -9,8 +41,11 @@
   gap: 16px;
   padding: 16px;
   border: 1px solid #ccc;
-  min-height: 100%;
-  max-height:100%;
+  width: 100%;
+  min-height: 90%;
+  max-height: 90%;
+
+
 }
 
 .esta{
@@ -118,6 +153,7 @@
   padding: 20px;
   z-index: 9999;
   overflow-y: auto;
+
 }
 
 .MenuBarEdicionTexto.active {
@@ -155,24 +191,33 @@ html, body {
   max-height: 20px;
 
 }
+.barrita{
+  flex:1; /* Inicialmente, el segundo hijo tiene un ancho cero */
+  min-width: 0; /* Ancho mínimo inicial */
+
+  padding: 10px;
+
+}
 
 .MenuBarEdicionTexto {
-  position: fixed;
-  right: 0;
-  top: 0;
-  height: 100vh;
+  position: relative;
+  /* right: 0;
+  top: 0; */
+  height: 77vh;
   width: 300px;
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  transition: right 0.3s ease-out;
+  /* transition: right 0.3s ease-out; */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   padding: 20px;
-  z-index: 9999;
+  /* z-index: 9999; */
   overflow-y: auto;
   white-space: nowrap;
   overflow-x: hidden;
+  font-family: 'Arya', sans-serif;
+  font-weight: bolder;
 }
 
 .MenuBarEdicionTexto.active {
@@ -194,8 +239,9 @@ html, body {
 
 /* Estilos para los controles de entrada y select */
 .MenuBarEdicionTexto input[type="text"],
+.MenuBarEdicionTexto .menu-item input[type="number"],
 .MenuBarEdicionTexto select {
-  width: 70%; /* Ajusta el ancho según tus preferencias */
+  width: 40%; /* Ajusta el ancho según tus preferencias */
 }
 
 /* Estilos para el botón "Guardar" */
@@ -206,6 +252,7 @@ html, body {
 /* Alinea verticalmente los elementos */
 .MenuBarEdicionTexto .menu-item select,
 .MenuBarEdicionTexto .menu-item input[type="text"],
+.MenuBarEdicionTexto .menu-item input[type="number"],
 .MenuBarEdicionTexto .menu-item input[type="checkbox"] {
   align-self: center;
 }
@@ -214,6 +261,7 @@ html, body {
 .MenuBarEdicionTexto .menu-item label,
 .MenuBarEdicionTexto .menu-item select,
 .MenuBarEdicionTexto .menu-item input[type="text"],
+.MenuBarEdicionTexto .menu-item input[type="number"],
 .MenuBarEdicionTexto .menu-item input[type="checkbox"],
 .MenuBarEdicionTexto button[type="submit"] {
   font-size: 15px; /* Tamaño de fuente uniforme */
@@ -226,22 +274,70 @@ html, body {
   padding-bottom: 10px;
   margin-bottom: 10px;
 }
+::ng-deep .p-colorpicker-panel {
+  left: auto !important;
+  right: 0 !important;
+  /* transform: translateX(-100%) !important; */
+
+}
+.inpRadio {
+  display: flex;
+  align-items: center; /* Centro verticalmente */
+  justify-content: space-around;
+  width: 40%;
+  border: 1px solid #ccc;
+}
+
+.inpRadio input {
+  border: 0;
+  margin-bottom: 10px;
+  height: 100%;
+  width: 80%;
+
+}
+
 
 .botoncito{
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
 
 .hidenbuttom{
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   align-items: center;
   display: flex;
   justify-content: center;
   border: none;
   background-color: white;
   padding: 10px;
+}
+.hidenbuttom img{
+  width: 100%;
+  height: 100%;
+}
+.btnGuardar{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 75%;
+  height: 5%;
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: #ffffff;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+.btnGuardar:hover{
+  background-color: #2980b9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 #borrar{
@@ -252,13 +348,22 @@ html, body {
   justify-content: center;
   border: none;
   background-color: white;
-  color: red;
+  color: rgb(255, 0, 0);
   padding: 10px;
+}
+#borrar i{
+  padding-left: 70%;
+  width: 100%;
+  height: 100%;
 }
 
 ::ng-deep .ui-colorPicker-panel {
   left: auto !important;
   right: 0 !important;
   transform: translateX(100%) !important;
+}
+
+pdf-viewer {
+  pointer-events: none; /* Deshabilita los clics en el elemento pdf-viewer */
 }
 

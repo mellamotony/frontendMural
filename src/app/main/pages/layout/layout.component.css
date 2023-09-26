@@ -1,3 +1,4 @@
+
 .arrow{
   width: 35px;
   position: relative;
@@ -19,7 +20,9 @@
 }
 
 #esta{
-  height: 90%;
+  height: auto;
+  width: 100vh;
+
 }
 #noc{
   margin-left: -10px;
@@ -34,3 +37,16 @@
   display: block;
 
 }
+
+.contSlide{
+  position: relative;
+  height: 100%;
+}
+
+/*estilos del contenedor global del mural*/
+.containerg{
+  min-width: 1090px;
+  height:100%;
+}
+
+

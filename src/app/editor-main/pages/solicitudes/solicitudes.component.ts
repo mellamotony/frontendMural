@@ -66,11 +66,13 @@ export class SolicitudesComponent implements OnInit {
     //se hace una peticion para obtener las solucitudes que esten en espera
     this.mService.getSolicitudes().subscribe((datas) => {
       datas.forEach((data) => {
+        console.log('datos del solicitud:',data)
         const objSoli: SolicituMural = {
           id_mural: data.id_mural,
           nombre_mural: data.nombrem,
           fecha: data.fecha_solicitud,
           estado: data.estado,
+          id_user:data.id_user
         };
         this.exito = false
         if (objSoli.estado === 'en espera') {
@@ -147,10 +149,11 @@ export class SolicitudesComponent implements OnInit {
     // Formatear la fecha y hora en el formato deseado
     const fechaAprobado = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
     console.log(fechaAprobado)
+    const id_user = this.e?.firstChild as HTMLElement
 
     const body: AprobeMural = {
       id_mural: this.e!.id,
-      id_user: Number(localStorage.getItem('id_user')),
+      id_user:Number(id_user.id),
       estado: 'aprobado',
       fecha_publicacion: this.cambiarFormato(fecha_inicio),
       fin_publicacion: this.cambiarFormato(fecha_fin),
@@ -159,13 +162,13 @@ export class SolicitudesComponent implements OnInit {
     console.log(body);
 
     //enviando los datos
-    this.mService.setAprove(body).subscribe((data) => {
-      console.log(data);
-      if (data.mensaje == 'actualización de estado exitosamente') {
-        alert('Mural actualizado con éxito');
-        window.location.reload();
-      }
-    });
+    // this.mService.setAprove(body).subscribe((data) => {
+    //   console.log(data);
+    //   if (data.mensaje == 'actualización de estado exitosamente') {
+    //     alert('Mural actualizado con éxito');
+    //     window.location.reload();
+    //   }
+    // });
   }
 
   onEdit() {

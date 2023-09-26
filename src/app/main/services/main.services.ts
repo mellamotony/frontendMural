@@ -18,6 +18,7 @@ export class MuralService {
 
   //guardar el contenido del mural en la base de datos
   postData(data:MuralDataSetItem): Observable<any>{
+    console.log('ejecutando.........')
     return this.http.post<any>(this.url+'/mural/insert',data)
   }
 

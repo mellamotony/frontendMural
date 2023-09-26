@@ -11,8 +11,8 @@
   </ng-template>
   <ng-template pTemplate="body" let-product>
     <tr class="rowT" [id]="product.id_mural">
-      <td>{{ product.nombre_mural }}</td>
-      <td>{{ product.fecha | date:'yyyy-MM-dd'}}</td>
+      <td  [id] ='product.id_user'>{{ product.nombre_mural }}</td>
+      <td >{{ product.fecha | date:'yyyy-MM-dd'}}</td>
       <td>{{ product.estado | titlecase }}</td>
       <td>
         <p-button (onClick)="onPublic($event)" styleClass="p-button-success">Aprobar / publicar</p-button>

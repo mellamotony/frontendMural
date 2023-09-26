@@ -19,6 +19,7 @@ import { EditMuralComponent } from './pages/edit-mural/edit-mural.component';
 
 
 
+
 @NgModule({
   declarations: [
     DragDropPanelComponent,
@@ -37,6 +38,7 @@ import { EditMuralComponent } from './pages/edit-mural/edit-mural.component';
     ReactiveFormsModule,
     PdfViewerModule,
     HttpClientModule,
+
 
   ],
   exports:[

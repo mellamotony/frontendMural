@@ -13,6 +13,7 @@ export  interface PanelItem {
   posy?:number,
   height?:number,
   width?: number
+  id?:number
 }
 
 export interface myFile extends File {
@@ -28,6 +29,7 @@ export interface myFile extends File {
 export interface MuralDataSetItem {
   id_mural:string |null,
   id_user:string |null,
+  imgMural?:string,
   height:number,
   width:number,
   fecha_modificacion?:string,
@@ -117,7 +119,8 @@ export interface IDmural {
 export interface MuralByUser{
   nombrem:string,
   numeroM?:number,
-  id_mural:string
+  id_mural:string,
+  imgmural?:string
 }
 
 

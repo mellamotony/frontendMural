@@ -1,16 +1,36 @@
 <div *ngIf="isdata" class="body_dashboard">
-  <div (click)="generarId()" class="card_body" >
-      <i class="pi pi-plus-circle" style="font-size: 3rem"></i>
-      <br>
-      <span>Crear un nuevo mural</span>
+  <div class="card1">
+    <div (click)="generarId()" class="card_new">
+      <div class="center-content">
+        <i class="pi pi-plus-circle" style="font-size: 3rem"></i>
+        <br>
+        <span>Crear un nuevo mural</span>
+      </div>
+    </div>
   </div>
 
-  <div [routerLink]="['/main/edit', item.id_mural]"  class="card_body" *ngFor="let item of listName">
-    <h1>{{item.nombrem}}</h1>
-    <span>{{item.numeroM}}</span>
+  <!-- <div [routerLink]="['/main/edit', item.id_mural]"  class="card_body" *ngFor="let item of listName">
+    <div class="contImg">
+      <img [src]="item.imgmural" alt="img del mural">
+    </div>
+    <div class="contdesc">
+      <h1>{{item.nombrem}}</h1>
 
+    </div>
 
+  </div> -->
+
+  <div [routerLink]="['/main/edit', item.id_mural]" class="card" *ngFor="let item of listName">
+    <div class="card-body">
+      <div class="contImg">
+        <img [src]="item.imgmural" alt="img del mural">
+      </div>
+      <div class="contdesc">
+        <h1>{{item.nombrem}}</h1>
+      </div>
+    </div>
   </div>
+
 
 
 </div>

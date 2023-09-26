@@ -5,6 +5,7 @@ export interface SolicituMural {
   fecha:string,
   estado:string
   fecha_respuesta?:string
+  id_user?:string
 }
 
 export interface HistorialMural{

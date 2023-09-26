@@ -31,11 +31,11 @@ const routes: Routes = [
       {
         path:'edit/:id',
         component:EditMuralComponent
+      },{
+        path:'**',
+        redirectTo:'/main/dashboard'
       }
     ]
-  },{
-    path:'**',
-    redirectTo:'/main/dashboard'
   }
 ];
 

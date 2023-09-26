@@ -1,7 +1,31 @@
+.containerg{
+  display: flex;
+  position: fixed;
+  width:100%;
+  height: 100vh;
+  max-width: max-content;
+}
+.bodyC{
+  display: flex;
+  flex-wrap: wrap;
+  width: 1080px;
+  height: 80vh;
+
+
+}
+.bodyB{
+
+  flex-basis: 100px;
+  flex-grow: 1;
+}
+
+
 .mainContainer{
-  width: 100%;
+  width: 75%;
   height: 100%;
-  position: relative;
+  /* position: fixed; */
+  min-width: 20%; /* Ajusta según tus necesidades */
+  padding: 10px;
 }
 .panel-container {
   display: flex;
@@ -9,8 +33,8 @@
   gap: 16px;
   padding: 16px;
   border: 1px solid #ccc;
-  min-height: 400px;
-  max-height:100vh;
+  min-height: 90%;
+  max-height: 90%;
 
 }
 
@@ -87,73 +111,181 @@
   border-radius:8px;
   padding:4px;
   max-height:25px;
-  text-align:center;
+  text-align:center;;
+}
+.barrita{
+  flex:1; /* Inicialmente, el segundo hijo tiene un ancho cero */
+  min-width: 0; /* Ancho mínimo inicial */
+
+  padding: 10px;
+
 }
 
 .MenuBarEdicionTexto {
-  position: fixed;
-  right: 0;
-  top: 0;
-  height: 100vh;
+  position: relative;
+  /* right: 0;
+  top: 0; */
+  height: 77vh;
   width: 300px;
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  transition: right 0.3s ease-out;
+  /* transition: right 0.3s ease-out; */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   padding: 20px;
-  z-index: 9999;
+  /* z-index: 9999; */
   overflow-y: auto;
+  white-space: nowrap;
+  overflow-x: hidden;
+  font-family: 'Arya', sans-serif;
+  font-weight: bolder;
 }
 
 .MenuBarEdicionTexto.active {
   right: 0;
 }
 
-.menu-item {
-  width: 100%;
+/* Estilos para la clase .menu-item */
+.MenuBarEdicionTexto .menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 10px;
 }
 
-.btnDelete {
-  cursor: pointer;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 30px;
-  height: 30px;
-  background-color: #ff0000;
-  color: #fff;
-  border-radius: 50%;
+/* Alineación de etiquetas a la izquierda */
+.MenuBarEdicionTexto label {
+  text-align: left;
+}
+
+/* Estilos para los controles de entrada y select */
+.MenuBarEdicionTexto input[type="text"],
+.MenuBarEdicionTexto .menu-item input[type="number"],
+.MenuBarEdicionTexto select {
+  width: 40%; /* Ajusta el ancho según tus preferencias */
+}
+
+/* Estilos para el botón "Guardar" */
+.MenuBarEdicionTexto button[type="submit"] {
+  width: 100%; /* Ocupa todo el ancho disponible */
+}
+
+/* Alinea verticalmente los elementos */
+.MenuBarEdicionTexto .menu-item select,
+.MenuBarEdicionTexto .menu-item input[type="text"],
+.MenuBarEdicionTexto .menu-item input[type="number"],
+.MenuBarEdicionTexto .menu-item input[type="checkbox"] {
+  align-self: center;
+}
+
+/* Espaciado uniforme para los elementos */
+.MenuBarEdicionTexto .menu-item label,
+.MenuBarEdicionTexto .menu-item select,
+.MenuBarEdicionTexto .menu-item input[type="text"],
+.MenuBarEdicionTexto .menu-item input[type="number"],
+.MenuBarEdicionTexto .menu-item input[type="checkbox"],
+.MenuBarEdicionTexto button[type="submit"] {
+  font-size: 15px; /* Tamaño de fuente uniforme */
+  margin-top: 10px;
+}
+
+/* Separación visual entre elementos */
+.MenuBarEdicionTexto .menu-item:not(:last-child) {
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+::ng-deep .p-colorpicker-panel {
+  left: auto !important;
+  right: 0 !important;
+  /* transform: translateX(-100%) !important; */
+
+}
+.inpRadio {
   display: flex;
+  align-items: center; /* Centro verticalmente */
+  justify-content: space-around;
+  width: 40%;
+  border: 1px solid #ccc;
+}
+
+.inpRadio input {
+  border: 0;
+  margin-bottom: 10px;
+  height: 100%;
+  width: 80%;
+
+}
+
+
+.botoncito{
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  width: 100%;
+}
+
+.hidenbuttom{
+  width: 60px;
+  height: 60px;
+  align-items: center;
+  display: flex;
   justify-content: center;
+  border: none;
+  background-color: white;
+  padding: 10px;
 }
-
-.btnDelete span {
-  font-size: 16px;
-  font-weight: bold;
+.hidenbuttom img{
+  width: 100%;
+  height: 100%;
 }
-
-button[type="submit"] {
-  margin-top: 20px;
-}
-
-html, body {
-  margin: 0;
-  padding: 0;
-}
-
-.forName{
-  border-radius:5px;
-  border: solid  #f0f0f0 1px;
-  font-family: arial;
+.btnGuardar{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 75%;
+  height: 5%;
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: #ffffff;
   text-align: center;
+  text-decoration: none;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+.btnGuardar:hover{
+  background-color: #2980b9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.contImg{
-  position:fixed;
+#borrar{
+  width: 60px;
+  height: 60px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  border: none;
+  background-color: white;
+  color: rgb(255, 0, 0);
+  padding: 10px;
+}
+#borrar i{
+  padding-left: 70%;
+  width: 100%;
+  height: 100%;
 }
 
+::ng-deep .ui-colorPicker-panel {
+  left: auto !important;
+  right: 0 !important;
+  transform: translateX(100%) !important;
+}
+
+pdf-viewer {
+  pointer-events: none; /* Deshabilita los clics en el elemento pdf-viewer */
+}
 
