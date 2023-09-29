@@ -6,6 +6,8 @@ import { ListadoUsuariosComponent } from './pages/listado-usuarios/listado-usuar
 import { PrimeNModule } from '../prime-n/prime-n.module';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ShadersModule } from '../shaders/shaders.module';
+
 
 
 @NgModule({
@@ -14,7 +16,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     PrimeNModule,
     CommonModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ShadersModule
   ],
   exports: [],
   declarations: [

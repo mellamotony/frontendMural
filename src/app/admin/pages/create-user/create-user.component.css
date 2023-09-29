@@ -57,3 +57,59 @@ button {
 button:hover {
   background-color: #0056b3;
 }
+
+/*para eliseo*/
+#padre {
+  width: 1920px;
+  height: 1080px;
+  position: relative;
+  border: 1px solid #555;
+  overflow: hidden;
+  margin:0 auto;
+}
+
+.elemento {
+  position: absolute;
+  border: 1px solid #555;
+  transform-origin: left top;
+  width: 198px;
+  /* Tamaño inicial del elemento */
+  height: 248px;
+  /* Tamaño inicial del elemento */
+  border: 1px solid #555;
+  float: left;
+  /* Para que los elementos se coloquen en línea horizontal */
+  transition: transform 0.3s;
+}
+
+/* posx: 248;
+posy: 277;
+
+fig2
+posx: 777;
+posy: 265;
+*/
+
+.txt {
+  position: absolute;
+  border: 1px solid #555;
+  transform-origin: left top;
+  width: 250px;
+  /* Tamaño inicial del elemento */
+  height: 150px;
+  /* Tamaño inicial del elemento */
+  border: 1px solid #555;
+  float: left;
+  /* Para que los elementos se coloquen en línea horizontal */
+  transition: transform 0.3s;
+}
+
+.elemento img {
+  width: 100%;
+  height: 100%;
+}
+
+.ampliado {
+  transform: scale(2);
+  /* Escala los elementos al doble del tamaño original */
+}

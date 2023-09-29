@@ -162,13 +162,13 @@ export class SolicitudesComponent implements OnInit {
     console.log(body);
 
     //enviando los datos
-    // this.mService.setAprove(body).subscribe((data) => {
-    //   console.log(data);
-    //   if (data.mensaje == 'actualización de estado exitosamente') {
-    //     alert('Mural actualizado con éxito');
-    //     window.location.reload();
-    //   }
-    // });
+    this.mService.setAprove(body).subscribe((data) => {
+      console.log(data);
+      if (data.mensaje == 'actualización de estado exitosamente') {
+        alert('Mural actualizado con éxito');
+        window.location.reload();
+      }
+    });
   }
 
   onEdit() {

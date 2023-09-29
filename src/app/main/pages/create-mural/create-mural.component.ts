@@ -427,6 +427,43 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
   getChangesStyles() {
     const element = this.e?.target as HTMLElement;
     console.log('el elemento:', element);
+
+    switch (true) {
+      case this.toolsForm.controls['width'].value > 790:
+        this.messages[0].severity = 'error'
+          this.messages[0].summary = 'Error'
+          this.messages[0].detail = 'Está superando el máximo de ancho del mural'
+
+          this.exito = true
+          setTimeout(()=>{
+            this.exito = false
+          },1000)
+        return;
+
+      case this.toolsForm.controls['height'].value > 450:
+        this.messages[0].severity = 'error'
+        this.messages[0].summary = 'Error'
+        this.messages[0].detail = 'Está superando el máximo de alto del mural'
+
+        this.exito = true
+        setTimeout(()=>{
+          this.exito = false
+        },1000)
+        return;
+
+      case this.toolsForm.controls['fontSize'].value > 50:
+        this.messages[0].severity = 'error'
+        this.messages[0].summary = 'Error'
+        this.messages[0].detail = 'Está superando el tamaño de fuente máximo permitido'
+
+        this.exito = true
+        setTimeout(()=>{
+          this.exito = false
+        },1000)
+
+        return;
+
+    }
     element.style.color = this.toolsForm.controls['color'].value;
 
     element.style.backgroundColor = this.toolsForm.controls['background'].value;
@@ -459,6 +496,30 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
     //obtenemos el elemento padre
 
     if (element.classList.contains('panel-i')) {
+      switch (true) {
+        case this.toolsForm.controls['width'].value > 790:
+          this.messages[0].severity = 'error'
+          this.messages[0].summary = 'Error'
+          this.messages[0].detail = 'Está superando el máximo de ancho del mural'
+
+          this.exito = true
+          setTimeout(()=>{
+            this.exito = false
+          },1000)
+          return;
+
+        case this.toolsForm.controls['height'].value > 450:
+          this.messages[0].severity = 'error'
+          this.messages[0].summary = 'Error'
+          this.messages[0].detail = 'Está superando el máximo de alto del mural'
+
+          this.exito = true
+          setTimeout(()=>{
+            this.exito = false
+          },1000)
+          return;
+      }
+
       element!.style.borderColor = this.toolsForm.controls['borderColor'].value;
 
       element!.style.borderStyle = this.toolsForm.controls['borderStyle'].value;
@@ -473,7 +534,34 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
       this.IsVidActive = false;
     } else {
       const parentElement = element.parentElement;
+      switch (true) {
+        case this.toolsForm.controls['width'].value > 790:
 
+          this.messages[0].severity = 'error'
+          this.messages[0].summary = 'Error'
+          this.messages[0].detail = 'Está superando el máximo de ancho del mural'
+
+          this.exito = true
+          setTimeout(()=>{
+            this.exito = false
+          },1000)
+
+          return;
+
+        case this.toolsForm.controls['height'].value > 450:
+          this.messages[0].severity = 'error'
+          this.messages[0].summary = 'Error'
+          this.messages[0].detail = 'Está superando el máximo de alto del mural'
+
+          this.exito = true
+          setTimeout(()=>{
+            this.exito = false
+          },1000)
+          return;
+
+
+
+      }
       parentElement!.style.borderColor =
         this.toolsForm.controls['borderColor'].value;
 
@@ -601,8 +689,21 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
 
       // Recorrer los textAreas y obtener sus valores
       textAreas.forEach((textArea: HTMLTextAreaElement) => {
+        const padreW = MuralData.clientWidth
+        const padreH = MuralData.clientHeight
+
         const computedStyle = textArea as HTMLElement;
+        const padreX = MuralData.getBoundingClientRect().left
+        const padreY = MuralData.getBoundingClientRect().top
+        const cp = textArea
+        const nx = cp.getBoundingClientRect().left - padreX
+        const ny =cp.getBoundingClientRect().top - padreY
         const { x, y, height, width } = computedStyle.getBoundingClientRect();
+        //convertir las posiciones en porcentajes
+        console.log('x,y: ',nx,ny)
+        const {left,top} = this.calcularPorcentajeLeftTop(padreW,padreH,nx,ny)
+        console.log('porcentaje convertido',{left,top})
+
 
         const valueTexts: TextDatasetItem = {
           id_mural: localStorage.getItem('id_mural'),
@@ -613,8 +714,8 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
               : textArea.style.fontFamily,
           font_size:
             textArea.style.fontSize == '' ? '16px' : textArea.style.fontSize,
-          posx: /*textArea.offsetLeft*/ x,
-          posy: /*textArea.offsetTop*/ y,
+          posx: /*textArea.offsetLeft*/ Number(left),
+          posy: /*textArea.offsetTop*/ Number(top),
           height: Number.isNaN(parseInt(textArea.style.height))
             ? 200
             : parseInt(textArea.style.height),
@@ -655,10 +756,20 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
       // Recorrer las imágenes y obtener sus atributos o valores
       images.forEach((image: HTMLImageElement, i: number) => {
         const panelItem = imgArray[i];
+        const padreW = MuralData.clientWidth
+        const padreH = MuralData.clientHeight
+        const padreX = MuralData.getBoundingClientRect().left
+        const padreY = MuralData.getBoundingClientRect().top
+
 
         const rect = image.getBoundingClientRect();
+        const X = rect.left - padreX;
+        const Y = rect.top - padreY;
+
         const posX = rect.left;
         const posY = rect.top;
+        const {left,top} = this.calcularPorcentajeLeftTop(padreW,padreH,X,Y)
+        console.log('porcentaje convertido',{left,top})
 
         const valueImages: ImageDatasetItem = {
           id_mural: localStorage.getItem('id_mural'),
@@ -667,8 +778,8 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
           alt: image.alt,
           height: image.height,
           width: image.width,
-          posx: posX,
-          posy: posY,
+          posx: Number(left),
+          posy: Number(top),
           border_color:
             !image.parentElement!.style.borderColor ||
             image.parentElement!.style.borderColor == 'black'
@@ -690,18 +801,27 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
       videos.forEach((video: HTMLVideoElement, i: number) => {
         const panelItem = videoArray[i];
 
+        const padreW = MuralData.clientWidth
+        const padreH = MuralData.clientHeight
+        const padreX = MuralData.getBoundingClientRect().left
+        const padreY = MuralData.getBoundingClientRect().top
+
         const rect = video.getBoundingClientRect();
+        const X = rect.left - padreX;
+        const Y = rect.top - padreY;
+
         const posX = rect.left;
         const posY = rect.top;
-        const videoSrc = video.currentSrc;
+        const {left,top} = this.calcularPorcentajeLeftTop(padreW,padreH,X,Y)
+        console.log('porcentaje convertido video',{left,top})
 
         const DataVideo: VideoDatasetItem = {
           id_mural: localStorage.getItem('id_mural'),
           url_video: panelItem.url,
           height: video.offsetHeight,
           width: video.offsetWidth,
-          posx: posX,
-          posy: posY,
+          posx: Number(left),
+          posy: Number(top),
           formato: 'mp4',
           duration: video.duration,
           border_color:
@@ -732,13 +852,27 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
 
         const panelItem = pdfArray[i];
 
+        const padreW = MuralData.clientWidth
+        const padreH = MuralData.clientHeight
+        const padreX = MuralData.getBoundingClientRect().left
+        const padreY = MuralData.getBoundingClientRect().top
+
+        const rect = computedStyle.getBoundingClientRect();
+        const X = rect.left - padreX;
+        const Y = rect.top - padreY;
+
+        // const posX = rect.left;
+        // const posY = rect.top;
+        const {left,top} = this.calcularPorcentajeLeftTop(padreW,padreH,X,Y)
+        console.log('porcentaje convertido de pdf',{left,top})
+
         const DataPdf: PdfsItem = {
           id_mural: localStorage.getItem('id_mural'),
           url_pdfs: panelItem.url,
           height: height,
           width: width,
-          posx: x,
-          posy: y,
+          posx: Number(left),
+          posy: Number(top),
           border_color:
             !computedStyle.parentElement!.style.borderColor ||
             computedStyle.parentElement!.style.borderColor == 'black'
@@ -821,6 +955,21 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
   ocultarToolbarPdf() {
     this.isPdfActive = !this.isPdfActive;
   }
+  //para convertir la posicion x y y en porcentaje de 50 a 100
+  calcularPorcentajeLeftTop(
+    padreWidth: number ,
+    padreHeight: number,
+    hijoPosX: number,
+    hijoPosY: number
+  ): { left: string; top: string } {
+    // Calcula el porcentaje de left y top en relación con el padre
+    const left = ((hijoPosX / padreWidth) * 100).toFixed(2);
+    const top = ((hijoPosY / padreHeight) * 100).toFixed(2);
+
+    return { left, top };
+  }
+
+
   /*Metodos a futura implementacion */
   // Método para aumentar el zoom
   zoomIn() {

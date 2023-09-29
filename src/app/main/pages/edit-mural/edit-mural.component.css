@@ -35,7 +35,7 @@
   border: 1px solid #ccc;
   min-height: 90%;
   max-height: 90%;
-
+  position: relative;
 }
 
 .element {
@@ -98,8 +98,8 @@
   text-align:center;
   font-family:arial;
   font-weight:500;
-  position: fixed;
-  resize: none;
+  position: absolute;
+  /* resize: none; */
 }
 
 .btnDelete{

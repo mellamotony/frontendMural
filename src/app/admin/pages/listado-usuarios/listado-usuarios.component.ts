@@ -18,14 +18,14 @@ export class ListadoUsuariosComponent {
   public avatar:string =''
   messages: Message[] = [{ severity: 'success', summary: 'Success', detail: 'Usuario creado con éxito' }]
   exito: boolean = false;
-
+  spinner:boolean = true
   items: MenuItem[] = [];
   showUserForm: boolean = false;
   showEditForm: boolean = false;
   formsUser: FormGroup = this.fb.group(
     {
       nombre: this.fb.control('', [Validators.required]),
-      contrasenia: this.fb.control('', [Validators.required]),
+      contrasenia: this.fb.control(''),
       apellido_p: this.fb.control('', [Validators.required]),
       apellido_m: this.fb.control('', [Validators.required]),
       correo: this.fb.control('', [Validators.required]),
@@ -44,6 +44,13 @@ export class ListadoUsuariosComponent {
   ngOnInit() {
     this.admService.getUsers().subscribe((dato) => {
       dato.forEach(data => {
+        if(!data){
+          this.exito = true
+          setTimeout(()=>{
+            this.exito = false
+          },2000)
+        }
+        this.spinner = false
         const user = {
           id_user: data.id_user,
           nombre: data.nombre,
@@ -94,13 +101,18 @@ export class ListadoUsuariosComponent {
 
     //servicio que envia
     console.log('enviando datos:', usuarios)
+    this.spinner = !this.spinner
     this.admService.insertUser(usuarios).subscribe((data) => {
       if (data) {
+        setTimeout(()=>{
+          this.spinner = !this.spinner
+        },2000)
         //mensaje
         this.exito = !this.exito
 
         console.log(data)
         this.formsUser.reset();
+        window.location.reload();
       }
     })
 
@@ -134,23 +146,24 @@ export class ListadoUsuariosComponent {
       nombre: this.formsUser.controls['nombre'].value,
       apellido_p: this.formsUser.controls['apellido_p'].value,
       apellido_m: this.formsUser.controls['apellido_m'].value,
-      contrasenia: this.formsUser.controls['contrasenia'].value,
+      contrasenia: this.formsUser.controls['contrasenia'].value!== undefined ? this.formsUser.controls['contrasenia'].value:undefined,
       correo: this.formsUser.controls['correo'].value,
       id_rol: this.formsUser.controls['id_rol'].value,
     }
     console.log(usuarios)
-    this.admService.editUser(usuarios).subscribe((data) => {
-      if(this.formsUser.invalid){
+    if(this.formsUser.invalid){
+      this.exito = !this.exito
+      this.messages[0].severity = 'error'
+      this.messages[0].summary = 'Error'
+      this.messages[0].detail = 'Todos los campos son necesarios'
+      setTimeout(()=>{
         this.exito = !this.exito
-        this.messages[0].severity = 'error'
-        this.messages[0].summary = 'Error'
-        this.messages[0].detail = 'Todos los campos son necesarios'
-        setTimeout(()=>{
-          this.exito = !this.exito
-        },2000)
+      },2000)
+      console.log('!!!!')
+      return
+    }
+    this.admService.editUser(usuarios).subscribe((data) => {
 
-        return
-      }
       //mensaje
       this.exito = !this.exito
 
@@ -160,6 +173,9 @@ export class ListadoUsuariosComponent {
         this.exito = !this.exito
       },2000)
       this.formsUser.reset();
+      setTimeout(()=>{
+        window.location.reload()
+      },2000)
     })
 
 

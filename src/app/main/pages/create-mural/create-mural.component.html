@@ -45,7 +45,7 @@
           </ng-container>
           <ng-container  class="contImg" *ngIf="item.type.startsWith('application/')" (click)="selectElement($event)">
             <pdf-viewer [id]="item.id" [src]="item.url" [render-text]="true" alt="item.file.name" [original-size]="true"
-              [fit-to-page]="true"></pdf-viewer>
+              [fit-to-page]="true" [zoom]="1"></pdf-viewer>
 
           </ng-container>
 
@@ -99,7 +99,7 @@
           <div class="menu-item">
             <label for="borderRadius">Radio de bordes</label>
             <div class="inpRadio">
-              <input formControlName="borderRadius" type="number" placeholder="4">
+              <input formControlName="borderRadius" type="number" placeholder="4" min="0" max="100">
               <svg class="svg" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="#000" fill-opacity="1" fill-rule="evenodd" stroke="none" d="M2 4.5C2 3.12 3.12 2 4.5 2H6v1H4.5C3.672 3 3 3.672 3 4.5V6H2V4.5zM10 2h1.5C12.88 2 14 3.12 14 4.5V6h-1V4.5c0-.828-.672-1.5-1.5-1.5H10V2zm-7 8v1.5c0 .828.672 1.5 1.5 1.5H6v1H4.5C3.12 14 2 12.88 2 11.5V10h1zm11 0v1.5c0 1.38-1.12 2.5-2.5 2.5H10v-1h1.5c.828 0 1.5-.672 1.5-1.5V10h1z"></path></svg>
             </div>
 
@@ -107,12 +107,12 @@
 
           <div class="menu-item">
             <label for="width">Ancho</label>
-            <input formControlName="width" type="number">
+            <input formControlName="width" type="number"  min="0" max="790">
           </div>
 
           <div class="menu-item">
             <label for="height">Alto</label>
-            <input formControlName="height" type="number">
+            <input formControlName="height" type="number" min="0" max="450">
           </div>
 
           <div class="menu-item">
@@ -137,7 +137,7 @@
 
           <div class="menu-item">
             <label for="fontSize">Tamaño de la fuente</label>
-            <input formControlName="fontSize" type="number">
+            <input formControlName="fontSize" type="number" min="0" max="50">
           </div>
 
           <button class="btnGuardar" type="submit">Guardar</button>
@@ -181,12 +181,12 @@
 
           <div class="menu-item">
             <h2>Ancho</h2>
-            <input formControlName="width" type="number">
+            <input formControlName="width" type="number"  min="0" max="790">
           </div>
 
           <div class="menu-item">
             <h2>Alto</h2>
-            <input formControlName="height" type="number">
+            <input formControlName="height" type="number"  min="0" max="450">
           </div>
 
 

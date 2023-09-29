@@ -125,7 +125,7 @@
     <input formControlName="correo" type="email" id="email" name="email" required>
 
     <label for="password">Contraseña:</label>
-    <input formControlName="contrasenia" type="password" id="password" name="password" required>
+    <input formControlName="contrasenia" type="password" id="password" name="password" >
 
     <label for="password">Rol:</label>
     <select class="roles"  formControlName="id_rol" name="roles">
@@ -143,3 +143,5 @@
 
 <p-messages [style]="{'width':'500'+'px','position':'fixed','left':'70'+'%','top':'2'+'px'}" *ngIf="exito"
   [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
+
+  <spinner *ngIf="spinner"  [style]="{'width':'500'+'px','position':'fixed','left':'50'+'%','top':'50'+'%'}"></spinner>
