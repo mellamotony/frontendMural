@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "https://2daa-45-224-99-21.ngrok-free.app",
+    "target": "https://346f-45-224-99-21.ngrok-free.app",
     "pathRewrite": {
       "^/api": "/codeigniter4-framework-5d3d4b2"
     },

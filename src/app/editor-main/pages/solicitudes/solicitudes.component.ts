@@ -7,6 +7,7 @@ import {
   SolicituMural,
 } from '../../interfaces/solicitudes.interface';
 import { EditorService } from '../../services/editor-services';
+import { Message } from 'primeng/api';
 
 @Component({
   selector: 'app-solicitudes',
@@ -17,7 +18,7 @@ export class SolicitudesComponent implements OnInit {
   public products: SolicituMural[] = [];
   public activeMessage: boolean = false;
   public exito:boolean = true;
-
+  messages: Message[] = [{ severity: 'success', summary: 'Success', detail: 'Mural actualizado con éxito' }]
   public e?: HTMLElement;
   date: Date[] = [
     new Date(),            // Fecha actual
@@ -117,13 +118,18 @@ export class SolicitudesComponent implements OnInit {
     this.mService.rejectMural(body).subscribe((data) => {
       console.log(data);
       if (data.mensaje == 'actualización de estado exitosamente') {
-        alert('Mural actualizado con éxito');
+        this.exito = !this.exito
+        setTimeout(()=>{
+          this.exito = !this.exito
+        },2000)
         window.location.reload();
       }
     });
   }
   onPublic(el: Event) {
     this.activeMessage = !this.activeMessage;
+
+
 
     //obtenemos el padre
     const parentElement = (el.target as HTMLElement).closest('.rowT');
@@ -165,7 +171,11 @@ export class SolicitudesComponent implements OnInit {
     this.mService.setAprove(body).subscribe((data) => {
       console.log(data);
       if (data.mensaje == 'actualización de estado exitosamente') {
-        alert('Mural actualizado con éxito');
+        this.exito = !this.exito
+        setTimeout(()=>{
+          this.exito = !this.exito
+        },2000)
+
         window.location.reload();
       }
     });
