@@ -28,6 +28,9 @@ export class EstadoComponent {
             this.isactive = false;
           },1000)
           this.listName.push(data)
+        }else{
+          this.isactive = false;
+          alert('No hubo datos ')
         }
 
       })

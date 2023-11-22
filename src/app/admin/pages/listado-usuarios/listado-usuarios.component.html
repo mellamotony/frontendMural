@@ -2,7 +2,7 @@
 
   <p-menubar [model]="items">
     <ng-template pTemplate="start">
-      <p-avatar [label]="avatar" size="xlarge"></p-avatar>
+      <p-avatar [ngStyle]="{'color':coloRandom}" [label]="avatar" size="xlarge"></p-avatar>
       <span>{{" "}} {{admindata.nombre}} {{admindata.apellidos}}</span>
     </ng-template>
     <ng-template pTemplate="end">

@@ -9,13 +9,17 @@ export class CreateUserComponent implements OnInit {
   // Ejemplo de uso
   public hijoPosX = 248;
   public hijoPosY = 277;
-  public left = ''
-  public top = ''
+  public left = '';
+  public top = '';
+  colors: string[] = ['red', 'blue', 'white'];
+  coloRandom: string = '';
   ngOnInit(): void {
+    const idRadom = Math.floor(Math.random() * this.colors.length);
+    this.coloRandom = this.colors[idRadom];
     const padreWidth = 790;
     const padreHeight = 450;
-    const left2 = 777
-    const top2 = 265
+    const left2 = 777;
+    const top2 = 265;
     const { left, top } = this.calcularPorcentajeLeftTop(
       padreWidth,
       padreHeight,
@@ -23,11 +27,15 @@ export class CreateUserComponent implements OnInit {
       this.hijoPosY
     );
     console.log('Left:', left, 'Top:', top);
-    this.left = left,
-    this.top = top
+    (this.left = left), (this.top = top);
 
-    const lef2 = this.calcularPorcentajeLeftTop(padreHeight,padreWidth,left2,top2)
-    console.log(lef2)
+    const lef2 = this.calcularPorcentajeLeftTop(
+      padreHeight,
+      padreWidth,
+      left2,
+      top2
+    );
+    console.log(lef2);
   }
 
   calcularPorcentajeLeftTop(

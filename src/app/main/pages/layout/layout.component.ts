@@ -19,12 +19,18 @@ export class LayoutComponent implements OnInit {
   public avatar:string = ''
   public nombre:string = ''
   public apellidos:string = ''
+  coloRandom: string = '';
+  colors: string [] = ['red','white','blue','yellow'];
 
   constructor(
 
     private ms: MuralService
   ) { }
   ngOnInit(): void {
+    const idRadom = Math.floor(Math.random() * this.colors.length)
+
+    this.coloRandom = this.colors[idRadom]
+    console.log('color: '+this.coloRandom)
     this.items = [
       {
         label: 'Galeria',

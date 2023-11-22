@@ -1,0 +1,6 @@
+/* :root {
+  --random-color: #${Math.floor(Math.random() * 16777215).toString(16)};
+}
+::ng-deep .p-avatar{
+  background-color: red;
+} */

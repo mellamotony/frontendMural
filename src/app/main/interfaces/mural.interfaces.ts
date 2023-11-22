@@ -27,8 +27,9 @@ export interface myFile extends File {
 
 
 export interface MuralDataSetItem {
-  id_mural:string |null,
+  id_mural?:string |null,
   id_user:string |null,
+  editor?:string,
   imgMural?:string,
   height:number,
   width:number,
@@ -134,10 +135,16 @@ export interface Solicitud {
   diseñador:       string;
   fecha_solicitud: string;
   fecha_respuesta?: string;
+  fecha_publicacion?:string;
+  fin_publicacion?:string;
 }
 
 export interface logs {
   fecha_modificacion:string,
   modificado:string,
   nombre_mural:string
+}
+
+export interface editors {
+  "id_user":string,"nombre":string,"apellidos":string,"correo":string,"id_rol":string,"rol":string
 }

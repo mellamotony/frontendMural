@@ -1,3 +1,14 @@
+<div *ngIf="isactive" class="sk-cube-grid">
+  <div class="sk-cube sk-cube1"></div>
+  <div class="sk-cube sk-cube2"></div>
+  <div class="sk-cube sk-cube3"></div>
+  <div class="sk-cube sk-cube4"></div>
+  <div class="sk-cube sk-cube5"></div>
+  <div class="sk-cube sk-cube6"></div>
+  <div class="sk-cube sk-cube7"></div>
+  <div class="sk-cube sk-cube8"></div>
+  <div class="sk-cube sk-cube9"></div>
+</div>
 <p-messages
   [style]="{
     width: '500' + 'px',
@@ -31,32 +42,7 @@
         <img [src]="image" width="100" />
       </div> -->
 
-      <textarea
-        [id]="idTxt[i]"
-        #textArea
-        *ngFor="let item of valueInputs; let i = index"
-        cdkDragBoundary=".panel-container"
-        cdkDrag
-        class="cdk-drag"
-        [value]="item.valor"
-        [ngStyle]="{
-          color: item.color,
-          backgroundColor: item.backgroundcolor,
-          'font-family': item.font,
-          'font-size': item.font_size,
-          border: '1px ' + item.border_style + ' ' + item.border_color,
-          'border-radius': item.border_radius,
-          'font-weight': item.font_weight,
-          left: item.posx + '%',
-          top: item.posy + '%',
-          height: item.height + 'px',
-          width: item.width + 'px',
-          'text-align': item.sangria
-        }"
-        type="text"
-        (click)="handleClick($event)"
-      >
-      </textarea>
+
 <!-- left: item.posx + 'px',
           top: item.posy + 'px', -->
       <input
@@ -115,6 +101,32 @@
           ></pdf-viewer>
         </ng-container>
       </div>
+      <textarea
+        [id]="idTxt[i]"
+        #textArea
+        *ngFor="let item of valueInputs; let i = index"
+        cdkDragBoundary=".panel-container"
+        cdkDrag
+        class="cdk-drag"
+        [value]="item.valor"
+        [ngStyle]="{
+          color: item.color,
+          backgroundColor: item.backgroundcolor,
+          'font-family': item.font,
+          'font-size': item.font_size,
+          border: '1px ' + item.border_style + ' ' + item.border_color,
+          'border-radius': item.border_radius,
+          'font-weight': item.font_weight,
+          left: item.posx + '%',
+          top: item.posy + '%',
+          height: item.height + 'px',
+          width: item.width + 'px',
+          'text-align': item.sangria
+        }"
+        type="text"
+        (click)="handleClick($event)"
+      >
+      </textarea>
     </div>
   </div>
   <div class="barrita">
@@ -302,3 +314,4 @@
 
 
 </div>
+<app-selec-editor *ngIf="editState" [editors]="users"  (idrol)="capturarIdRol($event)"></app-selec-editor>

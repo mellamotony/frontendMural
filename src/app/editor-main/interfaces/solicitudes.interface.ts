@@ -1,11 +1,13 @@
 
 export interface SolicituMural {
-  id_mural:string
+  id_mural:string,
   nombre_mural:string,
   fecha:string,
-  estado:string
-  fecha_respuesta?:string
-  id_user?:string
+  estado:string,
+  fecha_respuesta?:string,
+  id_user?:string,
+  fecha_publicacion?:string,
+  fin_publicacion?:string
 }
 
 export interface HistorialMural{

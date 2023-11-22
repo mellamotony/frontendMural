@@ -4,6 +4,8 @@
       <th>Nombre del Mural</th>
       <th>Fecha de {{aprobado}}</th>
       <th>Hora</th>
+      <th *ngIf="status">Inicio de publicación</th>
+      <th  *ngIf="status">Fin de publicación</th>
       <th>Estado</th>
       <th>
         <form [formGroup]="formEstado">
@@ -21,10 +23,12 @@
       <td>{{ product.nombre_mural |titlecase }}</td>
       <td>{{ product.fecha.slice(0, 10)}}</td>
       <td>{{product.fecha.slice(10, 19)}}</td>
+      <td  *ngIf="status">{{product.fecha_publicacion | titlecase}}</td>
+      <td  *ngIf="status">{{product.fin_publicacion | titlecase}}</td>
       <td>{{product.estado | titlecase}}</td>
       <td> </td>
 
     </tr>
   </ng-template>
 </p-table>
-<div *ngIf="exito" class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+<div *ngIf="exitos" class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>

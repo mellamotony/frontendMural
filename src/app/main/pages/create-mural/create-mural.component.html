@@ -1,246 +1,347 @@
-<p-messages [style]="{'width':'500'+'px','position':'fixed','left':'70'+'%','top':'2'+'px'}" *ngIf="exito"
-  [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
+<div *ngIf="isactive" class="sk-cube-grid">
+  <div class="sk-cube sk-cube1"></div>
+  <div class="sk-cube sk-cube2"></div>
+  <div class="sk-cube sk-cube3"></div>
+  <div class="sk-cube sk-cube4"></div>
+  <div class="sk-cube sk-cube5"></div>
+  <div class="sk-cube sk-cube6"></div>
+  <div class="sk-cube sk-cube7"></div>
+  <div class="sk-cube sk-cube8"></div>
+  <div class="sk-cube sk-cube9"></div>
+</div>
+<p-messages
+  [style]="{
+    width: '500' + 'px',
+    position: 'fixed',
+    left: '70' + '%',
+    top: '2' + 'px'
+  }"
+  *ngIf="exito"
+  [(value)]="messages"
+  [enableService]="false"
+  [closable]="true"
+></p-messages>
 <div class="padre">
   <div class="mainContainer">
     <form class="formBody" [formGroup]="MuralnameForm">
       <div class="esta">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-        class="pen">
-        <path stroke-linecap="round" stroke-linejoin="round"
-          d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
-      </svg>
-      <input class="forName" type="text" formControlName="Muralname" placeholder="Nombre de Mural">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="pen"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+          />
+        </svg>
+        <input
+          class="forName"
+          type="text"
+          formControlName="Muralname"
+          placeholder="Nombre de Mural"
+        />
       </div>
-
-
     </form>
     <!-- <span>{{this.zoomLevel+'%'}}</span> -->
     <p-megaMenu [model]="items"></p-megaMenu>
 
     <!-- <div class="padreContainer  [style.transform]="'scale(' + (zoomLevel / 100) + ')'""> -->
 
-      <div    class="panel-container" #contPanel>
-
-        <!--
+    <div class="panel-container" #contPanel>
+      <!--
     cdkDropList
     [cdkDropListData]="images"
     (cdkDropListDropped)="drop($event)"
     (cdkDropListEntered)="entered($event)" -->
-        <!-- <div class="element" *ngFor="let image of images" cdkDrag>
+      <!-- <div class="element" *ngFor="let image of images" cdkDrag>
         <img [src]="image" width="100" />
       </div> -->
 
-        <textarea [ngStyle]="{'position':'fixed'}" *ngFor="let item of valueInputs" cdkDragBoundary=".panel-container"
-          cdkDrag class="cdk-drag" [value]="item" type="text" (click)="handleClick($event)">
-        </textarea>
-
-        <input type="file" style="display: none" id="fileInput" (change)="handleFileInput($event)">
-        <div [ngStyle]="{'position':'fixed'}" class="panel-i" *ngFor="let item of panelItems" cdkDrag
-          cdkDragBoundary=".panel-container" (click)="handleClickMultimedia($event)">
-          <ng-container class="contVideo" *ngIf="item.type.startsWith('video/')">
-            <video [id]="item.id" [src]="item.url" controls></video>
-          </ng-container>
-          <ng-container class="contImg" *ngIf="item.type.startsWith('image/')">
-            <img [id]="item.id" [src]="item.url" [alt]="item.file.name">
-          </ng-container>
-          <ng-container  class="contImg" *ngIf="item.type.startsWith('application/')" (click)="selectElement($event)">
-            <pdf-viewer [id]="item.id" [src]="item.url" [render-text]="true" alt="item.file.name" [original-size]="true"
-              [fit-to-page]="true" [zoom]="1"></pdf-viewer>
-
-          </ng-container>
-
-        </div>
 
 
+      <input
+        type="file"
+        style="display: none"
+        id="fileInput"
+        (change)="handleFileInput($event)"
+      />
+      <div
+        [ngStyle]="{ position: 'fixed' }"
+        class="panel-i"
+        *ngFor="let item of panelItems"
+        cdkDrag
+        cdkDragBoundary=".panel-container"
+        (click)="handleClickMultimedia($event)"
+      >
+        <ng-container class="contVideo" *ngIf="item.type.startsWith('video/')">
+          <video [id]="item.id" [src]="item.url" controls></video>
+        </ng-container>
+        <ng-container class="contImg" *ngIf="item.type.startsWith('image/')">
+          <img [id]="item.id" [src]="item.url" [alt]="item.file.name" />
+        </ng-container>
+        <ng-container
+          class="contImg"
+          *ngIf="item.type.startsWith('application/')"
+          (click)="selectElement($event)"
+        >
+          <pdf-viewer
+            [id]="item.id"
+            [src]="item.url"
+            [render-text]="true"
+            alt="item.file.name"
+            [original-size]="true"
+            [fit-to-page]="true"
+            [zoom]="1"
+          ></pdf-viewer>
+        </ng-container>
       </div>
+      <textarea
+        [ngStyle]="{ position: 'fixed' }"
+        *ngFor="let item of valueInputs"
+        cdkDragBoundary=".panel-container"
+        cdkDrag
+        class="cdk-drag"
+        [value]="item"
+        type="text"
+        (click)="handleClick($event)"
+      >
+      </textarea>
+    </div>
     <!-- </div> -->
 
     <!-- <p-button  (click)="OnSaveMural()">Guardar</p-button> -->
-
-
-
   </div>
 
-    <div class="barrita">
-      <!-- Barra de herramientas para textos -->
-      <div class="MenuBarEdicionTexto" *ngIf="isActive">
-        <div class="botoncito">
-          <button class="hidenbuttom" (click)="ocultarToolbarTxt()">
-            <img
-              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAD3UlEQVR4nO1ZzU8TQRTfgB+JcPKLiMXOlMYDVwLiR+JfYTSaeAL1P0BITG9iwonQeUvDHWONJ8WrN+8qnggkoBEQMPQNRfSy5m0x0tcp3enuFkz6SybZsJ23782893sfOE4TTTQRHnmvNTlVuCoBRwXoV1LpzxL0D6HwNy3/GXDOfwc4moTCgJPxWpzDRrfa6ZKgn0mFXyVoz2YJwC9C6bH0RDHRcMXTE3hOgs4Jhb9sFa8wRPky3Ms5PNsQ5VOg70qlN8MqblgbSdB3YlO8N+cdF0pPVz9JjQJwRmRxSKpiH90S7aHl35i71V96h8/pt1UNUXqK9kSq/IWcd0oqfGv+IH5LKnxEv7GSBzgoQM9XcatZG3kHgk7DpLwA3BWATzrGV9rCyBaAwySrUr5+E8lNmN0GV4g2nYjQrQrXhMJVw224oQRLV98zXO8nok8nYqRyO5dItiG2btclsHOycEYovc6UX41DeWZE+U0ovVkXxRLPs2D9GaXbVEPKxes8JgRoZSWETpknKQpYp0GQCkc4YVhlbL88YFRpwzY9ee8E3WC9BvSU9i+wWBgLtjvvtfLahng+6Me7JoudUun3tM8JAQH4gN3CcqACsFRVlmfYoEmF6JBu6+/eMAZ0jK+0CdC6zBPcrf6aG6ncZZbPBD0xHjdhDCBIhS/2y0sBPnZqoVSz7zMgi0NB/N1UEtT8WA0IFx8yNnoZ5CTnygO42BfE32MxIFu4wrzhY81NvFSulkS4v0exHIYU6PMsHtdrW838mFwkiL/HYUB6wjvJ80E0Bqjt+5SZj6QBMqgLQbFXKFw6ei4ELIgP4F6/01L4Lq4gTkJhwDqIbWn0ZsY7VlF6HCaNSlZIUQ8b6GOGuAhrgASdZzcwbH9tNqUEi4swyvdk19ol6O2gOekfMl4LDZ3K3QEHg354f1xEWswpXAo8zaPSlfnevE2DHbacTpfoc5Hp8NRCQDFhaGhq+19EkJUF5W7CLV60FKJdLoTKBydmpLJ4o+LwFE5aC0pMb502NfXUeDe0qQe9UffclGaVnNtp9BGHESlSnifR0roVSjDNKg1GrNL0IGK3WTN8JxvRUBdnK4TT6EPhiKnYs2MrHDVVtkLp15TlnShAicxkxN5aIM62mlpk19r3eH7RJJOUj2y4WzbkZczEeFpTD0v1C3VSVEnSCdOiZ/obTTf2yoPyDAvlbhPZyZtAs0rOTlEsAfp76IC1mpuCVqaxuL3iuEs8T7TtNBqUHansoKFTHYovU3lgnWFjQcZrocaH5jZUs1PjQZ0dsYvPMPQM+GHv3bBfVR6Ff7M20YTz/+MPrVgMk80jMSEAAAAASUVORK5CYII=">
-          </button>
-          <div id="borrar" class="menu-item btnDelete" (click)="DeleteElement()">
-            <i class="pi pi-trash"></i>
-          </div>
-        </div>
-        <form (ngSubmit)="getChangesStyles()" [formGroup]="toolsForm">
-          <div class="menu-item">
-            <label for="color">Color de texto</label>
-            <p-colorPicker formControlName="color"></p-colorPicker>
-          </div>
-
-          <div class="menu-item">
-            <label for="background" class="carta">Color de fondo</label>
-            <p-colorPicker formControlName="background"></p-colorPicker>
-          </div>
-
-          <div class="menu-item">
-            <label for="borderColor">Color de Borde</label>
-            <p-colorPicker formControlName="borderColor"></p-colorPicker>
-          </div>
-
-          <div class="menu-item">
-            <label for="borderStyle">Estilos de borde</label>
-            <select formControlName="borderStyle" id="fonts">
-              <option *ngFor="let brdStyles of borderStyles" [value]="brdStyles">{{brdStyles}}</option>
-            </select>
-          </div>
-
-          <div class="menu-item">
-            <label for="borderRadius">Radio de bordes</label>
-            <div class="inpRadio">
-              <input formControlName="borderRadius" type="number" placeholder="4" min="0" max="100">
-              <svg class="svg" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="#000" fill-opacity="1" fill-rule="evenodd" stroke="none" d="M2 4.5C2 3.12 3.12 2 4.5 2H6v1H4.5C3.672 3 3 3.672 3 4.5V6H2V4.5zM10 2h1.5C12.88 2 14 3.12 14 4.5V6h-1V4.5c0-.828-.672-1.5-1.5-1.5H10V2zm-7 8v1.5c0 .828.672 1.5 1.5 1.5H6v1H4.5C3.12 14 2 12.88 2 11.5V10h1zm11 0v1.5c0 1.38-1.12 2.5-2.5 2.5H10v-1h1.5c.828 0 1.5-.672 1.5-1.5V10h1z"></path></svg>
-            </div>
-
-          </div>
-
-          <div class="menu-item">
-            <label for="width">Ancho</label>
-            <input formControlName="width" type="number"  min="0" max="790">
-          </div>
-
-          <div class="menu-item">
-            <label for="height">Alto</label>
-            <input formControlName="height" type="number" min="0" max="450">
-          </div>
-
-          <div class="menu-item">
-            <label for="negrita">Negritas</label>
-            <input formControlName="negrita" type="checkbox">
-          </div>
-
-          <div class="menu-item">
-            <label for="alignment">Alineación</label>
-            <select formControlName="alignment" id="alignment">
-              <option value="center">Centrado</option>
-              <option value="justify">Justificado</option>
-            </select>
-          </div>
-
-          <div class="menu-item">
-            <label for="fonts">Fuentes</label>
-            <select formControlName="fonts" id="fonts">
-              <option *ngFor="let font of fontFamilies" [value]="font">{{font}}</option>
-            </select>
-          </div>
-
-          <div class="menu-item">
-            <label for="fontSize">Tamaño de la fuente</label>
-            <input formControlName="fontSize" type="number" min="0" max="50">
-          </div>
-
-          <button class="btnGuardar" type="submit">Guardar</button>
-        </form>
-      </div>
-
-
-      <!-- Barra de herramientas para imagens y videos  -->
-
-      <div class="MenuBarEdicionTexto" *ngIf="IsVidActive">
-        <div class="botoncito">
-          <button class="hidenbuttom" (click)="ocultarToolbarMulti()">
-            <img
-              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAD3UlEQVR4nO1ZzU8TQRTfgB+JcPKLiMXOlMYDVwLiR+JfYTSaeAL1P0BITG9iwonQeUvDHWONJ8WrN+8qnggkoBEQMPQNRfSy5m0x0tcp3enuFkz6SybZsJ23782893sfOE4TTTQRHnmvNTlVuCoBRwXoV1LpzxL0D6HwNy3/GXDOfwc4moTCgJPxWpzDRrfa6ZKgn0mFXyVoz2YJwC9C6bH0RDHRcMXTE3hOgs4Jhb9sFa8wRPky3Ms5PNsQ5VOg70qlN8MqblgbSdB3YlO8N+cdF0pPVz9JjQJwRmRxSKpiH90S7aHl35i71V96h8/pt1UNUXqK9kSq/IWcd0oqfGv+IH5LKnxEv7GSBzgoQM9XcatZG3kHgk7DpLwA3BWATzrGV9rCyBaAwySrUr5+E8lNmN0GV4g2nYjQrQrXhMJVw224oQRLV98zXO8nok8nYqRyO5dItiG2btclsHOycEYovc6UX41DeWZE+U0ovVkXxRLPs2D9GaXbVEPKxes8JgRoZSWETpknKQpYp0GQCkc4YVhlbL88YFRpwzY9ee8E3WC9BvSU9i+wWBgLtjvvtfLahng+6Me7JoudUun3tM8JAQH4gN3CcqACsFRVlmfYoEmF6JBu6+/eMAZ0jK+0CdC6zBPcrf6aG6ncZZbPBD0xHjdhDCBIhS/2y0sBPnZqoVSz7zMgi0NB/N1UEtT8WA0IFx8yNnoZ5CTnygO42BfE32MxIFu4wrzhY81NvFSulkS4v0exHIYU6PMsHtdrW838mFwkiL/HYUB6wjvJ80E0Bqjt+5SZj6QBMqgLQbFXKFw6ei4ELIgP4F6/01L4Lq4gTkJhwDqIbWn0ZsY7VlF6HCaNSlZIUQ8b6GOGuAhrgASdZzcwbH9tNqUEi4swyvdk19ol6O2gOekfMl4LDZ3K3QEHg354f1xEWswpXAo8zaPSlfnevE2DHbacTpfoc5Hp8NRCQDFhaGhq+19EkJUF5W7CLV60FKJdLoTKBydmpLJ4o+LwFE5aC0pMb502NfXUeDe0qQe9UffclGaVnNtp9BGHESlSnifR0roVSjDNKg1GrNL0IGK3WTN8JxvRUBdnK4TT6EPhiKnYs2MrHDVVtkLp15TlnShAicxkxN5aIM62mlpk19r3eH7RJJOUj2y4WzbkZczEeFpTD0v1C3VSVEnSCdOiZ/obTTf2yoPyDAvlbhPZyZtAs0rOTlEsAfp76IC1mpuCVqaxuL3iuEs8T7TtNBqUHansoKFTHYovU3lgnWFjQcZrocaH5jZUs1PjQZ0dsYvPMPQM+GHv3bBfVR6Ff7M20YTz/+MPrVgMk80jMSEAAAAASUVORK5CYII=">
-          </button>
-          <div id="borrar" class="menu-item btnDelete" (click)="DeleteParent()">
-            <i class="pi pi-trash"></i>
-          </div>
-        </div>
-
-        <form (ngSubmit)="changeStyles()" [formGroup]="toolsForm">
-          <div class="menu-item">
-            <h2>Color de Borde</h2>
-            <p-colorPicker formControlName="borderColor"></p-colorPicker>
-          </div>
-
-          <div class="menu-item">
-            <label for="borderStyle">Estilos de borde</label>
-            <select formControlName="borderStyle" id="fonts">
-              <option *ngFor="let brdStyles of borderStyles" [value]="brdStyles">{{brdStyles}}</option>
-            </select>
-          </div>
-
-          <div class="menu-item">
-            <label for="borderRadius">Radio de bordes</label>
-            <div class="inpRadio">
-              <input formControlName="borderRadius" type="number" placeholder="4">
-              <svg class="svg" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="#000" fill-opacity="1" fill-rule="evenodd" stroke="none" d="M2 4.5C2 3.12 3.12 2 4.5 2H6v1H4.5C3.672 3 3 3.672 3 4.5V6H2V4.5zM10 2h1.5C12.88 2 14 3.12 14 4.5V6h-1V4.5c0-.828-.672-1.5-1.5-1.5H10V2zm-7 8v1.5c0 .828.672 1.5 1.5 1.5H6v1H4.5C3.12 14 2 12.88 2 11.5V10h1zm11 0v1.5c0 1.38-1.12 2.5-2.5 2.5H10v-1h1.5c.828 0 1.5-.672 1.5-1.5V10h1z"></path></svg>
-            </div>
-          </div>
-
-          <div class="menu-item">
-            <h2>Ancho</h2>
-            <input formControlName="width" type="number"  min="0" max="790">
-          </div>
-
-          <div class="menu-item">
-            <h2>Alto</h2>
-            <input formControlName="height" type="number"  min="0" max="450">
-          </div>
-
-
-
-          <button class="btnGuardar" type="submit">Guardar</button>
-        </form>
-      </div>
-
-
-
-      <!-- Barra de herramientas para Pdfs  -->
-
-      <div class="MenuBarEdicionTexto" *ngIf="isPdfActive">
-        <button class="hidenbuttom" (click)="ocultarToolbarPdf()">
+  <div class="barrita">
+    <!-- Barra de herramientas para textos -->
+    <div class="MenuBarEdicionTexto" *ngIf="isActive">
+      <div class="botoncito">
+        <button class="hidenbuttom" (click)="ocultarToolbarTxt()">
           <img
-            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAD3UlEQVR4nO1ZzU8TQRTfgB+JcPKLiMXOlMYDVwLiR+JfYTSaeAL1P0BITG9iwonQeUvDHWONJ8WrN+8qnggkoBEQMPQNRfSy5m0x0tcp3enuFkz6SybZsJ23782893sfOE4TTTQRHnmvNTlVuCoBRwXoV1LpzxL0D6HwNy3/GXDOfwc4moTCgJPxWpzDRrfa6ZKgn0mFXyVoz2YJwC9C6bH0RDHRcMXTE3hOgs4Jhb9sFa8wRPky3Ms5PNsQ5VOg70qlN8MqblgbSdB3YlO8N+cdF0pPVz9JjQJwRmRxSKpiH90S7aHl35i71V96h8/pt1UNUXqK9kSq/IWcd0oqfGv+IH5LKnxEv7GSBzgoQM9XcatZG3kHgk7DpLwA3BWATzrGV9rCyBaAwySrUr5+E8lNmN0GV4g2nYjQrQrXhMJVw224oQRLV98zXO8nok8nYqRyO5dItiG2btclsHOycEYovc6UX41DeWZE+U0ovVkXxRLPs2D9GaXbVEPKxes8JgRoZSWETpknKQpYp0GQCkc4YVhlbL88YFRpwzY9ee8E3WC9BvSU9i+wWBgLtjvvtfLahng+6Me7JoudUun3tM8JAQH4gN3CcqACsFRVlmfYoEmF6JBu6+/eMAZ0jK+0CdC6zBPcrf6aG6ncZZbPBD0xHjdhDCBIhS/2y0sBPnZqoVSz7zMgi0NB/N1UEtT8WA0IFx8yNnoZ5CTnygO42BfE32MxIFu4wrzhY81NvFSulkS4v0exHIYU6PMsHtdrW838mFwkiL/HYUB6wjvJ80E0Bqjt+5SZj6QBMqgLQbFXKFw6ei4ELIgP4F6/01L4Lq4gTkJhwDqIbWn0ZsY7VlF6HCaNSlZIUQ8b6GOGuAhrgASdZzcwbH9tNqUEi4swyvdk19ol6O2gOekfMl4LDZ3K3QEHg354f1xEWswpXAo8zaPSlfnevE2DHbacTpfoc5Hp8NRCQDFhaGhq+19EkJUF5W7CLV60FKJdLoTKBydmpLJ4o+LwFE5aC0pMb502NfXUeDe0qQe9UffclGaVnNtp9BGHESlSnifR0roVSjDNKg1GrNL0IGK3WTN8JxvRUBdnK4TT6EPhiKnYs2MrHDVVtkLp15TlnShAicxkxN5aIM62mlpk19r3eH7RJJOUj2y4WzbkZczEeFpTD0v1C3VSVEnSCdOiZ/obTTf2yoPyDAvlbhPZyZtAs0rOTlEsAfp76IC1mpuCVqaxuL3iuEs8T7TtNBqUHansoKFTHYovU3lgnWFjQcZrocaH5jZUs1PjQZ0dsYvPMPQM+GHv3bBfVR6Ff7M20YTz/+MPrVgMk80jMSEAAAAASUVORK5CYII=">
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAD3UlEQVR4nO1ZzU8TQRTfgB+JcPKLiMXOlMYDVwLiR+JfYTSaeAL1P0BITG9iwonQeUvDHWONJ8WrN+8qnggkoBEQMPQNRfSy5m0x0tcp3enuFkz6SybZsJ23782893sfOE4TTTQRHnmvNTlVuCoBRwXoV1LpzxL0D6HwNy3/GXDOfwc4moTCgJPxWpzDRrfa6ZKgn0mFXyVoz2YJwC9C6bH0RDHRcMXTE3hOgs4Jhb9sFa8wRPky3Ms5PNsQ5VOg70qlN8MqblgbSdB3YlO8N+cdF0pPVz9JjQJwRmRxSKpiH90S7aHl35i71V96h8/pt1UNUXqK9kSq/IWcd0oqfGv+IH5LKnxEv7GSBzgoQM9XcatZG3kHgk7DpLwA3BWATzrGV9rCyBaAwySrUr5+E8lNmN0GV4g2nYjQrQrXhMJVw224oQRLV98zXO8nok8nYqRyO5dItiG2btclsHOycEYovc6UX41DeWZE+U0ovVkXxRLPs2D9GaXbVEPKxes8JgRoZSWETpknKQpYp0GQCkc4YVhlbL88YFRpwzY9ee8E3WC9BvSU9i+wWBgLtjvvtfLahng+6Me7JoudUun3tM8JAQH4gN3CcqACsFRVlmfYoEmF6JBu6+/eMAZ0jK+0CdC6zBPcrf6aG6ncZZbPBD0xHjdhDCBIhS/2y0sBPnZqoVSz7zMgi0NB/N1UEtT8WA0IFx8yNnoZ5CTnygO42BfE32MxIFu4wrzhY81NvFSulkS4v0exHIYU6PMsHtdrW838mFwkiL/HYUB6wjvJ80E0Bqjt+5SZj6QBMqgLQbFXKFw6ei4ELIgP4F6/01L4Lq4gTkJhwDqIbWn0ZsY7VlF6HCaNSlZIUQ8b6GOGuAhrgASdZzcwbH9tNqUEi4swyvdk19ol6O2gOekfMl4LDZ3K3QEHg354f1xEWswpXAo8zaPSlfnevE2DHbacTpfoc5Hp8NRCQDFhaGhq+19EkJUF5W7CLV60FKJdLoTKBydmpLJ4o+LwFE5aC0pMb502NfXUeDe0qQe9UffclGaVnNtp9BGHESlSnifR0roVSjDNKg1GrNL0IGK3WTN8JxvRUBdnK4TT6EPhiKnYs2MrHDVVtkLp15TlnShAicxkxN5aIM62mlpk19r3eH7RJJOUj2y4WzbkZczEeFpTD0v1C3VSVEnSCdOiZ/obTTf2yoPyDAvlbhPZyZtAs0rOTlEsAfp76IC1mpuCVqaxuL3iuEs8T7TtNBqUHansoKFTHYovU3lgnWFjQcZrocaH5jZUs1PjQZ0dsYvPMPQM+GHv3bBfVR6Ff7M20YTz/+MPrVgMk80jMSEAAAAASUVORK5CYII="
+          />
         </button>
-        <form (ngSubmit)="changeStylesPdfs()" [formGroup]="toolsForm">
-          <div class="menu-item">
-            <h2>Color de Borde pdf</h2>
-            <p-colorPicker formControlName="borderColor"></p-colorPicker>
-          </div>
+        <div id="borrar" class="menu-item btnDelete" (click)="DeleteElement()">
+          <i class="pi pi-trash"></i>
+        </div>
+      </div>
+      <form (ngSubmit)="getChangesStyles()" [formGroup]="toolsForm">
+        <div class="menu-item">
+          <label for="color">Color de texto</label>
+          <p-colorPicker formControlName="color"></p-colorPicker>
+        </div>
 
-          <div class="menu-item">
-            <label for="borderStyle">Estilos de borde:</label>
-            <select formControlName="borderStyle" id="fonts">
-              <option *ngFor="let brdStyles of borderStyles" [value]="brdStyles">{{brdStyles}}</option>
-            </select>
-          </div>
+        <div class="menu-item">
+          <label for="background" class="carta">Color de fondo</label>
+          <p-colorPicker formControlName="background"></p-colorPicker>
+        </div>
 
-          <div class="menu-item">
-            <h2>Radio de bordes</h2>
-            <input formControlName="borderRadius" type="text"><span> %</span>
-          </div>
+        <div class="menu-item">
+          <label for="borderColor">Color de Borde</label>
+          <p-colorPicker formControlName="borderColor"></p-colorPicker>
+        </div>
 
-          <div class="menu-item">
-            <h2>Ancho</h2>
-            <input formControlName="width" type="text">
-          </div>
+        <div class="menu-item">
+          <label for="borderStyle">Estilos de borde</label>
+          <select formControlName="borderStyle" id="fonts">
+            <option *ngFor="let brdStyles of borderStyles" [value]="brdStyles">
+              {{ brdStyles }}
+            </option>
+          </select>
+        </div>
 
-          <div class="menu-item">
-            <h2>Alto</h2>
-            <input formControlName="height" type="text">
+        <div class="menu-item">
+          <label for="borderRadius">Radio de bordes</label>
+          <div class="inpRadio">
+            <input
+              formControlName="borderRadius"
+              type="number"
+              placeholder="4"
+              min="0"
+              max="100"
+            />
+            <svg
+              class="svg"
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fill="#000"
+                fill-opacity="1"
+                fill-rule="evenodd"
+                stroke="none"
+                d="M2 4.5C2 3.12 3.12 2 4.5 2H6v1H4.5C3.672 3 3 3.672 3 4.5V6H2V4.5zM10 2h1.5C12.88 2 14 3.12 14 4.5V6h-1V4.5c0-.828-.672-1.5-1.5-1.5H10V2zm-7 8v1.5c0 .828.672 1.5 1.5 1.5H6v1H4.5C3.12 14 2 12.88 2 11.5V10h1zm11 0v1.5c0 1.38-1.12 2.5-2.5 2.5H10v-1h1.5c.828 0 1.5-.672 1.5-1.5V10h1z"
+              ></path>
+            </svg>
           </div>
+        </div>
 
-          <div class="menu-item btnDelete" (click)="deleteFile()">
-            <i class="pi pi-trash"></i>
-          </div>
+        <div class="menu-item">
+          <label for="width">Ancho</label>
+          <input formControlName="width" type="number" min="0" max="790" />
+        </div>
 
-          <button type="submit">Guardar Pdfs</button>
-        </form>
+        <div class="menu-item">
+          <label for="height">Alto</label>
+          <input formControlName="height" type="number" min="0" max="450" />
+        </div>
+
+        <div class="menu-item">
+          <label for="negrita">Negritas</label>
+          <input formControlName="negrita" type="checkbox" />
+        </div>
+
+        <div class="menu-item">
+          <label for="alignment">Alineación</label>
+          <select formControlName="alignment" id="alignment">
+            <option value="center">Centrado</option>
+            <option value="justify">Justificado</option>
+          </select>
+        </div>
+
+        <div class="menu-item">
+          <label for="fonts">Fuentes</label>
+          <select formControlName="fonts" id="fonts">
+            <option *ngFor="let font of fontFamilies" [value]="font">
+              {{ font }}
+            </option>
+          </select>
+        </div>
+
+        <div class="menu-item">
+          <label for="fontSize">Tamaño de la fuente</label>
+          <input formControlName="fontSize" type="number" min="0" max="50" />
+        </div>
+
+        <button class="btnGuardar" type="submit">Guardar</button>
+      </form>
+    </div>
+
+    <!-- Barra de herramientas para imagens y videos  -->
+
+    <div class="MenuBarEdicionTexto" *ngIf="IsVidActive">
+      <div class="botoncito">
+        <button class="hidenbuttom" (click)="ocultarToolbarMulti()">
+          <img
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAD3UlEQVR4nO1ZzU8TQRTfgB+JcPKLiMXOlMYDVwLiR+JfYTSaeAL1P0BITG9iwonQeUvDHWONJ8WrN+8qnggkoBEQMPQNRfSy5m0x0tcp3enuFkz6SybZsJ23782893sfOE4TTTQRHnmvNTlVuCoBRwXoV1LpzxL0D6HwNy3/GXDOfwc4moTCgJPxWpzDRrfa6ZKgn0mFXyVoz2YJwC9C6bH0RDHRcMXTE3hOgs4Jhb9sFa8wRPky3Ms5PNsQ5VOg70qlN8MqblgbSdB3YlO8N+cdF0pPVz9JjQJwRmRxSKpiH90S7aHl35i71V96h8/pt1UNUXqK9kSq/IWcd0oqfGv+IH5LKnxEv7GSBzgoQM9XcatZG3kHgk7DpLwA3BWATzrGV9rCyBaAwySrUr5+E8lNmN0GV4g2nYjQrQrXhMJVw224oQRLV98zXO8nok8nYqRyO5dItiG2btclsHOycEYovc6UX41DeWZE+U0ovVkXxRLPs2D9GaXbVEPKxes8JgRoZSWETpknKQpYp0GQCkc4YVhlbL88YFRpwzY9ee8E3WC9BvSU9i+wWBgLtjvvtfLahng+6Me7JoudUun3tM8JAQH4gN3CcqACsFRVlmfYoEmF6JBu6+/eMAZ0jK+0CdC6zBPcrf6aG6ncZZbPBD0xHjdhDCBIhS/2y0sBPnZqoVSz7zMgi0NB/N1UEtT8WA0IFx8yNnoZ5CTnygO42BfE32MxIFu4wrzhY81NvFSulkS4v0exHIYU6PMsHtdrW838mFwkiL/HYUB6wjvJ80E0Bqjt+5SZj6QBMqgLQbFXKFw6ei4ELIgP4F6/01L4Lq4gTkJhwDqIbWn0ZsY7VlF6HCaNSlZIUQ8b6GOGuAhrgASdZzcwbH9tNqUEi4swyvdk19ol6O2gOekfMl4LDZ3K3QEHg354f1xEWswpXAo8zaPSlfnevE2DHbacTpfoc5Hp8NRCQDFhaGhq+19EkJUF5W7CLV60FKJdLoTKBydmpLJ4o+LwFE5aC0pMb502NfXUeDe0qQe9UffclGaVnNtp9BGHESlSnifR0roVSjDNKg1GrNL0IGK3WTN8JxvRUBdnK4TT6EPhiKnYs2MrHDVVtkLp15TlnShAicxkxN5aIM62mlpk19r3eH7RJJOUj2y4WzbkZczEeFpTD0v1C3VSVEnSCdOiZ/obTTf2yoPyDAvlbhPZyZtAs0rOTlEsAfp76IC1mpuCVqaxuL3iuEs8T7TtNBqUHansoKFTHYovU3lgnWFjQcZrocaH5jZUs1PjQZ0dsYvPMPQM+GHv3bBfVR6Ff7M20YTz/+MPrVgMk80jMSEAAAAASUVORK5CYII="
+          />
+        </button>
+        <div id="borrar" class="menu-item btnDelete" (click)="DeleteParent()">
+          <i class="pi pi-trash"></i>
+        </div>
       </div>
 
+      <form (ngSubmit)="changeStyles()" [formGroup]="toolsForm">
+        <div class="menu-item">
+          <h2>Color de Borde</h2>
+          <p-colorPicker formControlName="borderColor"></p-colorPicker>
+        </div>
 
+        <div class="menu-item">
+          <label for="borderStyle">Estilos de borde</label>
+          <select formControlName="borderStyle" id="fonts">
+            <option *ngFor="let brdStyles of borderStyles" [value]="brdStyles">
+              {{ brdStyles }}
+            </option>
+          </select>
+        </div>
+
+        <div class="menu-item">
+          <label for="borderRadius">Radio de bordes</label>
+          <div class="inpRadio">
+            <input
+              formControlName="borderRadius"
+              type="number"
+              placeholder="4"
+            />
+            <svg
+              class="svg"
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fill="#000"
+                fill-opacity="1"
+                fill-rule="evenodd"
+                stroke="none"
+                d="M2 4.5C2 3.12 3.12 2 4.5 2H6v1H4.5C3.672 3 3 3.672 3 4.5V6H2V4.5zM10 2h1.5C12.88 2 14 3.12 14 4.5V6h-1V4.5c0-.828-.672-1.5-1.5-1.5H10V2zm-7 8v1.5c0 .828.672 1.5 1.5 1.5H6v1H4.5C3.12 14 2 12.88 2 11.5V10h1zm11 0v1.5c0 1.38-1.12 2.5-2.5 2.5H10v-1h1.5c.828 0 1.5-.672 1.5-1.5V10h1z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <h2>Ancho</h2>
+          <input formControlName="width" type="number" min="0" max="790" />
+        </div>
+
+        <div class="menu-item">
+          <h2>Alto</h2>
+          <input formControlName="height" type="number" min="0" max="450" />
+        </div>
+
+        <button class="btnGuardar" type="submit">Guardar</button>
+      </form>
+    </div>
+
+    <!-- Barra de herramientas para Pdfs  -->
+
+    <div class="MenuBarEdicionTexto" *ngIf="isPdfActive">
+      <button class="hidenbuttom" (click)="ocultarToolbarPdf()">
+        <img
+          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAD3UlEQVR4nO1ZzU8TQRTfgB+JcPKLiMXOlMYDVwLiR+JfYTSaeAL1P0BITG9iwonQeUvDHWONJ8WrN+8qnggkoBEQMPQNRfSy5m0x0tcp3enuFkz6SybZsJ23782893sfOE4TTTQRHnmvNTlVuCoBRwXoV1LpzxL0D6HwNy3/GXDOfwc4moTCgJPxWpzDRrfa6ZKgn0mFXyVoz2YJwC9C6bH0RDHRcMXTE3hOgs4Jhb9sFa8wRPky3Ms5PNsQ5VOg70qlN8MqblgbSdB3YlO8N+cdF0pPVz9JjQJwRmRxSKpiH90S7aHl35i71V96h8/pt1UNUXqK9kSq/IWcd0oqfGv+IH5LKnxEv7GSBzgoQM9XcatZG3kHgk7DpLwA3BWATzrGV9rCyBaAwySrUr5+E8lNmN0GV4g2nYjQrQrXhMJVw224oQRLV98zXO8nok8nYqRyO5dItiG2btclsHOycEYovc6UX41DeWZE+U0ovVkXxRLPs2D9GaXbVEPKxes8JgRoZSWETpknKQpYp0GQCkc4YVhlbL88YFRpwzY9ee8E3WC9BvSU9i+wWBgLtjvvtfLahng+6Me7JoudUun3tM8JAQH4gN3CcqACsFRVlmfYoEmF6JBu6+/eMAZ0jK+0CdC6zBPcrf6aG6ncZZbPBD0xHjdhDCBIhS/2y0sBPnZqoVSz7zMgi0NB/N1UEtT8WA0IFx8yNnoZ5CTnygO42BfE32MxIFu4wrzhY81NvFSulkS4v0exHIYU6PMsHtdrW838mFwkiL/HYUB6wjvJ80E0Bqjt+5SZj6QBMqgLQbFXKFw6ei4ELIgP4F6/01L4Lq4gTkJhwDqIbWn0ZsY7VlF6HCaNSlZIUQ8b6GOGuAhrgASdZzcwbH9tNqUEi4swyvdk19ol6O2gOekfMl4LDZ3K3QEHg354f1xEWswpXAo8zaPSlfnevE2DHbacTpfoc5Hp8NRCQDFhaGhq+19EkJUF5W7CLV60FKJdLoTKBydmpLJ4o+LwFE5aC0pMb502NfXUeDe0qQe9UffclGaVnNtp9BGHESlSnifR0roVSjDNKg1GrNL0IGK3WTN8JxvRUBdnK4TT6EPhiKnYs2MrHDVVtkLp15TlnShAicxkxN5aIM62mlpk19r3eH7RJJOUj2y4WzbkZczEeFpTD0v1C3VSVEnSCdOiZ/obTTf2yoPyDAvlbhPZyZtAs0rOTlEsAfp76IC1mpuCVqaxuL3iuEs8T7TtNBqUHansoKFTHYovU3lgnWFjQcZrocaH5jZUs1PjQZ0dsYvPMPQM+GHv3bBfVR6Ff7M20YTz/+MPrVgMk80jMSEAAAAASUVORK5CYII="
+        />
+      </button>
+      <form (ngSubmit)="changeStylesPdfs()" [formGroup]="toolsForm">
+        <div class="menu-item">
+          <h2>Color de Borde pdf</h2>
+          <p-colorPicker formControlName="borderColor"></p-colorPicker>
+        </div>
+
+        <div class="menu-item">
+          <label for="borderStyle">Estilos de borde:</label>
+          <select formControlName="borderStyle" id="fonts">
+            <option *ngFor="let brdStyles of borderStyles" [value]="brdStyles">
+              {{ brdStyles }}
+            </option>
+          </select>
+        </div>
+
+        <div class="menu-item">
+          <h2>Radio de bordes</h2>
+          <input formControlName="borderRadius" type="text" /><span> %</span>
+        </div>
+
+        <div class="menu-item">
+          <h2>Ancho</h2>
+          <input formControlName="width" type="text" />
+        </div>
+
+        <div class="menu-item">
+          <h2>Alto</h2>
+          <input formControlName="height" type="text" />
+        </div>
+
+        <div class="menu-item btnDelete" (click)="deleteFile()">
+          <i class="pi pi-trash"></i>
+        </div>
+
+        <button type="submit">Guardar Pdfs</button>
+      </form>
+    </div>
   </div>
-
 </div>
+<app-selec-editor
+  *ngIf="editState"
+  [editors]="users"
+  (idrol)="capturarIdRol($event)"
+></app-selec-editor>

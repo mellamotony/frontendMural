@@ -12,9 +12,14 @@ export class LayoutEComponent implements OnInit {
   avatar: string ='';
   nombre: string = '';
   apellidos: string = '';
-
+  colors:string[] = ['red','blue','white']
+  coloRandom:string=''
   constructor(private ms:EditorService){}
   ngOnInit(): void {
+    const idRadom = Math.floor(Math.random() * this.colors.length)
+
+    this.coloRandom = this.colors[idRadom]
+    console.log('color: '+this.coloRandom)
     this.items = [
       {
         label: 'Solicitudes',

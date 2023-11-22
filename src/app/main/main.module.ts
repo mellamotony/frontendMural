@@ -16,34 +16,33 @@ import { EstadoComponent } from './pages/estado/estado.component';
 import { HistorialComponent } from './pages/historial/historial.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { EditMuralComponent } from './pages/edit-mural/edit-mural.component';
+import { ShadersModule } from "../shaders/shaders.module";
 
 
 
 
 @NgModule({
-  declarations: [
-    DragDropPanelComponent,
-    LayoutComponent,
-     CreateMuralComponent,
-     DashboardComponent,
-     EstadoComponent,
-     HistorialComponent,
-     EditMuralComponent
-  ],
-  imports: [
-    CommonModule,
-    MainRoutingModule,
-    DragDropModule,
-    PrimeNModule,
-    ReactiveFormsModule,
-    PdfViewerModule,
-    HttpClientModule,
-
-
-  ],
-  exports:[
-    EditMuralComponent,
-
-  ]
+    declarations: [
+        DragDropPanelComponent,
+        LayoutComponent,
+        CreateMuralComponent,
+        DashboardComponent,
+        EstadoComponent,
+        HistorialComponent,
+        EditMuralComponent
+    ],
+    exports: [
+        EditMuralComponent,
+    ],
+    imports: [
+        CommonModule,
+        MainRoutingModule,
+        DragDropModule,
+        PrimeNModule,
+        ReactiveFormsModule,
+        PdfViewerModule,
+        HttpClientModule,
+        ShadersModule
+    ]
 })
 export class MainModule { }

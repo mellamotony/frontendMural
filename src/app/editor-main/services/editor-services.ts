@@ -13,24 +13,42 @@ export class EditorService {
   constructor(private http: HttpClient) { }
   //servicio para obtener los id disponibles
 
-  getSolicitudes(): Observable<Solicitud[]> {
-    const httOptions = {
-      headers: new HttpHeaders({
-        'ngrok-skip-browser-warning': 'true'
-      })
-    }
-    return this.http.get<Solicitud[]>(this.url + '/mural/solicitudes', httOptions)
-  }
+  getSolicitudes(id: string): Observable<Solicitud[]> {
+    // const httOptions = {
+    //   headers: new HttpHeaders({
+    //     'ngrok-skip-browser-warning': 'true'
+    //   })
 
-  getResponse(): Observable<Solicitud[]> {
-    const httOptions = {
-      headers: new HttpHeaders({
-        'ngrok-skip-browser-warning': 'true'
-      })
+    // }
+    const body = {
+      "id_user":id
     }
-    return this.http.get<Solicitud[]>(this.url + '/mural/respuestas', httOptions)
+    return this.http.post<Solicitud[]>(this.url + '/mural/solbyuser',body)
   }
-
+  //servicio para el historial
+  getResponse(id_editor: string): Observable<Solicitud[]> {
+    // const httOptions = {
+    //   headers: new HttpHeaders({
+    //     'ngrok-skip-browser-warning': 'true'
+    //   })
+    // }
+    const body = {
+      "id_user":id_editor
+    }
+    return this.http.post<Solicitud[]>(this.url + '/mural/respuestas', body)
+  }
+  //servicio para el historial pero da respuesta de rechazados
+  getReject(id: string): Observable<Solicitud[]> {
+    // const httOptions = {
+    //   headers: new HttpHeaders({
+    //     'ngrok-skip-browser-warning': 'true'
+    //   })
+    // }
+    const body = {
+      "id_user":id
+    }
+    return this.http.post<Solicitud[]>(this.url + '/mural/respreject', body)
+  }
 
 
   //servicio para aprobar/publicar el mural

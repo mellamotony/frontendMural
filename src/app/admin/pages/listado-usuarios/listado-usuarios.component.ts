@@ -13,6 +13,7 @@ import { listUser } from '../../interfaces/admin.interfaces';
 export class ListadoUsuariosComponent {
 
   //lista de usuarios variable
+
   public users: listUser[] = []
   public admindata!:listUser
   public avatar:string =''
@@ -34,6 +35,8 @@ export class ListadoUsuariosComponent {
 
     }
   )
+  coloRandom: string = '';
+  colors: string [] = ['red','white','blue','yellow'];
 
 
   constructor(
@@ -42,6 +45,10 @@ export class ListadoUsuariosComponent {
 
   ) { }
   ngOnInit() {
+    const idRadom = Math.floor(Math.random() * this.colors.length)
+
+    this.coloRandom = this.colors[idRadom]
+    console.log('color: '+this.coloRandom)
     this.admService.getUsers().subscribe((dato) => {
       dato.forEach(data => {
         if(!data){

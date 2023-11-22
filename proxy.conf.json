@@ -1,11 +1,11 @@
 {
   "/api": {
-    "target": "https://346f-45-224-99-21.ngrok-free.app",
-    "pathRewrite": {
-      "^/api": "/codeigniter4-framework-5d3d4b2"
-    },
+    "target": "https://apimural.onrender.com",
     "secure": false,
-    "changeOrigin": true
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": ""
+    }
   }
-
 }
+

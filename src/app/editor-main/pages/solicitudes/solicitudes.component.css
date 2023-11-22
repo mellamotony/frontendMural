@@ -42,9 +42,7 @@
 
  }
 
-.BodyTime form span{
- color:blue;
-}
+
 
 .cardTime button{
   width:100px;
@@ -54,6 +52,11 @@
   font-size:20px;
   font-family:Times;
   border-radius:5%;
+}
+.cardTime span{
+  color:rgb(88, 88, 88);
+  font-size:18px;
+  font-family:Times;
 }
 
 .close{

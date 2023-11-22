@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   AprobeMural,
@@ -17,13 +22,20 @@ import { Message } from 'primeng/api';
 export class SolicitudesComponent implements OnInit {
   public products: SolicituMural[] = [];
   public activeMessage: boolean = false;
-  public exito:boolean = true;
-  messages: Message[] = [{ severity: 'success', summary: 'Success', detail: 'Mural actualizado con éxito' }]
+  public exito: boolean = true;
+  public exitos: boolean = false;
+  messages: Message[] = [
+    {
+      severity: 'success',
+      summary: 'Success',
+      detail: 'Mural actualizado con éxito',
+    },
+  ];
   public e?: HTMLElement;
   date: Date[] = [
-    new Date(),            // Fecha actual
+    new Date(), // Fecha actual
     new Date(2023, 8, 15), // 15 de septiembre de 2023
-    new Date(2023, 8, 16)  // 16 de septiembre de 2023
+    new Date(2023, 8, 16), // 16 de septiembre de 2023
   ];
   minDate: Date = new Date();
 
@@ -32,7 +44,7 @@ export class SolicitudesComponent implements OnInit {
   public dataTime: FormGroup = this.fb.group({
     inicio: this.fb.control(''),
     fin: this.fb.control(''),
-    control : this.fb.control(''),
+    control: this.fb.control(''),
   });
   constructor(
     private router: Router,
@@ -59,32 +71,34 @@ export class SolicitudesComponent implements OnInit {
     this.minDate.setDate(prevDay + 1);
     this.minDate.setMonth(month);
     this.minDate.setFullYear(prevYear);
-    console.log('miniama: ',this.minDate)
+    console.log('miniama: ', this.minDate);
     this.maxDate = new Date();
     this.maxDate.setMonth(nextMonth);
     this.maxDate.setFullYear(nextYear);
-
+    const IdEditor: string = localStorage.getItem('id_user')!;
+    console.log(IdEditor);
     //se hace una peticion para obtener las solucitudes que esten en espera
-    this.mService.getSolicitudes().subscribe((datas) => {
+    this.mService.getSolicitudes(IdEditor).subscribe((datas) => {
       datas.forEach((data) => {
-        console.log('datos del solicitud:',data)
+        console.log('datos del solicitud:', data);
         const objSoli: SolicituMural = {
           id_mural: data.id_mural,
           nombre_mural: data.nombrem,
           fecha: data.fecha_solicitud,
           estado: data.estado,
-          id_user:data.id_user
+          id_user: data.id_user,
         };
-        this.exito = false
+        this.exito = false;
         if (objSoli.estado === 'en espera') {
           this.products.push(objSoli);
-
         }
       });
     });
   }
 
   onDelete(el: Event) {
+    //activar spinner
+    this.exito = true;
     //obtenemos el padre
     const parentElement = (el.target as HTMLElement).closest('.rowT');
     console.log(parentElement);
@@ -102,34 +116,31 @@ export class SolicitudesComponent implements OnInit {
 
     // Formatear la fecha y hora en el formato deseado
     const fechaRechazado = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-    console.log(fechaRechazado)
+    console.log(fechaRechazado);
 
     const body: RejectMural = {
       id_mural: this.e.id,
       id_user: Number(localStorage.getItem('id_user')),
       estado: 'rechazado',
-      fechaRechazado:fechaRechazado
+      fechaRechazado: fechaRechazado,
     };
     console.log(body);
-
-
 
     //enviando datos
     this.mService.rejectMural(body).subscribe((data) => {
       console.log(data);
       if (data.mensaje == 'actualización de estado exitosamente') {
-        this.exito = !this.exito
-        setTimeout(()=>{
-          this.exito = !this.exito
-        },2000)
+        this.exito = !this.exitos;
+        setTimeout(() => {
+          this.exito = !this.exitos;
+          this.exito = false;
+        }, 2000);
         window.location.reload();
       }
     });
   }
   onPublic(el: Event) {
     this.activeMessage = !this.activeMessage;
-
-
 
     //obtenemos el padre
     const parentElement = (el.target as HTMLElement).closest('.rowT');
@@ -154,26 +165,46 @@ export class SolicitudesComponent implements OnInit {
 
     // Formatear la fecha y hora en el formato deseado
     const fechaAprobado = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-    console.log(fechaAprobado)
-    const id_user = this.e?.firstChild as HTMLElement
+    console.log(fechaAprobado);
+    const id_user = this.e?.firstChild as HTMLElement;
 
     const body: AprobeMural = {
       id_mural: this.e!.id,
-      id_user:Number(id_user.id),
+      id_user: Number(localStorage.getItem('id_user'))!,
       estado: 'aprobado',
       fecha_publicacion: this.cambiarFormato(fecha_inicio),
       fin_publicacion: this.cambiarFormato(fecha_fin),
-      fechaAprobado:fechaAprobado
+      fechaAprobado: fechaAprobado,
     };
-    console.log(body);
+
+    const { fecha_publicacion, fin_publicacion } = body;
+    const vInicio = new Date(fecha_publicacion);
+    const vFin = new Date(fin_publicacion);
+    console.log(':::', vInicio.getTime(), vFin.getTime());
+    if (vInicio.getTime() >= vFin.getTime()) {
+      this.messages[0] = {
+        severity: 'error',
+        summary: 'Error',
+        detail:
+          'La fecha de fin de publicación debe ser mayor a la fecha de inicio de publicación',
+      };
+      this.exitos = true;
+      setTimeout(()=>{
+        this.exitos = false;
+        this.messages[0] = { severity: 'success', summary: 'Success', detail: 'Mural actualizado con éxito' }
+      },2000)
+      return;
+    }
+    this.exito = true;
 
     //enviando los datos
     this.mService.setAprove(body).subscribe((data) => {
       console.log(data);
       if (data.mensaje == 'actualización de estado exitosamente') {
-        this.exito = !this.exito
+        this.exito = !this.exitos
         setTimeout(()=>{
-          this.exito = !this.exito
+          this.exito = false;
+          this.exito = !this.exitos
         },2000)
 
         window.location.reload();

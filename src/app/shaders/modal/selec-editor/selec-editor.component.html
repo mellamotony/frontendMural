@@ -1,0 +1,11 @@
+<div class="custom-modal">
+  <div class="modal-content">
+    <h2>Selector de editor</h2>
+    <p>¡Hola! Aquí debes seleccionar a tu editor asignado</p>
+    <select #selectEl>
+      <option *ngFor="let editor of editors"  [value]="editor.id_user">{{editor.nombre+" "+editor.apellidos}}</option>
+    </select>
+    <button (click)="getIdrol()">Guardar y solicitar</button>
+  </div>
+</div>
+
