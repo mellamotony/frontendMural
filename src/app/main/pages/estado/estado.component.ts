@@ -21,6 +21,10 @@ export class EstadoComponent {
     const idUser = localStorage.getItem('id_user')
 
     this.mService.postIdsolicitud(parseInt(idUser!)).subscribe((datas) =>{
+      if(datas.length < 1){
+        this.isactive = false;
+        return;
+      }
 
       datas.forEach((data)=>{
         if(data){

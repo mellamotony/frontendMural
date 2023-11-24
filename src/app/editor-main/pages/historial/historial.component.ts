@@ -29,7 +29,13 @@ export class HistorialComponent implements OnInit {
     //se hace una peticion para obtener las solucitudes que esten en espera
     const id_user: string = localStorage.getItem('id_user')!
     this.mService.getResponse(id_user).subscribe((datas) => {
+      console.log('p',datas)
+        if(datas.length < 1){
+          this.exitos = false;
+          return;
+        }
       datas.forEach((data) => {
+
         this.exitos = false
         console.log(data)
         const objSoli: SolicituMural = {
@@ -64,6 +70,10 @@ export class HistorialComponent implements OnInit {
     //se hace una nueva peticion
     if(this.aprobado == 'aprobado'){
       this.mService.getResponse(id_user).subscribe((datas) => {
+        if(datas.length < 1){
+          this.exitos = false;
+          return;
+        }
         datas.forEach((data) => {
           const objSoli: SolicituMural = {
             id_mural: data.id_mural,
@@ -89,6 +99,10 @@ export class HistorialComponent implements OnInit {
       });
     }else{
       this.mService.getReject(id_user).subscribe((datas)=>{
+        if(datas.length < 1){
+          this.exitos = false;
+          return;
+        }
         datas.forEach((data)=>{
           const objsolicitud: SolicituMural = {
             id_mural: data.id_mural,

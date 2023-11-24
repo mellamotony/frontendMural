@@ -5,17 +5,17 @@ import { listUser } from '../interfaces/admin.interfaces';
 
 @Injectable({providedIn: 'root'})
 export class adminService {
-  private url:string = '/api'
+  private url:string = 'https://apimural.onrender.com'
   constructor(private http:HttpClient) { }
 
 
   getUsers():Observable<listUser []>{
-    const httOptions = {
-      headers: new HttpHeaders({
-        'ngrok-skip-browser-warning': 'true'
-      })
-    }
-    return this.http.get<listUser []>(this.url+'/mural/getUsers',httOptions)
+    // const httOptions = {
+    //   headers: new HttpHeaders({
+    //     'ngrok-skip-browser-warning': 'true'
+    //   })
+    // }
+    return this.http.get<listUser []>(this.url+'/mural/getUsers')
   }
 
   //servicio para enviar el id_user para obtener la info del usuario

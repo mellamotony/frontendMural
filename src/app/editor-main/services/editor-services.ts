@@ -9,24 +9,24 @@ import { AprobeMural, RejectMural } from '../interfaces/solicitudes.interface';
 export class EditorService {
 
 
-  private url: string = '/api'
+  private url: string = 'https://apimural.onrender.com'
   constructor(private http: HttpClient) { }
   //servicio para obtener los id disponibles
-
-  getSolicitudes(id: string): Observable<Solicitud[]> {
-    // const httOptions = {
-    //   headers: new HttpHeaders({
-    //     'ngrok-skip-browser-warning': 'true'
-    //   })
-
-    // }
+  getSolicitudes(id: string): Observable<Solicitud[] | []> {
     const body = {
-      "id_user":id
-    }
-    return this.http.post<Solicitud[]>(this.url + '/mural/solbyuser',body)
+      "id_user": id
+    };
+
+    return this.http.post<Solicitud[]>(this.url + '/mural/solbyuser', body)
+      .pipe(
+        catchError((err) => {
+          console.error('Error en la solicitud:', err);
+          return of([]); // Devuelve un array vacío en caso de error
+        })
+      );
   }
   //servicio para el historial
-  getResponse(id_editor: string): Observable<Solicitud[]> {
+  getResponse(id_editor: string): Observable<Solicitud[] | []> {
     // const httOptions = {
     //   headers: new HttpHeaders({
     //     'ngrok-skip-browser-warning': 'true'
@@ -36,6 +36,12 @@ export class EditorService {
       "id_user":id_editor
     }
     return this.http.post<Solicitud[]>(this.url + '/mural/respuestas', body)
+    .pipe(
+      catchError((err) => {
+        console.error('Error en la solicitud:', err);
+        return of([]); // Devuelve un array vacío en caso de error
+      })
+    );
   }
   //servicio para el historial pero da respuesta de rechazados
   getReject(id: string): Observable<Solicitud[]> {
@@ -59,6 +65,12 @@ export class EditorService {
   //servicio para rechazar mural
   rejectMural(body: RejectMural): Observable<any> {
     return this.http.patch(this.url + '/mural/rechazar', body)
+    .pipe(
+      catchError((err) => {
+        console.error('Error en la solicitud:', err);
+        return of([]); // Devuelve un array vacío en caso de error
+      })
+    );
   }
 
   //servicio para enviar el id_user para obtener la info del usuario

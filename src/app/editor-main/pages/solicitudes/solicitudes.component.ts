@@ -79,6 +79,11 @@ export class SolicitudesComponent implements OnInit {
     console.log(IdEditor);
     //se hace una peticion para obtener las solucitudes que esten en espera
     this.mService.getSolicitudes(IdEditor).subscribe((datas) => {
+      console.log('1',datas)
+      if(datas.length < 1){
+        this.exito = false;
+        return;
+      }
       datas.forEach((data) => {
         console.log('datos del solicitud:', data);
         const objSoli: SolicituMural = {

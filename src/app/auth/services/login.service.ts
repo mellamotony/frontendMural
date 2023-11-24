@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class LoginService {
-  //http://localhost:8098/codeigniter4-framework-5d3d4b2/login'/api/login';
+  //http://localhost:8098/codeigniter4-framework-5d3d4b2/login'/api/login';'https://apimural.onrender.com/login'
   private url:string = 'https://apimural.onrender.com/login'
 
 

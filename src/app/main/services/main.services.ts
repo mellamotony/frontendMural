@@ -8,7 +8,7 @@ import { editors, IDmural, logs, MuralDataSetItem, Solicitud } from '../interfac
 export class MuralService {
 
 
-  private url:string = '/api'
+  private url:string = 'https://apimural.onrender.com/'
   constructor(private http: HttpClient) { }
   //servicio para obtener los id disponibles
   getId():Observable<IDmural[] | []>{
@@ -38,12 +38,17 @@ postIdmurl(id:string):Observable<MuralDataSetItem []> {
 }
 
 //servicio para recibir solicituds by usuario
-postIdsolicitud(id:number):Observable<Solicitud[]>{
+postIdsolicitud(id:number):Observable<Solicitud[] |[]>{
   const body = {
     id_user:id
   }
   console.log(body)
-  return this.http.post<Solicitud[]>(this.url+'/mural/getEstado',body)
+  return this.http.post<Solicitud[]>(this.url+'/mural/getEstado',body).pipe(
+    catchError((err) => {
+      console.error('Error en la solicitud:', err);
+      return of([]); // Devuelve un array vacío en caso de error
+    })
+  );
 }
 
 //servicio para actualizar el mural /mural/updateM
