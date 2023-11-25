@@ -181,7 +181,7 @@ export class SolicitudesComponent implements OnInit {
       fin_publicacion: this.cambiarFormato(fecha_fin),
       fechaAprobado: fechaAprobado,
     };
-
+    //
     const { fecha_publicacion, fin_publicacion } = body;
     const vInicio = new Date(fecha_publicacion);
     const vFin = new Date(fin_publicacion);
