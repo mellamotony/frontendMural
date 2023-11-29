@@ -23,6 +23,11 @@
 .modal-content select {
   height: 19%;
 }
+.butoms{
+  display: flex;
+  flex-direction: column;
+
+}
 
 button {
   margin-top: 10%;
@@ -31,5 +36,10 @@ button {
   color: #fff;
   border: none;
   cursor: pointer;
+
+}
+
+.btn-cancell{
+  background: red;
 
 }

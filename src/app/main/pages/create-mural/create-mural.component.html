@@ -69,6 +69,7 @@
         style="display: none"
         id="fileInput"
         (change)="handleFileInput($event)"
+        size="10485"
       />
       <div
         [ngStyle]="{ position: 'fixed' }"
@@ -344,4 +345,5 @@
   *ngIf="editState"
   [editors]="users"
   (idrol)="capturarIdRol($event)"
+  (salir)="capturarStatus($event)"
 ></app-selec-editor>

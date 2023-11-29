@@ -24,6 +24,12 @@
   width: 100vh;
 
 }
+.active-link {
+  background-color: rgb(5, 182, 241); /* Puedes ajustar el color según tus preferencias */
+  color: white; /* Ajusta el color del texto según tus preferencias */
+  /* Otros estilos que desees aplicar al enlace activo */
+}
+
 #noc{
   margin-left: -10px;
 }

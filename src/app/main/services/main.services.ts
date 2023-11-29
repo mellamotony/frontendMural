@@ -6,9 +6,9 @@ import { editors, IDmural, logs, MuralDataSetItem, Solicitud } from '../interfac
 
 @Injectable({providedIn: 'root'})
 export class MuralService {
+  //'https://apimural.onrender.com'
 
-
-  private url:string = 'https://apimural.onrender.com/'
+  private url:string = 'https://apimural.onrender.com'
   constructor(private http: HttpClient) { }
   //servicio para obtener los id disponibles
   getId():Observable<IDmural[] | []>{

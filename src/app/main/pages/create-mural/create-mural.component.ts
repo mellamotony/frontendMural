@@ -53,6 +53,9 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
   //spinner
  public isactive:boolean = false;
 
+ //variable para desactivar la ventana moral
+ public modal:boolean = false;
+
   //variable para almacenar usuarios
   public users: editors[] = [];
   //variable para estado del modal
@@ -298,6 +301,23 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
 
   handleFileInput(event: any): void {
     const files: File[] = Array.from(event.target.files);
+
+    const maxSizeInBytes = 10485760;
+    if(files[0].size < 0){ return }
+    if(files[0].size > maxSizeInBytes){
+      this.exito = true
+      this.messages.pop()
+      this.messages.push({
+        severity: 'error',
+        detail: 'No debe superar el tamaño máximo de 10MB',
+      },)
+      setTimeout(() => {
+        this.exito = false;
+      }, 3000);
+      const fileInput: HTMLInputElement = event.target;
+      fileInput.value = '';
+      return;
+    }
     this.id = this.id + 1;
     files.forEach((file) => {
       const reader = new FileReader();
@@ -671,10 +691,21 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
     }
   }
 
+  capturarStatus(v:boolean){
+    console.log('click')
+    if(v == true){
+      this.editState =false;
+    }
+
+  }
+
   //funcion para enviar los datos
   OnSaveMural() {
-    this.isactive = true;
+
+
     this.editState = true;
+
+
     // Esperar a que se establezca idRol usando una Promesa
     const waitForIdRol = new Promise<void>((resolve) => {
       const checkIdRol = () => {
@@ -972,7 +1003,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
         // downloadLink.href = dataUrl;
         // downloadLink.download = 'captured_image.png'; // Nombre del archivo de descarga
         // downloadLink.click();
-
+        this.isactive = true;
         this.DataMural = {
           id_mural: localStorage.getItem('id_mural'),
           id_user: localStorage.getItem('id_user'),

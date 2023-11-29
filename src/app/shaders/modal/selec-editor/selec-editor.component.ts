@@ -14,6 +14,11 @@ public editors: editors [] = []
 @Output()
 idrol = new EventEmitter<string>()
 
+@Output()
+salir = new EventEmitter<boolean>()
+
+public canelar:boolean = true;
+
 @ViewChild('selectEl', { static: false }) selectEl!: ElementRef;
 
 formIdROl:FormGroup = this.fb.group({
@@ -28,5 +33,9 @@ getIdrol(){
   const selectedValue = this.selectEl.nativeElement.value;
   console.log(selectedValue)
   this.idrol.emit(selectedValue)
+}
+
+cancel(){
+  this.salir.emit(this.canelar)
 }
 }

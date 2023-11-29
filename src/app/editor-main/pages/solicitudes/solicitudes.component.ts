@@ -196,7 +196,7 @@ export class SolicitudesComponent implements OnInit {
       this.exitos = true;
       setTimeout(()=>{
         this.exitos = false;
-        this.messages[0] = { severity: 'success', summary: 'Success', detail: 'Mural actualizado con éxito' }
+        this.messages[0] = { severity: 'success', detail: 'Mural actualizado con éxito' }
       },2000)
       return;
     }

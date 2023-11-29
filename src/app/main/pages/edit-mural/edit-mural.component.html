@@ -50,13 +50,14 @@
         style="display: none"
         id="fileInput"
         (change)="handleFileInput($event)"
+        size="10485760"
       />
       <div
         class="panel-i"
         *ngFor="let item of panelItems; let i = index"
         [ngStyle]="{
           border: '1px ' + item.border_style + ' ' + item.border_color,
-          'border-radius': item.border_radius + 'px',
+          'border-radius': item.border_radius + '%',
           left: item.posx + '%',
           top: item.posy + '%',
           height: item.height + 'px',
@@ -314,4 +315,4 @@
 
 
 </div>
-<app-selec-editor *ngIf="editState" [editors]="users"  (idrol)="capturarIdRol($event)"></app-selec-editor>
+<app-selec-editor *ngIf="editState" [editors]="users" (salir)="salirModal($event)"  (idrol)="capturarIdRol($event)"></app-selec-editor>

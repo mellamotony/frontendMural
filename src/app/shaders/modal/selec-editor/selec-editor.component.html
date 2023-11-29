@@ -5,7 +5,11 @@
     <select #selectEl>
       <option *ngFor="let editor of editors"  [value]="editor.id_user">{{editor.nombre+" "+editor.apellidos}}</option>
     </select>
-    <button (click)="getIdrol()">Guardar y solicitar</button>
+    <div class="butoms">
+      <button (click)="getIdrol()">Guardar y solicitar</button>
+    <button (click)="cancel()" class="btn-cancell">Cancelar</button>
+    </div>
+
   </div>
 </div>
 

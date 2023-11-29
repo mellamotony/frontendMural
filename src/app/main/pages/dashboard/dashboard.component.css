@@ -95,6 +95,15 @@ h1 {
   font-weight: bold; /* Texto en negrita, ajusta según tus necesidades */
 }
 
+.txtSpan{
+  margin: 0; /* Elimina el margen predeterminado del h1 */
+  white-space: nowrap; /* Evita que el título se divida en varias líneas */
+  overflow: hidden; /* Evita que el título se desborde */
+  text-overflow: ellipsis; /* Agrega puntos suspensivos si el título es largo */
+  font-size: 16px; /* Tamaño de fuente del título, ajusta según tus necesidades */
+  font-weight: bold;
+}
+
 
 
 /*spiner css*/

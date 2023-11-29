@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MenuItem, Message } from 'primeng/api';
 import { guardToken } from 'src/app/auth/interfaces/login.inteface';
 import { MuralService } from '../../services/main.services';
+import { ActivatedRoute, Router, RouterLinkActive } from '@angular/router';
 
 
 @Component({
@@ -24,7 +25,8 @@ export class LayoutComponent implements OnInit {
 
   constructor(
 
-    private ms: MuralService
+    private ms: MuralService,
+    private rt: Router
   ) { }
   ngOnInit(): void {
     const idRadom = Math.floor(Math.random() * this.colors.length)
@@ -72,6 +74,10 @@ this.ms.postIdUSER(id_user).subscribe((data)=>{
   this.apellidos = data.apellidos
 })
 
+  }
+
+  isLinkActive(routerLink: string): boolean {
+    return this.rt.isActive(routerLink, true);
   }
 
   closeSession(){

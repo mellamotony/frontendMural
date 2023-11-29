@@ -563,7 +563,23 @@ export class EditMuralComponent implements OnInit {
 
   handleFileInput(event: any): void {
     const files: File[] = Array.from(event.target.files);
-    console.log('archivos: ', event.target.files);
+
+    const maxSizeInBytes = 10485760;
+    if(files[0].size < 0){ return }
+    if(files[0].size > maxSizeInBytes){
+      this.exito = true
+      this.messages.pop()
+      this.messages.push({
+        severity: 'error',
+        detail: 'No debe superar el tamaño máximo de 10MB',
+      },)
+      setTimeout(() => {
+        this.exito = false;
+      }, 3000);
+      const fileInput: HTMLInputElement = event.target;
+      fileInput.value = '';
+      return;
+    }
     files.forEach((file) => {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -896,6 +912,7 @@ export class EditMuralComponent implements OnInit {
 
   //captural el idRol
   capturarIdRol(valor: string) {
+    this.isactive = false;
     this.idRol = valor;
     console.log('Dede: ', this.idRol);
 
@@ -904,10 +921,15 @@ export class EditMuralComponent implements OnInit {
     }
   }
 
+  salirModal(v:boolean){
+    if(v == true){
+      this.editState = false;
+    }
+  }
+
   //funcion para enviar los datos y actualizar los datos
    OnSaveMural() {
-    //se activa el spinner
-    this.isactive = true
+
     //obtener valores del mural
     const MuralData = this.containerRef.nativeElement;
     //copia del array con los archivos subidos en el mural separados por tipo
@@ -1254,6 +1276,9 @@ export class EditMuralComponent implements OnInit {
         const Url = canva.toDataURL('image/png');
         dataUrl.push(Url);
 
+        //se activa el spinner
+        this.isactive = true
+        console.log('........')
         //ordenamos en un objeto todos los datos necesarios para enviar al backend
         this.DataMural = {
           id_mural: this.idMural,
@@ -1292,7 +1317,7 @@ export class EditMuralComponent implements OnInit {
 
   OnSaveMuralAsNew() {
     //activar spinner
-    this.isactive = true;
+
     //obtener valores del mural
     //id del nuevo mural
     const id_muraal = uuidv4()
@@ -1639,7 +1664,7 @@ export class EditMuralComponent implements OnInit {
         const Url = canva.toDataURL('image/png');
         dataUrl.push(Url);
 
-
+        this.isactive = true;
         //ordenamos en un objeto todos los datos necesarios para enviar al backend
         this.DataMural = {
           id_mural:id_muraal,
