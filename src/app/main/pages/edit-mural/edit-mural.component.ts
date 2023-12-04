@@ -17,7 +17,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import html2canvas from 'html2canvas';
 import { PDFSource, PdfViewerComponent } from 'ng2-pdf-viewer';
 import { MegaMenuItem, Message } from 'primeng/api';
@@ -43,11 +43,14 @@ export class EditMuralComponent implements OnInit {
 
   @ViewChildren(PdfViewerComponent) pdfViewers!: QueryList<PdfViewerComponent>;
 
+  //variable para manejar el bloqueo de clicks
+  public enEspera: boolean = false;
+
   //Array para almacenar todos los datos del mural
   public IdMural: string = '';
 
   //variable para activar desactivar el spinner
-  public isactive:boolean = true;
+  public isactive: boolean = true;
 
   //manejador de zoom variables
   zoomLevel: number = 100; // Inicialmente, sin zoom (100%).
@@ -147,6 +150,7 @@ export class EditMuralComponent implements OnInit {
   @ViewChild('contPanel') containerRef!: ElementRef<HTMLElement>;
 
   constructor(
+    private ruta: Router,
     private mService: MuralService,
     private activateRoute: ActivatedRoute,
     private fb: FormBuilder,
@@ -183,10 +187,10 @@ export class EditMuralComponent implements OnInit {
     this.activateRoute.paramMap.subscribe((params) => {
       const idMural: string = params.get('id')!;
       this.idMural = idMural;
-      console.log('ID actual:', idMural);
+
       this.mService.postIdmurl(idMural).subscribe((mural) => {
-        console.log(mural);
-        this.isactive =false
+
+        this.isactive = false;
         this.idUser = mural[0].id_user!;
         //ingresando nombre del mural
         nombreMural = mural[0].nombrem!;
@@ -198,13 +202,13 @@ export class EditMuralComponent implements OnInit {
           data.posx = Number(data.posx);
           data.posy = Number(data.posy);
           this.valueInputs.push(data);
-          console.log('textos', data.id_txt);
+
           this.idTxt.push(data.id_txt!);
         });
 
         //capturando los datos para imagenes
         mural[0].imagenes.forEach((data) => {
-          console.log('imagenes: ', data);
+
           const arraytype = data.url.split('.');
           const type = arraytype[1];
 
@@ -227,7 +231,7 @@ export class EditMuralComponent implements OnInit {
             id: Number(data.id_imagenes),
           };
           this.idImg.push(data.id_imagenes!);
-          console.log('datas: ', datas);
+
           this.panelItems.push(datas);
         });
 
@@ -235,7 +239,7 @@ export class EditMuralComponent implements OnInit {
         mural[0].videos.forEach((data) => {
           const arraytype = data.url_video.split('.');
           const type = arraytype[1];
-          console.log('videos: ', data);
+
           let datas: PanelItem = {
             file: {
               lastModified: 0,
@@ -254,7 +258,7 @@ export class EditMuralComponent implements OnInit {
             width: Number(data.width),
             id: Number(data.id_video),
           };
-          console.log('tipo: ', datas);
+
           this.idVideo.push(data.id_video!);
           this.panelItems.push(datas);
         });
@@ -263,7 +267,7 @@ export class EditMuralComponent implements OnInit {
         mural[0].pdfs.forEach((data) => {
           const urls = this.cleanPath(data.url_pdfs!);
           const urlLImpia = this.quitslash(urls);
-          console.log('pdfs: ', data);
+
           const arraytype = data.url_pdfs!.split('.');
           const type = arraytype[1];
           let datas: PanelItem = {
@@ -285,16 +289,15 @@ export class EditMuralComponent implements OnInit {
             id: Number(data.id_pdfs),
           };
           this.idPdf.push(data.id_pdfs!);
-          console.log('url pdf: ', this.quitslash(datas.url));
+
           this.panelItems.push(datas);
-          console.log(this.panelItems);
+
         });
       });
     });
 
-
     //elimina si es editor el guardar como nuevo
-    const esEditor = localStorage.getItem('rol')
+    const esEditor = localStorage.getItem('rol');
     if (esEditor == 'editor') {
       this.items = [
         {
@@ -369,7 +372,7 @@ export class EditMuralComponent implements OnInit {
                     command: () => {
                       this.OnSaveMural();
                     },
-                  }
+                  },
                 ],
               },
             ],
@@ -390,109 +393,109 @@ export class EditMuralComponent implements OnInit {
         //   },
         // },
       ];
-    }else{
+    } else {
       //si no es un diseñador
-    this.items = [
-      {
-        label: 'Texto',
-        icon: 'pi pi-fw pi-language',
-        command: () => {
-          this.createTxt();
+      this.items = [
+        {
+          label: 'Texto',
+          icon: 'pi pi-fw pi-language',
+          command: () => {
+            this.createTxt();
+          },
         },
-      },
-      {
-        label: 'Subir archivo',
-        icon: 'pi pi-fw pi-file',
-        items: [
-          [
-            {
-              label: 'Imagen',
-              items: [
-                {
-                  label: 'Tipo:Jpg',
-                  command: () => {
-                    this.uploadFile('image/jpeg');
+        {
+          label: 'Subir archivo',
+          icon: 'pi pi-fw pi-file',
+          items: [
+            [
+              {
+                label: 'Imagen',
+                items: [
+                  {
+                    label: 'Tipo:Jpg',
+                    command: () => {
+                      this.uploadFile('image/jpeg');
+                    },
                   },
-                },
-                {
-                  label: 'Tipo:Png',
-                  command: () => {
-                    this.uploadFile('image/png');
+                  {
+                    label: 'Tipo:Png',
+                    command: () => {
+                      this.uploadFile('image/png');
+                    },
                   },
-                },
-              ],
-            },
+                ],
+              },
+            ],
+            [
+              {
+                label: 'Video',
+                items: [
+                  {
+                    label: 'Tipo:Mp4',
+                    command: () => {
+                      this.uploadFile('video/mp4');
+                    },
+                  },
+                ],
+              },
+              {
+                label: 'Pdf',
+                items: [
+                  {
+                    label: 'Subir',
+                    command: () => {
+                      this.uploadFile('application/pdf');
+                    },
+                  },
+                ],
+              },
+            ],
           ],
-          [
-            {
-              label: 'Video',
-              items: [
-                {
-                  label: 'Tipo:Mp4',
-                  command: () => {
-                    this.uploadFile('video/mp4');
+          // command:()=>{
+          //   alert('subiendo_:...')
+          // }
+        },
+        {
+          label: 'Guardar/Enviar solicitud',
+          icon: 'pi pi-fw pi-save',
+          items: [
+            [
+              {
+                items: [
+                  {
+                    label: 'Guardar cambios',
+                    icon: 'pi pi-fw pi-save',
+                    command: () => {
+                      this.OnSaveMural();
+                    },
                   },
-                },
-              ],
-            },
-            {
-              label: 'Pdf',
-              items: [
-                {
-                  label: 'Subir',
-                  command: () => {
-                    this.uploadFile('application/pdf');
+                  {
+                    label: 'Guardar como nuevo',
+                    icon: 'pi pi-fw pi-save',
+                    command: () => {
+                      this.OnSaveMuralAsNew();
+                    },
                   },
-                },
-              ],
-            },
+                ],
+              },
+            ],
           ],
-        ],
-        // command:()=>{
-        //   alert('subiendo_:...')
-        // }
-      },
-      {
-        label: 'Guardar/Enviar solicitud',
-        icon: 'pi pi-fw pi-save',
-        items: [
-          [
-            {
-              items: [
-                {
-                  label: 'Guardar cambios',
-                  icon: 'pi pi-fw pi-save',
-                  command: () => {
-                    this.OnSaveMural();
-                  },
-                },
-                {
-                  label: 'Guardar como nuevo',
-                  icon: 'pi pi-fw pi-save',
-                  command: () => {
-                    this.OnSaveMuralAsNew()
-                  },
-                },
-              ],
-            },
-          ],
-        ],
-      },
-      // {
-      //   // label:this.zoomLevel.toString()+'%',
-      //   icon: 'pi pi-plus-circle',
-      //   command: () => {
-      //     this.zoomIn();
-      //   },
-      // },
-      // {
-      //   // label:this.zoomLevel.toString()+'%',
-      //   icon: 'pi pi-minus-circle',
-      //   command: () => {
-      //     this.zoomOut();
-      //   },
-      // },
-    ];
+        },
+        // {
+        //   // label:this.zoomLevel.toString()+'%',
+        //   icon: 'pi pi-plus-circle',
+        //   command: () => {
+        //     this.zoomIn();
+        //   },
+        // },
+        // {
+        //   // label:this.zoomLevel.toString()+'%',
+        //   icon: 'pi pi-minus-circle',
+        //   command: () => {
+        //     this.zoomOut();
+        //   },
+        // },
+      ];
     }
 
     //cargar los editores para elmodal
@@ -502,12 +505,12 @@ export class EditMuralComponent implements OnInit {
           this.users.push(dat);
         }
       });
-      console.log(this.users);
+
     });
   }
 
   ngAfterViewInit(): void {
-    console.log('cargado');
+
   }
 
   //propio de cdk angular
@@ -532,7 +535,7 @@ export class EditMuralComponent implements OnInit {
     event.item.data =
       event.item.element.nativeElement.querySelector('img')?.src;
 
-    console.log(event.item.data);
+
   }
 
   //crear
@@ -565,14 +568,16 @@ export class EditMuralComponent implements OnInit {
     const files: File[] = Array.from(event.target.files);
 
     const maxSizeInBytes = 10485760;
-    if(files[0].size < 0){ return }
-    if(files[0].size > maxSizeInBytes){
-      this.exito = true
-      this.messages.pop()
+    if (files[0].size < 0) {
+      return;
+    }
+    if (files[0].size > maxSizeInBytes) {
+      this.exito = true;
+      this.messages.pop();
       this.messages.push({
         severity: 'error',
         detail: 'No debe superar el tamaño máximo de 10MB',
-      },)
+      });
       setTimeout(() => {
         this.exito = false;
       }, 3000);
@@ -610,8 +615,7 @@ export class EditMuralComponent implements OnInit {
     if ((this.isPdfActive = true)) {
       this.isPdfActive = false;
     }
-    console.log('El elemento fue presionado');
-    console.log(e);
+
     const element = e.target as HTMLElement;
 
     this.isActive = true;
@@ -627,7 +631,7 @@ export class EditMuralComponent implements OnInit {
     //   this.isPdfActive = false;
 
     // }
-    // console.log('El elemento fue presionado');
+    //
     // console.log(this.e)
 
     // if (newElement.className == 'textLayer') {
@@ -648,18 +652,18 @@ export class EditMuralComponent implements OnInit {
     if ((this.isPdfActive = true)) {
       this.isPdfActive = false;
     }
-    console.log(this.e);
+
 
     const newElement = e.target as HTMLElement;
     if (newElement.className == 'textLayer') {
-      console.log(newElement.nodeName);
+
       if (newElement.nodeName !== 'DIV') {
         this.isPdfActive = false;
         this.IsVidActive = false;
 
         return;
       }
-      console.log('El elemento fue presionado');
+
       this.isPdfActive = true;
       this.IsVidActive = false;
       this.e = e;
@@ -673,8 +677,7 @@ export class EditMuralComponent implements OnInit {
   //funcion para cambiar cambiar la barra de herramientas de texto
   getChangesStyles() {
     const element = this.e?.target as HTMLElement;
-    console.log('el elemento:', element);
-    console.log(element);
+
 
     switch (true) {
       case this.toolsForm.controls['width'].value > 790:
@@ -842,7 +845,7 @@ export class EditMuralComponent implements OnInit {
   DeleteParent() {
     // const element = this.e?.target as HTMLElement;
     // console.log('eliminado de elementos')
-    // console.log({ file: this.panelItems, elemento: element });
+    // ##
     // if (element.parentElement) {
     //   element.parentElement.remove();
     // }
@@ -850,24 +853,21 @@ export class EditMuralComponent implements OnInit {
     // //desaparece la barra de herramientas
     // this.IsVidActive = false;
     const element = this.e?.target as HTMLElement;
-    console.log(element.className);
+
     if (element.classList.contains('panel-i')) {
-      console.log('in');
+
       const idPdf = element.childNodes[2] as HTMLElement;
       element.remove();
       this.panelItems = this.panelItems.filter(
         (item) => item.id != Number(idPdf.id)
       );
       this.idPdf = this.idPdf.filter((id) => Number(id) != Number(element.id));
-      console.log('eliminado archivos', {
-        file: this.panelItems,
-        elemento: element,
-      });
+
       //desaparece la barra de herramientas
       this.IsVidActive = false;
     } else {
       if (element.parentElement) {
-        console.log({ file: this.panelItems, elemento: element });
+
         element.parentElement.remove();
         this.panelItems = this.panelItems.filter(
           (item) => item.id != Number(element.id)
@@ -877,18 +877,12 @@ export class EditMuralComponent implements OnInit {
           this.idImg = this.idImg.filter(
             (id) => Number(id) != Number(element.id)
           );
-          console.log('eliminado archivos', {
-            file: this.panelItems,
-            elemento: element,
-          });
+
         } else {
           this.idVideo = this.idVideo.filter(
             (id) => Number(id) != Number(element.id)
           );
-          console.log('eliminado archivos', {
-            file: this.panelItems,
-            elemento: element,
-          });
+
         }
       }
 
@@ -900,8 +894,7 @@ export class EditMuralComponent implements OnInit {
   DeletePdfs() {
     const element = this.e?.target as HTMLElement;
 
-    console.log(this.e);
-    console.log(this.panelItems);
+
     if (element.parentElement) {
       element.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.remove();
     }
@@ -914,29 +907,28 @@ export class EditMuralComponent implements OnInit {
   capturarIdRol(valor: string) {
     this.isactive = false;
     this.idRol = valor;
-    console.log('Dede: ', this.idRol);
+
 
     if (!this.idRol) {
       return;
     }
   }
 
-  salirModal(v:boolean){
-    if(v == true){
+  salirModal(v: boolean) {
+    if (v == true) {
       this.editState = false;
     }
   }
 
   //funcion para enviar los datos y actualizar los datos
-   OnSaveMural() {
-
+  OnSaveMural() {
     //obtener valores del mural
     const MuralData = this.containerRef.nativeElement;
     //copia del array con los archivos subidos en el mural separados por tipo
     let imgArray: PanelItem[] = [];
     let videoArray: PanelItem[] = [];
     let pdfArray: PanelItem[] = [];
-    console.log('1:', this.panelItems);
+
     //this.editState = true;
     // Esperar a que se establezca idRol usando una Promesa
     // const waitForIdRol = new Promise<void>((resolve) => {
@@ -951,366 +943,363 @@ export class EditMuralComponent implements OnInit {
     // });
     //waitForIdRol.then(() => {
 
+    // if (!this.idRol) {
+    //   return;
+    // }
+    this.editState = false;
+    this.panelItems.forEach((item) => {
 
-      // if (!this.idRol) {
-      //   return;
-      // }
-      this.editState = false;
-      this.panelItems.forEach((item) => {
-        console.log(item.type);
-        if (
-          item.type == 'image/jpeg' ||
-          item.type == 'image/png' ||
-          item.type == 'image/jpg' ||
-          item.type == 'image/cloudinary'
-        ) {
-          imgArray.push(item);
-          console.log('desde arrai:', item);
-        }
-        if (item.type == 'video/mp4' || item.type == 'video/cloudinary') {
-          videoArray.push(item);
-        }
-        if (
-          item.type == 'application/pdf' ||
-          item.type == 'application/cloudinary'
-        ) {
-          pdfArray.push(item);
-          console.log(item)
-        }
-      });
+      if (
+        item.type == 'image/jpeg' ||
+        item.type == 'image/png' ||
+        item.type == 'image/jpg' ||
+        item.type == 'image/cloudinary'
+      ) {
+        imgArray.push(item);
 
-      //hacemos la captura de la imgen
-      let dataUrl: string[] = [];
-      html2canvas(MuralData).then((canva) => {
-        const textAreas =
-          this.containerRef.nativeElement.querySelectorAll('textarea');
-        const images = this.containerRef.nativeElement.querySelectorAll('img');
-        const videos =
-          this.containerRef.nativeElement.querySelectorAll('video');
-        const pdfs =
-          this.containerRef.nativeElement.querySelectorAll('pdf-viewer');
+      }
+      if (item.type == 'video/mp4' || item.type == 'video/cloudinary') {
+        videoArray.push(item);
+      }
+      if (
+        item.type == 'application/pdf' ||
+        item.type == 'application/cloudinary'
+      ) {
+        pdfArray.push(item);
 
-        //Array de cada elemento
+      }
+    });
 
-        const Videos: VideoDatasetItem[] = [];
-        const Texts: TextDatasetItem[] = [];
-        const DataImagenes: ImageDatasetItem[] = [];
-        const DataPdfs: PdfsItem[] = [];
+    //hacemos la captura de la imgen
+    let dataUrl: string[] = [];
+    html2canvas(MuralData).then((canva) => {
+      const textAreas =
+        this.containerRef.nativeElement.querySelectorAll('textarea');
+      const images = this.containerRef.nativeElement.querySelectorAll('img');
+      const videos = this.containerRef.nativeElement.querySelectorAll('video');
+      const pdfs =
+        this.containerRef.nativeElement.querySelectorAll('pdf-viewer');
 
-        // Recorrer los textAreas y obtener sus valores
-        textAreas.forEach((textArea: HTMLTextAreaElement) => {
-          const computedStyle = textArea as HTMLElement;
-          const { x, y, height, width } = computedStyle.getBoundingClientRect();
-          const padreW = MuralData.clientWidth;
-          const padreH = MuralData.clientHeight;
-          const padreX = MuralData.getBoundingClientRect().left;
-          const padreY = MuralData.getBoundingClientRect().top;
-          const nx = textArea.getBoundingClientRect().left - padreX;
-          const ny = textArea.getBoundingClientRect().top - padreY;
-          const { left, top } = this.calcularPorcentajeLeftTop(
-            padreW,
-            padreH,
-            nx,
-            ny
-          );
-          console.log('porcentaje convertido', { left, top });
+      //Array de cada elemento
 
-          const valueTexts: TextDatasetItem = {
-            id_mural: this.idMural,
-            valor: textArea.value,
-            font:
-              textArea.style.fontFamily == ''
-                ? 'Arial'
-                : textArea.style.fontFamily,
-            font_size:
-              textArea.style.fontSize == '' ? '16px' : textArea.style.fontSize,
-            posx: /*textArea.offsetLeft*/ Number(left),
-            posy: /*textArea.offsetTop*/ Number(top),
-            height: Number.isNaN(parseInt(textArea.style.height))
-              ? 200
-              : parseInt(textArea.style.height),
-            width: Number.isNaN(parseInt(textArea.style.width))
-              ? 200
-              : parseInt(textArea.style.width),
-            color:
-              !textArea.style.color || textArea.style.color === 'black'
-                ? 'rgb(0,0,0)'
-                : textArea.style.color,
-            border_color:
-              !textArea.style.borderColor ||
-              textArea.style.borderColor == 'black'
-                ? 'rgb(0,0,0)'
-                : textArea.style.borderColor,
-            border_radius:
-              textArea.style.borderRadius == ''
-                ? '0%'
-                : textArea.style.borderRadius,
-            backgroundcolor:
-              !textArea.style.backgroundColor ||
-              textArea.style.backgroundColor == 'black'
-                ? 'rgb(0,0,0)'
-                : textArea.style.backgroundColor,
-            border_style:
-              textArea.style.borderStyle == ''
-                ? 'solid'
-                : textArea.style.borderStyle,
-            font_weight: textArea.style.fontWeight || 'bolder',
-            sangria:
-              textArea.style.textAlign == ''
-                ? 'center'
-                : textArea.style.textAlign,
-            id_txt: textArea.id !== undefined ? textArea.id : undefined,
-          };
-          if (valueTexts.id_txt == 'undefined') {
-            delete valueTexts.id_txt;
-            console.log('eliminando');
-          }
-          console.log('alto:', textArea.style.height);
-          console.log('elemento: ', textArea.offsetTop);
-          Texts.push(valueTexts);
-        });
+      const Videos: VideoDatasetItem[] = [];
+      const Texts: TextDatasetItem[] = [];
+      const DataImagenes: ImageDatasetItem[] = [];
+      const DataPdfs: PdfsItem[] = [];
 
-        // Recorrer las imágenes y obtener sus atributos o valores
-        images.forEach((image: HTMLImageElement, i: number) => {
-          const rect = image.getBoundingClientRect();
-          const x = rect.left;
-          const y = rect.top;
-          const padreW = MuralData.clientWidth;
-          const padreH = MuralData.clientHeight;
-          const padreX = MuralData.getBoundingClientRect().left;
-          const padreY = MuralData.getBoundingClientRect().top;
-          const X = rect.left - padreX;
-          const Y = rect.top - padreY;
+      // Recorrer los textAreas y obtener sus valores
+      textAreas.forEach((textArea: HTMLTextAreaElement) => {
+        const computedStyle = textArea as HTMLElement;
+        const { x, y, height, width } = computedStyle.getBoundingClientRect();
+        const padreW = MuralData.clientWidth;
+        const padreH = MuralData.clientHeight;
+        const padreX = MuralData.getBoundingClientRect().left;
+        const padreY = MuralData.getBoundingClientRect().top;
+        const nx = textArea.getBoundingClientRect().left - padreX;
+        const ny = textArea.getBoundingClientRect().top - padreY;
+        const { left, top } = this.calcularPorcentajeLeftTop(
+          padreW,
+          padreH,
+          nx,
+          ny
+        );
 
-          const { left, top } = this.calcularPorcentajeLeftTop(
-            padreW,
-            padreH,
-            X,
-            Y
-          );
-          console.log('porcentaje convertido', { left, top });
-          const panelItem = imgArray[i];
-          const computedStyle = image as HTMLElement;
-          // const { x, y, height, width } = computedStyle.getBoundingClientRect()
-          if (panelItem) {
-            console.log(panelItem.url);
-          } else {
-            console.error(`imgArray[${i}] es undefined.`);
-          }
 
-          const valueImages: ImageDatasetItem = {
-            id_mural: this.idMural,
-            id_imagenes:
-              this.idImg[i] !== undefined ? this.idImg[i] : undefined,
-            url: panelItem.url! == undefined ? 'ojo' : panelItem.url,
-            alt: image.alt,
-            height: Number(computedStyle.parentElement?.clientHeight) + 2,
-            width: Number(computedStyle.parentElement?.clientWidth) + 2,
-            posx: Number(left),
-            posy: Number(top),
-            border_color:
-              !image.parentElement!.style.borderColor ||
-              image.parentElement!.style.borderColor == 'black'
-                ? 'rgb(0,0,0)'
-                : image.parentElement!.style.borderColor,
-            border_radius:
-              image.parentElement!.style.borderRadius == ''
-                ? '1%'
-                : image.parentElement!.style.borderRadius,
-            border_style:
-              image.parentElement!.style.borderStyle == ''
-                ? 'solid'
-                : image.parentElement!.style.borderStyle,
-          };
-          if (valueImages.id_imagenes == undefined) {
-            delete valueImages.id_imagenes;
-            console.log('eliminando');
-          }
-
-          DataImagenes.push(valueImages);
-        });
-
-        // Recorrer los videos y obtener sus atributos o valores
-        videos.forEach((video: HTMLVideoElement, i: number) => {
-          const panelItem = videoArray[i];
-
-          const videoSrc = video.currentSrc;
-          const padreW = MuralData.clientWidth;
-          const padreH = MuralData.clientHeight;
-          const padreX = MuralData.getBoundingClientRect().left;
-          const padreY = MuralData.getBoundingClientRect().top;
-
-          const rect = video.getBoundingClientRect();
-          const X = rect.left - padreX;
-          const Y = rect.top - padreY;
-
-          const { left, top } = this.calcularPorcentajeLeftTop(
-            padreW,
-            padreH,
-            X,
-            Y
-          );
-          console.log('porcentaje convertido video', { left, top });
-
-          const DataVideo: VideoDatasetItem = {
-            id_mural: this.idMural,
-            url_video: panelItem.url,
-            height: video.offsetHeight,
-            width: video.offsetWidth,
-            posx: Number(left),
-            posy: Number(top),
-            formato: 'mp4',
-            duration: !Number.isNaN(video.duration) ? video.duration : 50,
-            border_color:
-              !video.parentElement!.style.borderColor ||
-              video.parentElement!.style.borderColor == 'black'
-                ? 'rgb(0,0,0)'
-                : video.parentElement!.style.borderColor,
-            border_radius:
-              video.parentElement!.style.borderRadius == ''
-                ? '0%'
-                : video.parentElement!.style.borderRadius,
-            border_style:
-              video.parentElement!.style.borderStyle == ''
-                ? 'solid'
-                : video.parentElement!.style.borderStyle,
-            id_video:
-              this.idVideo[i] !== undefined ? this.idVideo[i] : undefined,
-          };
-          if (DataVideo.id_video == undefined) {
-            delete DataVideo.id_video;
-            console.log('eliminando');
-          }
-          Videos.push(DataVideo);
-        });
-
-        // Se recorre los pdfViewer y se almacena sus valores en un objeto
-
-        pdfs.forEach((pdf: PDFSource, i: number) => {
-          //para obtener la posX  y en Y
-
-          const computedStyle = pdf as HTMLElement;
-          const { x, y, height, width } = computedStyle.getBoundingClientRect();
-
-          const panelItem = pdfArray[i];
-          console.log(pdf);
-
-          const padreW = MuralData.clientWidth;
-          const padreH = MuralData.clientHeight;
-          const padreX = MuralData.getBoundingClientRect().left;
-          const padreY = MuralData.getBoundingClientRect().top;
-
-          const rect = computedStyle.getBoundingClientRect();
-          const X = rect.left - padreX;
-          const Y = rect.top - padreY;
-
-          // const posX = rect.left;
-          // const posY = rect.top;
-          const { left, top } = this.calcularPorcentajeLeftTop(
-            padreW,
-            padreH,
-            X,
-            Y
-          );
-          console.log('porcentaje convertido de pdf', { left, top });
-
-          const DataPdf: PdfsItem = {
-            id_mural: this.idMural,
-            url_pdfs: panelItem.url,
-            height: height,
-            width: width,
-            posx: Number(left),
-            posy: Number(top),
-            border_color:
-              !computedStyle.parentElement!.style.borderColor ||
-              computedStyle.parentElement!.style.borderColor == 'black'
-                ? 'rgb(0,0,0)'
-                : computedStyle.parentElement!.style.borderColor,
-            border_style:
-              computedStyle.parentElement!.style.borderStyle == ''
-                ? 'solid'
-                : computedStyle.parentElement!.style.borderStyle,
-            border_radius:
-              computedStyle.parentElement!.style.borderRadius == ''
-                ? '1%'
-                : computedStyle.parentElement!.style.borderRadius,
-            id_pdfs: this.idPdf[i] !== undefined ? this.idPdf[i] : undefined,
-          };
-          if (DataPdf.id_pdfs == undefined) {
-            delete DataPdf.id_pdfs;
-            console.log('eliminando');
-          }
-          DataPdfs.push(DataPdf);
-        });
-        //agregar los enlaces a la url del pdf
-        // if (this.pdfViewers.length === DataPdfs.length) {
-        //   let pdfViewersArray = this.pdfViewers.toArray();
-        //   for (let i = 0; i < pdfViewersArray.length; i++) {
-        //     DataPdfs[i].url_pdfs = pdfViewersArray[i].src as string;
-        //   }
-        // } else {
-        //   console.error('Los arrays pdfViewers y DataPdfs no tienen la misma longitud');
-        // }
-
-        //se guardan en el array el objeto con todo sus elementos
-        let nombreMural = this.MuralnameForm.controls['Muralname'].value;
-        //verificamos si se le puso nombre al mural
-        if (!nombreMural) {
-          nombreMural = 'sin nombre';
-        }
-        //obetenemos la fecha de modificacion actual
-        const fecha_actual = new Date();
-        const year = fecha_actual.getFullYear();
-        const month = (fecha_actual.getMonth() + 1).toString().padStart(2, '0'); // +1 porque los meses comienzan desde 0
-        const day = fecha_actual.getDate().toString().padStart(2, '0');
-        const hours = fecha_actual.getHours().toString().padStart(2, '0');
-        const minutes = fecha_actual.getMinutes().toString().padStart(2, '0');
-        const seconds = fecha_actual.getSeconds().toString().padStart(2, '0');
-
-        // Formatear la fecha y hora en el formato deseado
-        const fechaModificacion = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-        console.log(fechaModificacion);
-
-        //hacemos una captura del mural para usar en un dashbaord
-
-        const Url = canva.toDataURL('image/png');
-        dataUrl.push(Url);
-
-        //se activa el spinner
-        this.isactive = true
-        console.log('........')
-        //ordenamos en un objeto todos los datos necesarios para enviar al backend
-        this.DataMural = {
+        const valueTexts: TextDatasetItem = {
           id_mural: this.idMural,
-          id_user: this.idUser,
-          editor: this.idRol,
-          nombrem: nombreMural!,
-          imgMural: dataUrl[0]!,
-          height: MuralData.offsetWidth,
-          width: MuralData.offsetHeight,
-          fecha_modificacion: fechaModificacion!,
-          textos: Texts,
-          imagenes: DataImagenes,
-          videos: Videos,
-          pdfs: DataPdfs,
-          estado: 'en espera',
+          valor: textArea.value,
+          font:
+            textArea.style.fontFamily == ''
+              ? 'Arial'
+              : textArea.style.fontFamily,
+          font_size:
+            textArea.style.fontSize == '' ? '16px' : textArea.style.fontSize,
+          posx: /*textArea.offsetLeft*/ Number(left),
+          posy: /*textArea.offsetTop*/ Number(top),
+          height: Number.isNaN(parseInt(textArea.style.height))
+            ? 200
+            : parseInt(textArea.style.height),
+          width: Number.isNaN(parseInt(textArea.style.width))
+            ? 200
+            : parseInt(textArea.style.width),
+          color:
+            !textArea.style.color || textArea.style.color === 'black'
+              ? 'rgb(0,0,0)'
+              : textArea.style.color,
+          border_color:
+            !textArea.style.borderColor || textArea.style.borderColor == 'black'
+              ? 'rgb(0,0,0)'
+              : textArea.style.borderColor,
+          border_radius:
+            textArea.style.borderRadius == ''
+              ? '0%'
+              : textArea.style.borderRadius,
+          backgroundcolor:
+            !textArea.style.backgroundColor ||
+            textArea.style.backgroundColor == 'black'
+              ? 'rgb(0,0,0)'
+              : textArea.style.backgroundColor,
+          border_style:
+            textArea.style.borderStyle == ''
+              ? 'solid'
+              : textArea.style.borderStyle,
+          font_weight: textArea.style.fontWeight || 'bolder',
+          sangria:
+            textArea.style.textAlign == ''
+              ? 'center'
+              : textArea.style.textAlign,
+          id_txt: textArea.id !== undefined ? textArea.id : undefined,
         };
-        console.log('Enviando datos:', this.DataMural);
-        console.log(this.panelItems);
-        //Endepoint para actualizar
-        this.mService.updateMural(this.DataMural).subscribe((data) => {
-          console.log(data);
-          if (data.mensaje) {
-            this.exito = true;
-            this.isactive = false;
-            setTimeout(() => {
-              this.exito = false;
+        if (valueTexts.id_txt == 'undefined') {
+          delete valueTexts.id_txt;
 
-            }, 2000);
-          }
-        });
-        this.idRol = ''
+        }
+
+
+        Texts.push(valueTexts);
       });
+
+      // Recorrer las imágenes y obtener sus atributos o valores
+      images.forEach((image: HTMLImageElement, i: number) => {
+        const rect = image.getBoundingClientRect();
+        const x = rect.left;
+        const y = rect.top;
+        const padreW = MuralData.clientWidth;
+        const padreH = MuralData.clientHeight;
+        const padreX = MuralData.getBoundingClientRect().left;
+        const padreY = MuralData.getBoundingClientRect().top;
+        const X = rect.left - padreX;
+        const Y = rect.top - padreY;
+
+        const { left, top } = this.calcularPorcentajeLeftTop(
+          padreW,
+          padreH,
+          X,
+          Y
+        );
+
+        const panelItem = imgArray[i];
+        const computedStyle = image as HTMLElement;
+        // const { x, y, height, width } = computedStyle.getBoundingClientRect()
+        if (panelItem) {
+
+        } else {
+          console.error(`imgArray[${i}] es undefined.`);
+        }
+
+        const valueImages: ImageDatasetItem = {
+          id_mural: this.idMural,
+          id_imagenes: this.idImg[i] !== undefined ? this.idImg[i] : undefined,
+          url: panelItem.url! == undefined ? 'ojo' : panelItem.url,
+          alt: image.alt,
+          height: Number(computedStyle.parentElement?.clientHeight) + 2,
+          width: Number(computedStyle.parentElement?.clientWidth) + 2,
+          posx: Number(left),
+          posy: Number(top),
+          border_color:
+            !image.parentElement!.style.borderColor ||
+            image.parentElement!.style.borderColor == 'black'
+              ? 'rgb(0,0,0)'
+              : image.parentElement!.style.borderColor,
+          border_radius:
+            image.parentElement!.style.borderRadius == ''
+              ? '1%'
+              : image.parentElement!.style.borderRadius,
+          border_style:
+            image.parentElement!.style.borderStyle == ''
+              ? 'solid'
+              : image.parentElement!.style.borderStyle,
+        };
+        if (valueImages.id_imagenes == undefined) {
+          delete valueImages.id_imagenes;
+
+        }
+
+        DataImagenes.push(valueImages);
+      });
+
+      // Recorrer los videos y obtener sus atributos o valores
+      videos.forEach((video: HTMLVideoElement, i: number) => {
+        const panelItem = videoArray[i];
+
+        const videoSrc = video.currentSrc;
+        const padreW = MuralData.clientWidth;
+        const padreH = MuralData.clientHeight;
+        const padreX = MuralData.getBoundingClientRect().left;
+        const padreY = MuralData.getBoundingClientRect().top;
+
+        const rect = video.getBoundingClientRect();
+        const X = rect.left - padreX;
+        const Y = rect.top - padreY;
+
+        const { left, top } = this.calcularPorcentajeLeftTop(
+          padreW,
+          padreH,
+          X,
+          Y
+        );
+
+
+        const DataVideo: VideoDatasetItem = {
+          id_mural: this.idMural,
+          url_video: panelItem.url,
+          height: video.offsetHeight,
+          width: video.offsetWidth,
+          posx: Number(left),
+          posy: Number(top),
+          formato: 'mp4',
+          duration: !Number.isNaN(video.duration) ? video.duration : 50,
+          border_color:
+            !video.parentElement!.style.borderColor ||
+            video.parentElement!.style.borderColor == 'black'
+              ? 'rgb(0,0,0)'
+              : video.parentElement!.style.borderColor,
+          border_radius:
+            video.parentElement!.style.borderRadius == ''
+              ? '0%'
+              : video.parentElement!.style.borderRadius,
+          border_style:
+            video.parentElement!.style.borderStyle == ''
+              ? 'solid'
+              : video.parentElement!.style.borderStyle,
+          id_video: this.idVideo[i] !== undefined ? this.idVideo[i] : undefined,
+        };
+        if (DataVideo.id_video == undefined) {
+          delete DataVideo.id_video;
+
+        }
+        Videos.push(DataVideo);
+      });
+
+      // Se recorre los pdfViewer y se almacena sus valores en un objeto
+
+      pdfs.forEach((pdf: PDFSource, i: number) => {
+        //para obtener la posX  y en Y
+
+        const computedStyle = pdf as HTMLElement;
+        const { x, y, height, width } = computedStyle.getBoundingClientRect();
+
+        const panelItem = pdfArray[i];
+
+
+        const padreW = MuralData.clientWidth;
+        const padreH = MuralData.clientHeight;
+        const padreX = MuralData.getBoundingClientRect().left;
+        const padreY = MuralData.getBoundingClientRect().top;
+
+        const rect = computedStyle.getBoundingClientRect();
+        const X = rect.left - padreX;
+        const Y = rect.top - padreY;
+
+        // const posX = rect.left;
+        // const posY = rect.top;
+        const { left, top } = this.calcularPorcentajeLeftTop(
+          padreW,
+          padreH,
+          X,
+          Y
+        );
+
+
+        const DataPdf: PdfsItem = {
+          id_mural: this.idMural,
+          url_pdfs: panelItem.url,
+          height: height,
+          width: width,
+          posx: Number(left),
+          posy: Number(top),
+          border_color:
+            !computedStyle.parentElement!.style.borderColor ||
+            computedStyle.parentElement!.style.borderColor == 'black'
+              ? 'rgb(0,0,0)'
+              : computedStyle.parentElement!.style.borderColor,
+          border_style:
+            computedStyle.parentElement!.style.borderStyle == ''
+              ? 'solid'
+              : computedStyle.parentElement!.style.borderStyle,
+          border_radius:
+            computedStyle.parentElement!.style.borderRadius == ''
+              ? '1%'
+              : computedStyle.parentElement!.style.borderRadius,
+          id_pdfs: this.idPdf[i] !== undefined ? this.idPdf[i] : undefined,
+        };
+        if (DataPdf.id_pdfs == undefined) {
+          delete DataPdf.id_pdfs;
+
+        }
+        DataPdfs.push(DataPdf);
+      });
+      //agregar los enlaces a la url del pdf
+      // if (this.pdfViewers.length === DataPdfs.length) {
+      //   let pdfViewersArray = this.pdfViewers.toArray();
+      //   for (let i = 0; i < pdfViewersArray.length; i++) {
+      //     DataPdfs[i].url_pdfs = pdfViewersArray[i].src as string;
+      //   }
+      // } else {
+      //   console.error('Los arrays pdfViewers y DataPdfs no tienen la misma longitud');
+      // }
+
+      //se guardan en el array el objeto con todo sus elementos
+      let nombreMural = this.MuralnameForm.controls['Muralname'].value;
+      //verificamos si se le puso nombre al mural
+      if (!nombreMural) {
+        nombreMural = 'sin nombre';
+      }
+      //obetenemos la fecha de modificacion actual
+      const fecha_actual = new Date();
+      const year = fecha_actual.getFullYear();
+      const month = (fecha_actual.getMonth() + 1).toString().padStart(2, '0'); // +1 porque los meses comienzan desde 0
+      const day = fecha_actual.getDate().toString().padStart(2, '0');
+      const hours = fecha_actual.getHours().toString().padStart(2, '0');
+      const minutes = fecha_actual.getMinutes().toString().padStart(2, '0');
+      const seconds = fecha_actual.getSeconds().toString().padStart(2, '0');
+
+      // Formatear la fecha y hora en el formato deseado
+      const fechaModificacion = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+
+
+      //hacemos una captura del mural para usar en un dashbaord
+
+      const Url = canva.toDataURL('image/png');
+      dataUrl.push(Url);
+      //se bloquea los clicks
+      this.enEspera = true;
+
+      //se activa el spinner
+      this.isactive = true;
+
+      //ordenamos en un objeto todos los datos necesarios para enviar al backend
+      this.DataMural = {
+        id_mural: this.idMural,
+        id_user: this.idUser,
+        editor: this.idRol,
+        nombrem: nombreMural!,
+        imgMural: dataUrl[0]!,
+        height: MuralData.offsetWidth,
+        width: MuralData.offsetHeight,
+        fecha_modificacion: fechaModificacion!,
+        textos: Texts,
+        imagenes: DataImagenes,
+        videos: Videos,
+        pdfs: DataPdfs,
+        estado: 'en espera',
+      };
+
+
+      //Endepoint para actualizar
+      this.mService.updateMural(this.DataMural).subscribe((data) => {
+
+        if (data.mensaje) {
+          this.enEspera = false;
+          this.exito = true;
+          this.isactive = false;
+          setTimeout(() => {
+            this.exito = false;
+          }, 2000);
+        }
+      });
+      this.idRol = '';
+    });
 
     //});
   }
@@ -1320,13 +1309,13 @@ export class EditMuralComponent implements OnInit {
 
     //obtener valores del mural
     //id del nuevo mural
-    const id_muraal = uuidv4()
+    const id_muraal = uuidv4();
     const MuralData = this.containerRef.nativeElement;
     //copia del array con los archivos subidos en el mural separados por tipo
     let imgArray: PanelItem[] = [];
     let videoArray: PanelItem[] = [];
     let pdfArray: PanelItem[] = [];
-    console.log('1:', this.panelItems);
+
     this.editState = true;
     // Esperar a que se establezca idRol usando una Promesa
     const waitForIdRol = new Promise<void>((resolve) => {
@@ -1340,14 +1329,12 @@ export class EditMuralComponent implements OnInit {
       checkIdRol();
     });
     waitForIdRol.then(() => {
-
-
       if (!this.idRol) {
         return;
       }
       this.editState = false;
       this.panelItems.forEach((item) => {
-        console.log(item.type);
+
         if (
           item.type == 'image/jpeg' ||
           item.type == 'image/png' ||
@@ -1355,7 +1342,7 @@ export class EditMuralComponent implements OnInit {
           item.type == 'image/cloudinary'
         ) {
           imgArray.push(item);
-          console.log('desde arrai:', item);
+
         }
         if (item.type == 'video/mp4' || item.type == 'video/cloudinary') {
           videoArray.push(item);
@@ -1367,7 +1354,7 @@ export class EditMuralComponent implements OnInit {
           pdfArray.push(item);
         }
       });
-      console.log(imgArray);
+
       //hacemos la captura de la imgen
       let dataUrl: string[] = [];
       html2canvas(MuralData).then((canva) => {
@@ -1402,7 +1389,7 @@ export class EditMuralComponent implements OnInit {
             nx,
             ny
           );
-          console.log('porcentaje convertido', { left, top });
+
 
           const valueTexts: TextDatasetItem = {
             id_mural: id_muraal,
@@ -1452,10 +1439,10 @@ export class EditMuralComponent implements OnInit {
           };
           if (valueTexts.id_txt == 'undefined') {
             delete valueTexts.id_txt;
-            console.log('eliminando');
+
           }
-          console.log('alto:', textArea.style.height);
-          console.log('elemento: ', textArea.offsetTop);
+
+
           Texts.push(valueTexts);
         });
 
@@ -1477,12 +1464,12 @@ export class EditMuralComponent implements OnInit {
             X,
             Y
           );
-          console.log('porcentaje convertido', { left, top });
+
           const panelItem = imgArray[i];
           const computedStyle = image as HTMLElement;
           // const { x, y, height, width } = computedStyle.getBoundingClientRect()
           if (panelItem) {
-            console.log(panelItem.url);
+
           } else {
             console.error(`imgArray[${i}] es undefined.`);
           }
@@ -1513,7 +1500,7 @@ export class EditMuralComponent implements OnInit {
           };
           if (valueImages.id_imagenes == undefined) {
             delete valueImages.id_imagenes;
-            console.log('eliminando');
+
           }
 
           DataImagenes.push(valueImages);
@@ -1539,7 +1526,7 @@ export class EditMuralComponent implements OnInit {
             X,
             Y
           );
-          console.log('porcentaje convertido video', { left, top });
+
 
           const DataVideo: VideoDatasetItem = {
             id_mural: id_muraal,
@@ -1568,7 +1555,7 @@ export class EditMuralComponent implements OnInit {
           };
           if (DataVideo.id_video == undefined) {
             delete DataVideo.id_video;
-            console.log('eliminando');
+
           }
           Videos.push(DataVideo);
         });
@@ -1600,10 +1587,10 @@ export class EditMuralComponent implements OnInit {
             X,
             Y
           );
-          console.log('porcentaje convertido de pdf', { left, top });
+
 
           const DataPdf: PdfsItem = {
-            id_mural:id_muraal,
+            id_mural: id_muraal,
             url_pdfs: panelItem.url,
             height: height,
             width: width,
@@ -1626,7 +1613,7 @@ export class EditMuralComponent implements OnInit {
           };
           if (DataPdf.id_pdfs == undefined) {
             delete DataPdf.id_pdfs;
-            console.log('eliminando');
+
           }
           DataPdfs.push(DataPdf);
         });
@@ -1657,7 +1644,7 @@ export class EditMuralComponent implements OnInit {
 
         // Formatear la fecha y hora en el formato deseado
         const fechaModificacion = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-        console.log(fechaModificacion);
+
 
         //hacemos una captura del mural para usar en un dashbaord
 
@@ -1667,7 +1654,7 @@ export class EditMuralComponent implements OnInit {
         this.isactive = true;
         //ordenamos en un objeto todos los datos necesarios para enviar al backend
         this.DataMural = {
-          id_mural:id_muraal,
+          id_mural: id_muraal,
           id_user: this.idUser,
           editor: this.idRol,
           nombrem: nombreMural!,
@@ -1681,22 +1668,41 @@ export class EditMuralComponent implements OnInit {
           pdfs: DataPdfs,
           estado: 'en espera',
         };
-        console.log('Enviando datos:', this.DataMural);
-        console.log(this.panelItems);
-        //Endepoint para actualizar
-        this.mService.postData(this.DataMural).subscribe((data) => {
-          console.log(data);
-          if (data.mensaje) {
-            this.exito = true;
-            this.isactive = false;
-            setTimeout(() => {
-              this.exito = false;
-            }, 2000);
-          }
-        });
-        this.idRol = ''
-      });
 
+
+        this.enEspera = true;
+        //Endepoint para actualizar
+        this.mService.postData(this.DataMural).subscribe(
+          (data) => {
+
+            if (data.mensaje) {
+              this.enEspera = false;
+              this.exito = true;
+              this.isactive = false;
+              setTimeout(() => {
+                this.exito = false;
+              }, 2000);
+            }
+          },
+          (error) => {
+            console.error('Hola', error.status);
+            // Puedes agregar lógica adicional de manejo de errores aquí si es necesario
+            if(error.status == 0){
+              this.exito = true;
+              this.enEspera = false;
+              this.isactive = false;
+              setTimeout(()=> {
+                this.ruta.navigate(['/main/dashboard']);
+              },1000)
+
+            }else{
+              this.isactive = false;
+              return;
+            }
+          }
+        );
+        this.idRol = '';
+      });
     });
   }
 

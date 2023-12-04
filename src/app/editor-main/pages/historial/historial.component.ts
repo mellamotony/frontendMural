@@ -29,7 +29,7 @@ export class HistorialComponent implements OnInit {
     //se hace una peticion para obtener las solucitudes que esten en espera
     const id_user: string = localStorage.getItem('id_user')!
     this.mService.getResponse(id_user).subscribe((datas) => {
-      console.log('p',datas)
+
         if(datas.length < 1){
           this.exitos = false;
           return;
@@ -37,7 +37,7 @@ export class HistorialComponent implements OnInit {
       datas.forEach((data) => {
 
         this.exitos = false
-        console.log(data)
+
         const objSoli: SolicituMural = {
           id_mural: data.id_mural,
           nombre_mural: data.nombrem,
@@ -48,7 +48,7 @@ export class HistorialComponent implements OnInit {
         };
 
         // let option =  this.formEstado.controls['option'].value
-        // console.log(option[0])
+        //
         this.products = this.products.filter((data)=> data.estado !== 'en espera')
         this.products.push(objSoli);
 
@@ -63,7 +63,7 @@ export class HistorialComponent implements OnInit {
   cambiarStatus(){
     const id_user: string = localStorage.getItem('id_user')!
     this.exitos = true
-    console.log( this.formEstado.get('option')!.value)
+
     this.aprobado = this.formEstado.get('option')!.value
     this.formEstado.controls['option'].setValue( this.formEstado.get('option')!.value)
     this.products = []
@@ -88,7 +88,7 @@ export class HistorialComponent implements OnInit {
           }
           this.exitos = false
           let option =  this.formEstado.controls['option'].value
-          console.log(option)
+
           if (objSoli.estado === option) {
 
             this.products = this.products.filter((data) => data.estado == option )

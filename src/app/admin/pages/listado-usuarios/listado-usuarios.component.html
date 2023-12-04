@@ -79,6 +79,7 @@
 <div class="container" *ngIf="showUserForm">
   <h1>Administrar Usuarios</h1>
   <form [formGroup]="formsUser" (ngSubmit)="crearNuevoUsuario()" id="user-form">
+
     <label for="name">Nombre:</label>
     <input formControlName="nombre" type="text" id="name" name="name" required>
 

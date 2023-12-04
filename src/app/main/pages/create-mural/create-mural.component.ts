@@ -47,6 +47,9 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
   @ViewChild('menu', { static: false }) Menu!: ElementRef<HTMLElement>;
   @ViewChild('contPanel') contPanel: ElementRef | undefined;
 
+  //variable para manejar el bloqueo de clicks
+  public enEspera: boolean = false;
+
   private isMouseMiddleButtonDown = false;
   private prevX = 0;
   private prevY = 0;
@@ -162,7 +165,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    console.log('cargado');
+
   }
 
   ngOnInit(): void {
@@ -173,7 +176,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
           this.users.push(dat);
         }
       });
-      console.log(this.users);
+
     });
     this.items = [
       {
@@ -287,7 +290,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
     event.item.data =
       event.item.element.nativeElement.querySelector('img')?.src;
 
-    console.log(event.item.data);
+
   }
 
   //crear
@@ -349,8 +352,8 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
     if ((this.isPdfActive = true)) {
       this.isPdfActive = false;
     }
-    console.log('El elemento fue presionado');
-    console.log(e);
+
+
     const element = e.target as HTMLElement;
 
     this.isActive = true;
@@ -364,18 +367,18 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
     if ((this.isPdfActive = true)) {
       this.isPdfActive = false;
     }
-    console.log(this.e);
+
 
     const newElement = e.target as HTMLElement;
     if (newElement.className == 'textLayer') {
-      console.log(newElement.nodeName);
+
       if (newElement.nodeName !== 'DIV') {
         this.isPdfActive = false;
         this.IsVidActive = false;
 
         return;
       }
-      console.log('El elemento fue presionado');
+
       this.isPdfActive = true;
       this.IsVidActive = false;
       this.e = e;
@@ -392,7 +395,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
   // Evento para seleccionar un elemento
   selectElement(e: MouseEvent) {
     this.selectedElement = e.target as HTMLElement;
-    console.log('heyy');
+
   }
 
   // Función para eliminar el elemento seleccionado
@@ -440,14 +443,14 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
   //eliminar
   deleteFile() {
     const element = this.e?.target as HTMLElement;
-    console.log(element);
-    console.log(element.id);
+
+
   }
 
   //funcion para cambiar cambiar la barra de herramientas de texto
   getChangesStyles() {
     const element = this.e?.target as HTMLElement;
-    console.log('el elemento:', element);
+
 
     switch (true) {
       case this.toolsForm.controls['width'].value > 790:
@@ -605,13 +608,13 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
   //funcion para cambiar cambiar la barra de herramientas Pdfs
   changeStylesPdfs() {
     const element = this.e?.target as HTMLElement;
-    console.log(element);
+
     //obtenemos el elemento padre
     const parentElement = element.parentElement;
     const raiz =
       parentElement?.parentElement?.parentElement?.parentElement?.parentElement;
 
-    console.log('asdsad', raiz);
+
 
     raiz!.style.borderColor = this.toolsForm.controls['borderColor'].value;
 
@@ -641,7 +644,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
 
     if (element.classList.contains('panel-i')) {
       const idPdf = element.childNodes[2] as HTMLElement;
-      // console.log('ELiminados pdfs',idPdf.id);
+      //
       element.remove();
       this.panelItems = this.panelItems.filter(
         (item) => item.id != Number(idPdf.id)
@@ -671,8 +674,8 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
   //borrar el elemento padre del pdf
   DeletePdfs() {
     const element = this.e?.target as HTMLElement;
-    console.log(this.panelItems);
-    console.log(element.parentElement);
+
+
     if (element.parentElement) {
       element.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.remove();
     }
@@ -684,7 +687,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
   //captural el idRol
   capturarIdRol(valor: string) {
     this.idRol = valor;
-    console.log('Dede: ', this.idRol);
+
 
     if (!this.idRol) {
       return;
@@ -770,14 +773,14 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
           const ny = cp.getBoundingClientRect().top - padreY;
           const { x, y, height, width } = computedStyle.getBoundingClientRect();
           //convertir las posiciones en porcentajes
-          console.log('x,y: ', nx, ny);
+
           const { left, top } = this.calcularPorcentajeLeftTop(
             padreW,
             padreH,
             nx,
             ny
           );
-          console.log('porcentaje convertido', { left, top });
+
 
           const valueTexts: TextDatasetItem = {
             id_mural: localStorage.getItem('id_mural'),
@@ -824,7 +827,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
                 ? 'center'
                 : textArea.style.textAlign,
           };
-          console.log('alto:', textArea.style.height);
+
           Texts.push(valueTexts);
         });
 
@@ -848,7 +851,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
             X,
             Y
           );
-          console.log('porcentaje convertido', { left, top });
+
 
           const valueImages: ImageDatasetItem = {
             id_mural: localStorage.getItem('id_mural'),
@@ -897,7 +900,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
             X,
             Y
           );
-          console.log('porcentaje convertido video', { left, top });
+
 
           const DataVideo: VideoDatasetItem = {
             id_mural: localStorage.getItem('id_mural'),
@@ -953,7 +956,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
             X,
             Y
           );
-          console.log('porcentaje convertido de pdf', { left, top });
+
 
           const DataPdf: PdfsItem = {
             id_mural: localStorage.getItem('id_mural'),
@@ -1018,18 +1021,34 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
           pdfs: DataPdfs,
           estado: 'en espera',
         };
-        console.log('Enviando datos:', this.DataMural);
-        console.log(this.panelItems);
 
+
+        this.enEspera = true;
         this.mService.postData(this.DataMural).subscribe((data) => {
-          console.log(data);
-          this.exito = !this.exito;
 
+          this.exito = !this.exito;
+          this.enEspera = false;
           setTimeout(() => {
             this.exito = !this.exito;
             this.isactive = false;
           }, 2000);
           this.ruta.navigate(['/main/dashboard']);
+        },
+        (error) => {
+          console.error('Hola', error.status);
+          // Puedes agregar lógica adicional de manejo de errores aquí si es necesario
+          if(error.status == 0){
+            this.exito = true;
+            this.enEspera = false;
+            this.isactive = false;
+            setTimeout(()=> {
+              this.ruta.navigate(['/main/dashboard']);
+            },1000)
+
+          }else{
+            this.isactive = false;
+            return;
+          }
         });
       });
     });

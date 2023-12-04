@@ -32,7 +32,7 @@ export class LayoutComponent implements OnInit {
     const idRadom = Math.floor(Math.random() * this.colors.length)
 
     this.coloRandom = this.colors[idRadom]
-    console.log('color: '+this.coloRandom)
+
     this.items = [
       {
         label: 'Galeria',
@@ -66,9 +66,9 @@ export class LayoutComponent implements OnInit {
 const id_user = Number(localStorage.getItem('id_user'));
 //se desencripta el token para obtener los datos necesarios para la validación de rutas
 
-console.log(id_user);
+
 this.ms.postIdUSER(id_user).subscribe((data)=>{
-  console.log(data)
+
   this.avatar = data.nombre[0]
   this.nombre = data.nombre
   this.apellidos = data.apellidos
@@ -85,7 +85,7 @@ this.ms.postIdUSER(id_user).subscribe((data)=>{
     //borra los datos en el //borra lga
 
     localStorage['removeItem']('token');
-    console.log('sesion cerrada')
+
   }
 
   hiddenmenu(){

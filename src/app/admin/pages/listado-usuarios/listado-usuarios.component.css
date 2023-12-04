@@ -5,9 +5,17 @@
   font-family: 'DM Serif Display', serif;
 }
 
+/* .nose {
+  filter: brightness(1.2);
+} */
+
 h2 {
   font-size: 24px;
   margin-bottom: 10px;
+}
+
+.esta h1{
+  color:#007bff;
 }
 
 table {
@@ -74,22 +82,22 @@ button:hover {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #070025;
+  background-color: rgb(34, 151, 77);
   color: rgb(29, 27, 27); /* Color de texto contrastante */
-  text-align: center; /* Centrar el contenido del elemento */
+
   padding: 20px; /* Espacio interno para mejorar la legibilidad */
   display:flex;
   flex-direction: column;
   justify-content:center;
   align-items:center;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 10px 10px 20px 100% rgba(0, 0, 0, 0.2);
 
   /* Borde redondeado */
   border-radius: 10px;
 }
 .container h1{
   color: rgb(255, 255, 255);
-  font-weight: 200;
+  font-weight: 900;
   font-family: 'DM Serif Display', serif;
 }
 
@@ -108,19 +116,26 @@ h1 {
   width: 300px;
   padding: 20px;
 
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border: 0px;
 }
 
 form label {
   font-weight: 200;
   margin-bottom: 5px;
   color: white;
-
   font-family: 'DM Serif Display', serif;
   font-size: medium;
 }
 
 form input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+form select {
   width: 100%;
   padding: 8px;
   margin-bottom: 10px;
@@ -134,7 +149,7 @@ form input {
 }
 
 .bton {
-  background-color: #07acc0 ;
+  background-color: #1307c0 ;
   color: #fff;
   border: none;
   padding: 8px 16px;
@@ -165,3 +180,4 @@ form input {
 .btnEsta{
   font-family: 'DM Serif Display', serif;
 }
+

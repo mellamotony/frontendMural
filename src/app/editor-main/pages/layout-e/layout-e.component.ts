@@ -19,7 +19,7 @@ export class LayoutEComponent implements OnInit {
     const idRadom = Math.floor(Math.random() * this.colors.length)
 
     this.coloRandom = this.colors[idRadom]
-    console.log('color: '+this.coloRandom)
+
     this.items = [
       {
         label: 'Solicitudes',
@@ -41,7 +41,7 @@ export class LayoutEComponent implements OnInit {
         command: () => {
 
           localStorage['removeItem']('token');
-          console.log('Sesion finalizada');
+          ;
         }
       },
     ];
@@ -50,9 +50,9 @@ export class LayoutEComponent implements OnInit {
     const id_user = Number(localStorage.getItem('id_user'));
     //se desencripta el token para obtener los datos necesarios para la validación de rutas
 
-    console.log(id_user);
+    ;
     this.ms.postIdUSER(id_user).subscribe((data) => {
-      console.log(data)
+
       this.avatar = data.nombre[0]
       this.nombre = data.nombre
       this.apellidos = data.apellidos

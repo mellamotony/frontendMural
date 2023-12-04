@@ -22,7 +22,7 @@
   [closable]="true"
 ></p-messages>
 <div class="bodyC">
-  <div class="mainContainer">
+  <div class="mainContainer" [ngClass]="{'disabled': enEspera}" >
     <form [formGroup]="MuralnameForm">
       <input
         class="forName"

@@ -60,9 +60,9 @@ export class SolicitudesComponent implements OnInit {
     let year = today.getFullYear();
 
     let day = today.getDate();
-    console.log(day);
+
     let prevDay = day === 1 ? new Date(year, month, 0).getDate() : day - 1;
-    console.log(prevDay);
+
     let prevMonth = month === 0 ? 11 : month - 1;
     let prevYear = prevMonth === 11 ? year - 1 : year;
     let nextMonth = month === 11 ? 0 : month + 1;
@@ -71,21 +71,21 @@ export class SolicitudesComponent implements OnInit {
     this.minDate.setDate(prevDay + 1);
     this.minDate.setMonth(month);
     this.minDate.setFullYear(prevYear);
-    console.log('miniama: ', this.minDate);
+
     this.maxDate = new Date();
     this.maxDate.setMonth(nextMonth);
     this.maxDate.setFullYear(nextYear);
     const IdEditor: string = localStorage.getItem('id_user')!;
-    console.log(IdEditor);
+
     //se hace una peticion para obtener las solucitudes que esten en espera
     this.mService.getSolicitudes(IdEditor).subscribe((datas) => {
-      console.log('1',datas)
+
       if(datas.length < 1){
         this.exito = false;
         return;
       }
       datas.forEach((data) => {
-        console.log('datos del solicitud:', data);
+
         const objSoli: SolicituMural = {
           id_mural: data.id_mural,
           nombre_mural: data.nombrem,
@@ -106,7 +106,7 @@ export class SolicitudesComponent implements OnInit {
     this.exito = true;
     //obtenemos el padre
     const parentElement = (el.target as HTMLElement).closest('.rowT');
-    console.log(parentElement);
+
     //asignamos el event para obtener unos valores
     this.e = parentElement as HTMLElement;
 
@@ -121,7 +121,7 @@ export class SolicitudesComponent implements OnInit {
 
     // Formatear la fecha y hora en el formato deseado
     const fechaRechazado = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-    console.log(fechaRechazado);
+
 
     const body: RejectMural = {
       id_mural: this.e.id,
@@ -129,11 +129,11 @@ export class SolicitudesComponent implements OnInit {
       estado: 'rechazado',
       fechaRechazado: fechaRechazado,
     };
-    console.log(body);
+
 
     //enviando datos
     this.mService.rejectMural(body).subscribe((data) => {
-      console.log(data);
+
       if (data.mensaje == 'actualización de estado exitosamente') {
         this.exito = !this.exitos;
         setTimeout(() => {
@@ -149,7 +149,7 @@ export class SolicitudesComponent implements OnInit {
 
     //obtenemos el padre
     const parentElement = (el.target as HTMLElement).closest('.rowT');
-    console.log(parentElement);
+
     //asignamos el event para obtener unos valores
     this.e = parentElement as HTMLElement;
   }
@@ -170,7 +170,7 @@ export class SolicitudesComponent implements OnInit {
 
     // Formatear la fecha y hora en el formato deseado
     const fechaAprobado = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-    console.log(fechaAprobado);
+
     const id_user = this.e?.firstChild as HTMLElement;
 
     const body: AprobeMural = {
@@ -185,7 +185,7 @@ export class SolicitudesComponent implements OnInit {
     const { fecha_publicacion, fin_publicacion } = body;
     const vInicio = new Date(fecha_publicacion);
     const vFin = new Date(fin_publicacion);
-    console.log(':::', vInicio.getTime(), vFin.getTime());
+
     if (vInicio.getTime() >= vFin.getTime()) {
       this.messages[0] = {
         severity: 'error',
@@ -204,7 +204,7 @@ export class SolicitudesComponent implements OnInit {
 
     //enviando los datos
     this.mService.setAprove(body).subscribe((data) => {
-      console.log(data);
+
       if (data.mensaje == 'actualización de estado exitosamente') {
         this.exito = !this.exitos
         setTimeout(()=>{

@@ -41,7 +41,7 @@ export class DashboardComponent implements OnInit {
           this.isactive = false
         }, 100);
         this.isdata = true;
-        console.log('datos recibidos: ', data)
+
 
         data.forEach((item: MuralByUser, i: number) => {
           const obj = { nombrem: item.nombrem, numeroM: i + 1, id_mural: item.id_mural, imgmural:this.cleanPath(item.imgmural!)  }
@@ -57,7 +57,7 @@ export class DashboardComponent implements OnInit {
 
   generarId() {
     this.mService.getId().subscribe((data) => {
-      console.log(data);
+
 
       let repeat: boolean = true;
 
@@ -68,7 +68,7 @@ export class DashboardComponent implements OnInit {
             const { id_mural } = d;
             if (id_mural == nuevoUUID) {
               //Remplazar por un mensaje de notificacion de prime ng
-              console.log('ya existe el id');
+
               return
             }
 
@@ -80,7 +80,7 @@ export class DashboardComponent implements OnInit {
           }
         });
       } else {
-        console.log('no hubo datos, entonces es un nuevo mural ');
+
         const nuevoUUID: string = uuidv4();
         //agrega el id al localStorage para usarlo en la aplicacion
         localStorage.setItem('id_mural', nuevoUUID);

@@ -19,7 +19,7 @@ export class MuralService {
 
   //guardar el contenido del mural en la base de datos
   postData(data:MuralDataSetItem): Observable<any>{
-    console.log('ejecutando.........')
+
     return this.http.post<any>(this.url+'/mural/insert',data)
   }
 
@@ -42,10 +42,10 @@ postIdsolicitud(id:number):Observable<Solicitud[] |[]>{
   const body = {
     id_user:id
   }
-  console.log(body)
+
   return this.http.post<Solicitud[]>(this.url+'/mural/getEstado',body).pipe(
     catchError((err) => {
-      console.error('Error en la solicitud:', err);
+
       return of([]); // Devuelve un array vacío en caso de error
     })
   );

@@ -17,7 +17,7 @@ export class DesignerGuard implements CanActivate {
     }
     const rolSincoded = localStorage.getItem('token');
     const token:guardToken = jwt_decode(rolSincoded!)
-    console.log('guard: ',token.rol);
+
   if(token.rol == 'diseñador'){
     return true;
   }else{

@@ -48,7 +48,7 @@ export class ListadoUsuariosComponent {
     const idRadom = Math.floor(Math.random() * this.colors.length)
 
     this.coloRandom = this.colors[idRadom]
-    console.log('color: '+this.coloRandom)
+
     this.admService.getUsers().subscribe((dato) => {
       dato.forEach(data => {
         if(!data){
@@ -86,7 +86,7 @@ export class ListadoUsuariosComponent {
           return 0; // son iguales, no se cambia su orden relativo
         }
       });
-      console.log(this.users)
+
 
     })
 
@@ -107,7 +107,7 @@ export class ListadoUsuariosComponent {
     }
 
     //servicio que envia
-    console.log('enviando datos:', usuarios)
+
     this.spinner = !this.spinner
     this.admService.insertUser(usuarios).subscribe((data) => {
       if (data) {
@@ -117,7 +117,7 @@ export class ListadoUsuariosComponent {
         //mensaje
         this.exito = !this.exito
 
-        console.log(data)
+
         this.formsUser.reset();
         window.location.reload();
       }
@@ -128,10 +128,10 @@ export class ListadoUsuariosComponent {
 
   editarUsuario(e:Event) {
     const parent = e.target as HTMLElement
-    console.log(parent.parentElement?.id)
+
     const id_user:number = Number(parent.parentElement?.id)
     this.admService.postIdUSER(id_user).subscribe((data) => {
-      console.log(data)
+
       const apelldos: string = data.apellidos.split(' ')
       const apellido_p: string = apelldos[0]
       const apellido_m: string = apelldos[1]
@@ -157,7 +157,7 @@ export class ListadoUsuariosComponent {
       correo: this.formsUser.controls['correo'].value,
       id_rol: this.formsUser.controls['id_rol'].value,
     }
-    console.log(usuarios)
+
     if(this.formsUser.invalid){
       this.exito = !this.exito
       this.messages[0].severity = 'error'
@@ -166,7 +166,7 @@ export class ListadoUsuariosComponent {
       setTimeout(()=>{
         this.exito = !this.exito
       },2000)
-      console.log('!!!!')
+
       return
     }
     this.admService.editUser(usuarios).subscribe((data) => {
@@ -175,7 +175,7 @@ export class ListadoUsuariosComponent {
       this.exito = !this.exito
 
       this.messages[0].detail = data.mensaje
-      console.log('enviando......', data)
+
       setTimeout(()=>{
         this.exito = !this.exito
       },2000)
@@ -203,16 +203,16 @@ export class ListadoUsuariosComponent {
 
   eliminarUsuario(e:Event) {
     const parent = e.target as HTMLElement
-    console.log(parent.parentElement?.id)
+
     const id_user:number = Number(parent.parentElement?.id)
     this.admService.deleteUser(id_user).subscribe((data) =>{
-      console.log(data);
+      ;
 
        //mensaje
        this.exito = !this.exito
 
        this.messages[0].detail = data.mensaje
-       console.log('enviando......', data)
+
        setTimeout(()=>{
          this.exito = !this.exito
        },2000)
@@ -226,7 +226,7 @@ export class ListadoUsuariosComponent {
     //borra los datos en el //borra lga
 
     localStorage['removeItem']('token');
-    console.log('sesion cerrada')
+
   }
 
 }

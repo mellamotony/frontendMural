@@ -22,7 +22,7 @@
   [closable]="true"
 ></p-messages>
 <div class="padre">
-  <div class="mainContainer">
+  <div class="mainContainer" [ngClass]="{'disabled': enEspera}">
     <form class="formBody" [formGroup]="MuralnameForm">
       <div class="esta">
         <svg

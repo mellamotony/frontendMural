@@ -131,7 +131,11 @@
   overflow-y: hidden;
 
 }
-
+/*deescativar clicks*/
+.disabled {
+  pointer-events: none; /* Disable pointer events on the div */
+  opacity: 0.5; /* Optionally reduce the opacity to visually indicate the disabled state */
+}
 
 .btnDelete{
   color: white;

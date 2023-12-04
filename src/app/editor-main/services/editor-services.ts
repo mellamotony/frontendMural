@@ -20,7 +20,7 @@ export class EditorService {
     return this.http.post<Solicitud[]>(this.url + '/mural/solbyuser', body)
       .pipe(
         catchError((err) => {
-          console.error('Error en la solicitud:', err);
+
           return of([]); // Devuelve un array vacío en caso de error
         })
       );

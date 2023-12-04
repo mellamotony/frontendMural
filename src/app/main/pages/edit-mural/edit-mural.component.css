@@ -54,6 +54,11 @@
   width: 100%;
   height: 100%;
 }
+/*deescativar clicks*/
+.disabled {
+  pointer-events: none; /* Disable pointer events on the div */
+  opacity: 0.5; /* Optionally reduce the opacity to visually indicate the disabled state */
+}
 
 .panel-i img{
   width: 100%;

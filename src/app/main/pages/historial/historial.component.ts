@@ -23,7 +23,7 @@ export class HistorialComponent implements OnInit {
     this.ms.historial(id_user).subscribe((data) => {
       if (data) {
         this.isactive = false;
-        console.log(data)
+
         if (!data) {
           alert('No hay datos')
           return
