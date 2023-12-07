@@ -72,14 +72,14 @@
         size="10485"
       />
       <div
-        [ngStyle]="{ position: 'fixed' }"
+        [ngStyle]="{ position: 'absolute' }"
         class="panel-i"
         *ngFor="let item of panelItems"
         cdkDrag
         cdkDragBoundary=".panel-container"
         (click)="handleClickMultimedia($event)"
       >
-        <ng-container class="contVideo" *ngIf="item.type.startsWith('video/')">
+        <ng-container class="contVideo"  *ngIf="item.type.startsWith('video/')">
           <video [id]="item.id" [src]="item.url" controls></video>
         </ng-container>
         <ng-container class="contImg" *ngIf="item.type.startsWith('image/')">
@@ -102,7 +102,7 @@
         </ng-container>
       </div>
       <textarea
-        [ngStyle]="{ position: 'fixed' }"
+        [ngStyle]="{ position: 'absolute' }"
         *ngFor="let item of valueInputs"
         cdkDragBoundary=".panel-container"
         cdkDrag

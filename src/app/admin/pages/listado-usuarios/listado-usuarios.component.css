@@ -85,7 +85,7 @@ button:hover {
   background-color: rgb(34, 151, 77);
   color: rgb(29, 27, 27); /* Color de texto contrastante */
 
-  padding: 20px; /* Espacio interno para mejorar la legibilidad */
+  padding: 5%; /* Espacio interno para mejorar la legibilidad */
   display:flex;
   flex-direction: column;
   justify-content:center;
@@ -95,12 +95,15 @@ button:hover {
   /* Borde redondeado */
   border-radius: 10px;
 }
+
 .container h1{
   color: rgb(255, 255, 255);
   font-weight: 900;
   font-family: 'DM Serif Display', serif;
 }
-
+.headreC{
+  text-align: center;
+}
 
 h1 {
   font-size: 24px;

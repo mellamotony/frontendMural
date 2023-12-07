@@ -13,33 +13,45 @@
 
 .modal-content {
   background: #fff;
-  padding: 20px;
+  padding: 5%; /* Ajustado para ser un porcentaje del ancho del modal */
   border-radius: 4px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
-  width: 30%;
-  height: 40%;
+  width: 70%; /* Ajustado para ser un porcentaje del ancho del modal */
+  max-width: 600px; /* Evita que el contenido sea demasiado ancho en pantallas grandes */
+  height: 60%; /* Ajustado para ser un porcentaje del alto del modal */
+  max-height: 500px; /* Evita que el contenido sea demasiado alto en pantallas grandes */
 }
+
 .modal-content select {
-  height: 19%;
+  height: 10%; /* Ajustado para ser un porcentaje del alto del modal */
 }
-.butoms{
+
+.butoms {
   display: flex;
   flex-direction: column;
-
 }
 
 button {
-  margin-top: 10%;
+  margin-top: 5%; /* Ajustado para ser un porcentaje del alto del modal */
   padding: 10px 20px;
   background: #007bff;
   color: #fff;
   border: none;
   cursor: pointer;
-
 }
 
-.btn-cancell{
+.btn-cancell {
   background: red;
+}
 
+/* Media query para pantallas más pequeñas */
+@media (max-width: 600px) {
+  .modal-content {
+    width: 90%; /* Ajusta el ancho para pantallas más pequeñas */
+  }
+
+  .modal-content select {
+    height: 15%; /* Ajusta la altura del select para pantallas más pequeñas */
+  }
 }

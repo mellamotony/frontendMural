@@ -33,9 +33,11 @@
   gap: 16px;
   padding: 16px;
   border: 1px solid #ccc;
-  min-height: 90%;
-  max-height: 90%;
+  min-height:450px;
+  max-width: 790px;
+  max-height: 450px;
   position: relative;
+  overflow: hidden;
 }
 
 .element {

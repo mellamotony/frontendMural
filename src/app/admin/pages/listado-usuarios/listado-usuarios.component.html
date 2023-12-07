@@ -77,7 +77,10 @@
 </div>
 
 <div class="container" *ngIf="showUserForm">
-  <h1>Administrar Usuarios</h1>
+  <div class="headreC">
+    <h1>Administrar Usuarios</h1>
+  </div>
+
   <form [formGroup]="formsUser" (ngSubmit)="crearNuevoUsuario()" id="user-form">
 
     <label for="name">Nombre:</label>
@@ -111,7 +114,10 @@
 
 <!-- FORMULARIO PARA EDITAR USUSARIO -->
 <div class="container" *ngIf="showEditForm">
-  <h1>Editar Usuario</h1>
+  <div>
+    <h1>Editar Usuario</h1>
+  </div>
+
   <form [formGroup]="formsUser" (ngSubmit)="editNUevoUser()" id="user-form">
     <label for="name">Nombre:</label>
     <input formControlName="nombre" type="text" id="name" name="name" required>
