@@ -288,9 +288,15 @@ html, body {
   padding-bottom: 10px;
   margin-bottom: 10px;
 }
+
+.MenuBarEdicionTexto form {
+  margin-left:13%;
+}
+
 ::ng-deep .p-colorpicker-panel {
   left: auto !important;
   right: 0 !important;
+
   /* transform: translateX(-100%) !important; */
 
 }
@@ -447,4 +453,35 @@ pdf-viewer {
     -webkit-transform: scale3D(0, 0, 1);
             transform: scale3D(0, 0, 1);
   }
+}
+/*Estilos responsivos aqui*/
+/* Barrita en pantallas pequeñas */
+/*
+@media (max-width: 100px) {
+  .barrita {
+    width: 100%;
+  }
+ }
+*/
+
+
+.guide {
+  position: absolute;
+  background: rgba(0,0,0,0.3);
+  width: 1px;
+  height: 5%;
+}
+.guideh {
+  position: absolute;
+  background: rgba(0,0,0,0.3);
+  width: 5%;
+  height: 1px;
+}
+.herraText{
+  margin-top: 34%;
+  padding-top: 50%;
+  text-align: center;
+  border: 1px solid black;
+  height:350px;
+  width: 300px;
 }

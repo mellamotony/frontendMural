@@ -1,7 +1,13 @@
 <p-menubar>
-  <ng-template   pTemplate="start">
-    <p-avatar [ngStyle]="{'color':coloRandom}" [label]="avatar" size="xlarge"></p-avatar>
-    <span>{{" "}} {{nombre}} {{apellidos}}</span>
+  <ng-template   pTemplate="start" >
+    <div class="hedr">
+      <p-avatar [ngStyle]="{'color':coloRandom}" [label]="avatar" size="xlarge"></p-avatar>
+      <h2>{{" "}} {{nombre}} {{apellidos}}</h2>
+    </div>
+
+  </ng-template>
+  <ng-template pTemplate="end">
+    <h2 class="sbhr">{{rol | titlecase}}</h2>
   </ng-template>
 </p-menubar>
 <br>
@@ -10,6 +16,7 @@
   <div class="flex justify-content-center">
     <p-slideMenu [model]="items" [viewportHeight]="550" [menuWidth]="160"></p-slideMenu>
   </div>
+
 
   <div class="flex-fill">
 

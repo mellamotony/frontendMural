@@ -1,17 +1,30 @@
-<p-menubar  >
-  <ng-template pTemplate="start">
-    <p-avatar [ngStyle]="{'color':coloRandom}" [label]="avatar" size="xlarge"></p-avatar>
-    <span>{{" "}} {{nombre}} {{apellidos}}</span>
+<p-menubar>
+  <ng-template pTemplate="start" style="width: 600px;">
+    <div class="headr">
+      <p-avatar
+        [ngStyle]="{ color: coloRandom }"
+        [label]="avatar"
+        size="xlarge"
+      ></p-avatar>
+      <div class="subhr">
+        <h2>{{ " " }} {{ nombre }} {{ apellidos }}</h2>
+
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="end"><h2 >{{ rol | titlecase }}</h2>
   </ng-template>
 </p-menubar>
-<br>
+<br />
 
-<div id="esta"  class="d-flex gap-1">
-
+<div id="esta" class="d-flex gap-1">
   <div #menu class="flex justify-content-center contSlide">
-
-    <p-slideMenu [popup]="false" [model]="items" [viewportHeight]="550" [menuWidth]="160">
-
+    <p-slideMenu
+      [popup]="false"
+      [model]="items"
+      [viewportHeight]="550"
+      [menuWidth]="160"
+    >
     </p-slideMenu>
   </div>
   <!-- <button id="noc" class="arrow flex-fill"  (click)="hiddenmenu()"><svg  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-9 h-9">
@@ -21,8 +34,4 @@
   <div class="containerg flex-fill">
     <router-outlet></router-outlet>
   </div>
-
-
-
 </div>
-

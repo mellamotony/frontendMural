@@ -363,3 +363,13 @@ pdf-viewer {
             transform: scale3D(0, 0, 1);
   }
 }
+
+.herraText{
+  margin-top: 34%;
+  padding-top: 50%;
+  text-align: center;
+  border: 1px solid black;
+  height:350px;
+  width: 300px;
+}
+

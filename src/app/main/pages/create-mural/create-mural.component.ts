@@ -46,7 +46,12 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
   @ViewChildren(PdfViewerComponent) pdfViewers!: QueryList<PdfViewerComponent>;
   @ViewChild('menu', { static: false }) Menu!: ElementRef<HTMLElement>;
   @ViewChild('contPanel') contPanel: ElementRef | undefined;
+  //variables para crear la regleta
+  pixelSize = 790;
+  pixelHeight = 450;
 
+  verticalGuides: any[] = [];
+  horizontalGuides: any[] = [];
   //variable para manejar el bloqueo de clicks
   public enEspera: boolean = false;
 
@@ -149,6 +154,8 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
 
   panelItems: PanelItem[] = [];
 
+  herramientaActive:boolean = false;
+
   @ViewChild('contPanel') containerRef!: ElementRef<HTMLElement>;
 
   //constructor
@@ -169,6 +176,9 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.herramientaActive = true;
+    this.generateGuides()
+    //this.IsVidActive = true;
     //cargar los editores para elmodal
     this.mService.getUsers().subscribe((data) => {
       data.map((dat) => {
@@ -208,8 +218,6 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
                 },
               ],
             },
-          ],
-          [
             {
               label: 'Video',
               items: [
@@ -233,6 +241,7 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
               ],
             },
           ],
+
         ],
         // command:()=>{
         //   alert('subiendo_:...')
@@ -293,9 +302,25 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
 
   }
 
+  //crea los reglones
+  generateGuides() {
+    for(let i = 50; i < this.pixelSize; i+= 50) {
+      this.verticalGuides.push({
+        left: i + 'px'
+      });
+    }
+
+    for(let i = 50; i < this.pixelHeight; i+= 50) {
+      this.horizontalGuides.push({
+        top: i + 'px'
+      });
+    }
+  }
+
   //crear
   createTxt() {
     this.valueInputs.push('valor por defecto');
+    //this.isActive = true;
   }
   //Crear archivos
   createFileInput() {
@@ -344,10 +369,12 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
       inputElement.accept = acceptedType;
       inputElement.click();
     }
+
   }
 
   //click al elemento ContainerTxt
   handleClick(e: MouseEvent) {
+    this.herramientaActive = false;
     this.IsVidActive = false;
     if ((this.isPdfActive = true)) {
       this.isPdfActive = false;
@@ -359,13 +386,87 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
     this.isActive = true;
 
     this.e = e;
-  }
 
+    const elemento = e.target as HTMLElement
+    const color = this.eliminarUnidades(elemento.style.color) == '' ? 'rgb(0,0,0)': this.eliminarUnidades(elemento.style.color)
+    const background_color = this.eliminarUnidades(elemento.style.backgroundColor) == '' ||'black' ? 'rgb(255,255,255)': this.eliminarUnidades(elemento.style.color)
+    const border_color = this.eliminarUnidades(elemento.style.borderColor) == '' ? 'rgb(0,0,0)': this.eliminarUnidades(elemento.style.borderColor)
+
+
+
+    this.toolsForm.controls['height'].setValue(parseInt(this.eliminarUnidades(elemento.style.height)));
+    this.toolsForm.controls['width'].setValue(parseInt(this.eliminarUnidades(elemento.style.width)));
+    this.toolsForm.controls['color'].setValue(this.rgbToHex(color));
+    this.toolsForm.controls['fonts'].setValue((this.eliminarUnidades(elemento.style.fontFamily)));
+    this.toolsForm.controls['borderStyle'].setValue((this.eliminarUnidades(elemento.style.borderStyle)));
+    this.toolsForm.controls['borderRadius'].setValue(parseInt(this.eliminarUnidades(elemento.style.borderRadius)));
+    this.toolsForm.controls['alignment'].setValue((this.eliminarUnidades(elemento.style.textAlign)));
+    this.toolsForm.controls['fontSize'].setValue(parseInt(this.eliminarUnidades(elemento.style.fontSize)));
+    this.toolsForm.controls['borderColor'].setValue(this.rgbToHex(border_color));
+    this.toolsForm.controls['background'].setValue(this.rgbToHex(background_color));
+  }
+  //permite tener los estilos en la barra de herramientas
+  mantenerStilos(e:MouseEvent){
+    const elemento = e.target as HTMLElement
+    if(elemento.classList.contains('panel-i')){
+    const border_color = this.eliminarUnidades(elemento.style.borderColor) == '' ? 'rgb(0,0,0)': this.eliminarUnidades(elemento.style.borderColor)
+
+    this.toolsForm.controls['borderColor'].setValue(this.rgbToHex(border_color));
+    this.toolsForm.controls['height'].setValue(parseInt(this.eliminarUnidades(elemento.style.height)));
+    this.toolsForm.controls['width'].setValue(parseInt(this.eliminarUnidades(elemento.style.width)));
+    this.toolsForm.controls['borderRadius'].setValue(parseInt(this.eliminarUnidades(elemento.style.borderRadius)));
+    this.toolsForm.controls['borderStyle'].setValue((this.eliminarUnidades(elemento.style.borderStyle)));
+    return
+  }
+    const ePadre = elemento.parentElement
+    const border_color = this.eliminarUnidades(ePadre!.style.borderColor) == '' ? 'rgb(0,0,0)': this.eliminarUnidades(ePadre!.style.borderColor);
+
+    this.toolsForm.controls['borderColor'].setValue(this.rgbToHex(border_color));
+    this.toolsForm.controls['height'].setValue(parseInt(this.eliminarUnidades(ePadre!.style.height)));
+    this.toolsForm.controls['width'].setValue(parseInt(this.eliminarUnidades(ePadre!.style.width)));
+    this.toolsForm.controls['borderRadius'].setValue(parseInt(this.eliminarUnidades(ePadre!.style.borderRadius)));
+    this.toolsForm.controls['borderStyle'].setValue((this.eliminarUnidades(ePadre!.style.borderStyle)));
+  }
+  //cambiar formato
+  rgbToHex(rgbString: string): string | null {
+    const match = rgbString.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+
+    if (!match) {
+      return null; // Devuelve null si el formato del string RGB no es válido
+    }
+
+    const [, r, g, b] = match.map(Number);
+
+    const toHex = (c: number) => {
+      const hex = c.toString(16);
+      return hex.length === 1 ? '0' + hex : hex;
+    };
+
+    const hexR = toHex(r);
+    const hexG = toHex(g);
+    const hexB = toHex(b);
+
+    return `#${hexR}${hexG}${hexB}`;
+  }
+  //funcion que limpia los px y / de un texto
+   eliminarUnidades(cadena: string): string {
+    // Eliminar "px"
+    const sinPx = cadena.replace("px", "");
+
+    // Eliminar "/"
+    const sinSlash = sinPx.replace("/", "");
+    const sincomi = sinSlash.replaceAll('"',"")
+
+    return sincomi;
+  }
   //click a los elementos de video,pdf e imagenes
   handleClickMultimedia(e: MouseEvent) {
+    this.herramientaActive = false;
     this.isActive = false;
+    this.mantenerStilos(e)
     if ((this.isPdfActive = true)) {
       this.isPdfActive = false;
+      //this.mantenerStilos(e)
     }
 
 
@@ -375,18 +476,20 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
       if (newElement.nodeName !== 'DIV') {
         this.isPdfActive = false;
         this.IsVidActive = false;
-
+        this.mantenerStilos(e)
         return;
       }
 
       this.isPdfActive = true;
       this.IsVidActive = false;
       this.e = e;
+      this.mantenerStilos(e)
       return;
     }
     this.IsVidActive = true;
-
+    console.log('video activo')
     this.e = e;
+    this.mantenerStilos(e)
   }
 
   // Define una variable para almacenar el elemento seleccionado
@@ -705,353 +808,369 @@ export class CreateMuralComponent implements OnInit, AfterViewInit {
   //funcion para enviar los datos
   OnSaveMural() {
 
-
+    this.isActive = false;
+    this.IsVidActive = false;
     this.editState = true;
 
-
-    // Esperar a que se establezca idRol usando una Promesa
-    const waitForIdRol = new Promise<void>((resolve) => {
-      const checkIdRol = () => {
-        if (this.idRol) {
+    const images = this.containerRef.nativeElement.querySelectorAll('img');
+    const imagePromises = Array.from(images).map((image: HTMLImageElement) => {
+      return new Promise<void>((resolve) => {
+        if (image.complete) {
           resolve();
-        } else {
-          setTimeout(checkIdRol, 100); // Revisar cada 100 milisegundos
+        }else {
+          image.onload = () => resolve();
         }
-      };
-      checkIdRol();
+      });
     });
-    waitForIdRol.then(() => {
-      if (!this.idRol) {
-        return;
-      }
-      this.editState = false;
-      //obtener valores del mural
-      const MuralData = this.containerRef.nativeElement;
-      //hacemos la captura de la imgen
-      let dataUrl: string[] = [];
-      html2canvas(MuralData).then((canva) => {
-        const textAreas =
-          this.containerRef.nativeElement.querySelectorAll('textarea');
-        const images = this.containerRef.nativeElement.querySelectorAll('img');
-        const videos =
-          this.containerRef.nativeElement.querySelectorAll('video');
-        const pdfs =
-          this.containerRef.nativeElement.querySelectorAll('pdf-viewer');
-        //copia del array con los archivos subidos en el mural separados por tipo
-        let imgArray: PanelItem[] = [];
-        let videoArray: PanelItem[] = [];
-        let pdfArray: PanelItem[] = [];
 
-        this.panelItems.forEach((item) => {
-          if (item.type == 'image/jpeg' || item.type == 'image/png') {
-            imgArray.push(item);
+    Promise.all(imagePromises).then(() => {
+      // Llamar a html2canvas aquí
+      const waitForIdRol = new Promise<void>((resolve) => {
+        const checkIdRol = () => {
+          if (this.idRol) {
+            resolve();
+          } else {
+            setTimeout(checkIdRol, 100); // Revisar cada 100 milisegundos
           }
-          if (item.type == 'video/mp4') {
-            videoArray.push(item);
-          }
-          if (item.type == 'application/pdf') {
-            pdfArray.push(item);
-          }
-        });
-        //Array de cada elemento
-
-        const Videos: VideoDatasetItem[] = [];
-        const Texts: TextDatasetItem[] = [];
-        const DataImagenes: ImageDatasetItem[] = [];
-        const DataPdfs: PdfsItem[] = [];
-
-        // Recorrer los textAreas y obtener sus valores
-        textAreas.forEach((textArea: HTMLTextAreaElement) => {
-          const padreW = MuralData.clientWidth;
-          const padreH = MuralData.clientHeight;
-
-          const computedStyle = textArea as HTMLElement;
-          const padreX = MuralData.getBoundingClientRect().left;
-          const padreY = MuralData.getBoundingClientRect().top;
-          const cp = textArea;
-          const nx = cp.getBoundingClientRect().left - padreX;
-          const ny = cp.getBoundingClientRect().top - padreY;
-          const { x, y, height, width } = computedStyle.getBoundingClientRect();
-          //convertir las posiciones en porcentajes
-
-          const { left, top } = this.calcularPorcentajeLeftTop(
-            padreW,
-            padreH,
-            nx,
-            ny
-          );
-
-
-          const valueTexts: TextDatasetItem = {
-            id_mural: localStorage.getItem('id_mural'),
-            valor: textArea.value,
-            font:
-              textArea.style.fontFamily == ''
-                ? 'Arial'
-                : textArea.style.fontFamily,
-            font_size:
-              textArea.style.fontSize == '' ? '16px' : textArea.style.fontSize,
-            posx: /*textArea.offsetLeft*/ Number(left),
-            posy: /*textArea.offsetTop*/ Number(top),
-            height: Number.isNaN(parseInt(textArea.style.height))
-              ? 200
-              : parseInt(textArea.style.height),
-            width: Number.isNaN(parseInt(textArea.style.width))
-              ? 200
-              : parseInt(textArea.style.width),
-            color:
-              !textArea.style.color || textArea.style.color === 'black'
-                ? 'rgb(0,0,0)'
-                : textArea.style.color,
-            border_color:
-              !textArea.style.borderColor ||
-              textArea.style.borderColor == 'black'
-                ? 'rgb(0,0,0)'
-                : textArea.style.borderColor,
-            border_radius:
-              textArea.style.borderRadius == ''
-                ? '0%'
-                : textArea.style.borderRadius,
-            backgroundcolor:
-              !textArea.style.backgroundColor ||
-              textArea.style.backgroundColor == 'black'
-                ? 'rgb(0,0,0)'
-                : textArea.style.backgroundColor,
-            border_style:
-              textArea.style.borderStyle == ''
-                ? 'solid'
-                : textArea.style.borderStyle,
-            font_weight: textArea.style.fontWeight || 'bolder',
-            sangria:
-              textArea.style.textAlign == ''
-                ? 'center'
-                : textArea.style.textAlign,
-          };
-
-          Texts.push(valueTexts);
-        });
-
-        // Recorrer las imágenes y obtener sus atributos o valores
-        images.forEach((image: HTMLImageElement, i: number) => {
-          const panelItem = imgArray[i];
-          const padreW = MuralData.clientWidth;
-          const padreH = MuralData.clientHeight;
-          const padreX = MuralData.getBoundingClientRect().left;
-          const padreY = MuralData.getBoundingClientRect().top;
-
-          const rect = image.getBoundingClientRect();
-          const X = rect.left - padreX;
-          const Y = rect.top - padreY;
-
-          const posX = rect.left;
-          const posY = rect.top;
-          const { left, top } = this.calcularPorcentajeLeftTop(
-            padreW,
-            padreH,
-            X,
-            Y
-          );
-
-
-          const valueImages: ImageDatasetItem = {
-            id_mural: localStorage.getItem('id_mural'),
-
-            url: panelItem.url,
-            alt: image.alt,
-            height: image.height,
-            width: image.width,
-            posx: Number(left),
-            posy: Number(top),
-            border_color:
-              !image.parentElement!.style.borderColor ||
-              image.parentElement!.style.borderColor == 'black'
-                ? 'rgb(0,0,0)'
-                : image.parentElement!.style.borderColor,
-            border_radius:
-              image.parentElement!.style.borderRadius == ''
-                ? '1%'
-                : image.parentElement!.style.borderRadius,
-            border_style:
-              image.parentElement!.style.borderStyle == ''
-                ? 'solid'
-                : image.parentElement!.style.borderStyle,
-          };
-          DataImagenes.push(valueImages);
-        });
-
-        // Recorrer los videos y obtener sus atributos o valores
-        videos.forEach((video: HTMLVideoElement, i: number) => {
-          const panelItem = videoArray[i];
-
-          const padreW = MuralData.clientWidth;
-          const padreH = MuralData.clientHeight;
-          const padreX = MuralData.getBoundingClientRect().left;
-          const padreY = MuralData.getBoundingClientRect().top;
-
-          const rect = video.getBoundingClientRect();
-          const X = rect.left - padreX;
-          const Y = rect.top - padreY;
-
-          const posX = rect.left;
-          const posY = rect.top;
-          const { left, top } = this.calcularPorcentajeLeftTop(
-            padreW,
-            padreH,
-            X,
-            Y
-          );
-
-
-          const DataVideo: VideoDatasetItem = {
-            id_mural: localStorage.getItem('id_mural'),
-            url_video: panelItem.url,
-            height: video.offsetHeight,
-            width: video.offsetWidth,
-            posx: Number(left),
-            posy: Number(top),
-            formato: 'mp4',
-            duration: video.duration,
-            border_color:
-              !video.parentElement!.style.borderColor ||
-              video.parentElement!.style.borderColor == 'black'
-                ? 'rgb(0,0,0)'
-                : video.parentElement!.style.borderColor,
-            border_radius:
-              video.parentElement!.style.borderRadius == ''
-                ? '0%'
-                : video.parentElement!.style.borderRadius,
-            border_style:
-              video.parentElement!.style.borderStyle == ''
-                ? 'solid'
-                : video.parentElement!.style.borderStyle,
-          };
-
-          Videos.push(DataVideo);
-        });
-
-        // Se recorre los pdfViewer y se almacena sus valores en un objeto
-
-        pdfs.forEach((pdf: PDFSource, i: number) => {
-          //para obtener la posX  y en Y
-
-          const computedStyle = pdf as HTMLElement;
-          const { x, y, height, width } = computedStyle.getBoundingClientRect();
-
-          const panelItem = pdfArray[i];
-
-          const padreW = MuralData.clientWidth;
-          const padreH = MuralData.clientHeight;
-          const padreX = MuralData.getBoundingClientRect().left;
-          const padreY = MuralData.getBoundingClientRect().top;
-
-          const rect = computedStyle.getBoundingClientRect();
-          const X = rect.left - padreX;
-          const Y = rect.top - padreY;
-
-          // const posX = rect.left;
-          // const posY = rect.top;
-          const { left, top } = this.calcularPorcentajeLeftTop(
-            padreW,
-            padreH,
-            X,
-            Y
-          );
-
-
-          const DataPdf: PdfsItem = {
-            id_mural: localStorage.getItem('id_mural'),
-            url_pdfs: panelItem.url,
-            height: height,
-            width: width,
-            posx: Number(left),
-            posy: Number(top),
-            border_color:
-              !computedStyle.parentElement!.style.borderColor ||
-              computedStyle.parentElement!.style.borderColor == 'black'
-                ? 'rgb(0,0,0)'
-                : computedStyle.parentElement!.style.borderColor,
-            border_style:
-              computedStyle.parentElement!.style.borderStyle == ''
-                ? 'solid'
-                : computedStyle.parentElement!.style.borderStyle,
-            border_radius:
-              computedStyle.parentElement!.style.borderRadius == ''
-                ? '1%'
-                : computedStyle.parentElement!.style.borderRadius,
-          };
-          DataPdfs.push(DataPdf);
-        });
-        //agregar los enlaces a la url del pdf
-        // if (this.pdfViewers.length === DataPdfs.length) {
-        //   let pdfViewersArray = this.pdfViewers.toArray();
-        //   for (let i = 0; i < pdfViewersArray.length; i++) {
-        //     DataPdfs[i].url_pdfs = pdfViewersArray[i].src as string;
-        //   }
-        // } else {
-        //   console.error('Los arrays pdfViewers y DataPdfs no tienen la misma longitud');
-        // }
-
-        //se guardan en el array el objeto con todo sus elementos
-        let nombreMural = this.MuralnameForm.controls['Muralname'].value;
-        //verificamos si se le puso nombre al mural
-        if (!nombreMural) {
-          nombreMural = 'sin nombre';
-        }
-
-        //hacemos una captura del mural para usar en un dashbaord
-
-        const Url = canva.toDataURL('image/png');
-        dataUrl.push(Url);
-        // const downloadLink = document.createElement('a');
-        // downloadLink.href = dataUrl;
-        // downloadLink.download = 'captured_image.png'; // Nombre del archivo de descarga
-        // downloadLink.click();
-        this.isactive = true;
-        this.DataMural = {
-          id_mural: localStorage.getItem('id_mural'),
-          id_user: localStorage.getItem('id_user'),
-          editor: this.idRol,
-          imgMural: dataUrl[0]!,
-          nombrem: nombreMural!,
-          height: MuralData.offsetWidth,
-          width: MuralData.offsetHeight,
-          textos: Texts,
-          imagenes: DataImagenes,
-          videos: Videos,
-          pdfs: DataPdfs,
-          estado: 'en espera',
         };
+        checkIdRol();
+      });
+      waitForIdRol.then(() => {
+        if (!this.idRol) {
+          return;
+        }
+        this.editState = false;
+        //obtener valores del mural
+        const MuralData = this.containerRef.nativeElement;
+        //hacemos la captura de la imgen
+        let dataUrl: string[] = [];
+        html2canvas(MuralData).then((canva) => {
+          const textAreas =
+            this.containerRef.nativeElement.querySelectorAll('textarea');
+          const images = this.containerRef.nativeElement.querySelectorAll('img');
+          const videos =
+            this.containerRef.nativeElement.querySelectorAll('video');
+          const pdfs =
+            this.containerRef.nativeElement.querySelectorAll('pdf-viewer');
+          //copia del array con los archivos subidos en el mural separados por tipo
+          let imgArray: PanelItem[] = [];
+          let videoArray: PanelItem[] = [];
+          let pdfArray: PanelItem[] = [];
+
+          this.panelItems.forEach((item) => {
+            if (item.type == 'image/jpeg' || item.type == 'image/png') {
+              imgArray.push(item);
+            }
+            if (item.type == 'video/mp4') {
+              videoArray.push(item);
+            }
+            if (item.type == 'application/pdf') {
+              pdfArray.push(item);
+            }
+          });
+          //Array de cada elemento
+
+          const Videos: VideoDatasetItem[] = [];
+          const Texts: TextDatasetItem[] = [];
+          const DataImagenes: ImageDatasetItem[] = [];
+          const DataPdfs: PdfsItem[] = [];
+
+          // Recorrer los textAreas y obtener sus valores
+          textAreas.forEach((textArea: HTMLTextAreaElement) => {
+            const padreW = MuralData.clientWidth;
+            const padreH = MuralData.clientHeight;
+
+            const computedStyle = textArea as HTMLElement;
+            const padreX = MuralData.getBoundingClientRect().left;
+            const padreY = MuralData.getBoundingClientRect().top;
+            const cp = textArea;
+            const nx = cp.getBoundingClientRect().left - padreX;
+            const ny = cp.getBoundingClientRect().top - padreY;
+            const { x, y, height, width } = computedStyle.getBoundingClientRect();
+            //convertir las posiciones en porcentajes
+
+            const { left, top } = this.calcularPorcentajeLeftTop(
+              padreW,
+              padreH,
+              nx,
+              ny
+            );
 
 
-        this.enEspera = true;
-        this.mService.postData(this.DataMural).subscribe((data) => {
+            const valueTexts: TextDatasetItem = {
+              id_mural: localStorage.getItem('id_mural'),
+              valor: textArea.value,
+              font:
+                textArea.style.fontFamily == ''
+                  ? 'Arial'
+                  : textArea.style.fontFamily,
+              font_size:
+                textArea.style.fontSize == '' ? '16px' : textArea.style.fontSize,
+              posx: /*textArea.offsetLeft*/ Number(left),
+              posy: /*textArea.offsetTop*/ Number(top),
+              height: Number.isNaN(parseInt(textArea.style.height))
+                ? 200
+                : parseInt(textArea.style.height),
+              width: Number.isNaN(parseInt(textArea.style.width))
+                ? 200
+                : parseInt(textArea.style.width),
+              color:
+                !textArea.style.color || textArea.style.color === 'black'
+                  ? 'rgb(0,0,0)'
+                  : textArea.style.color,
+              border_color:
+                !textArea.style.borderColor ||
+                textArea.style.borderColor == 'black'
+                  ? 'rgb(0,0,0)'
+                  : textArea.style.borderColor,
+              border_radius:
+                textArea.style.borderRadius == ''
+                  ? '0%'
+                  : textArea.style.borderRadius,
+              backgroundcolor:
+                !textArea.style.backgroundColor ||
+                textArea.style.backgroundColor == 'black'
+                  ? 'rgb(0,0,0)'
+                  : textArea.style.backgroundColor,
+              border_style:
+                textArea.style.borderStyle == ''
+                  ? 'solid'
+                  : textArea.style.borderStyle,
+              font_weight: textArea.style.fontWeight || 'bolder',
+              sangria:
+                textArea.style.textAlign == ''
+                  ? 'center'
+                  : textArea.style.textAlign,
+            };
 
-          this.exito = !this.exito;
-          this.enEspera = false;
-          setTimeout(() => {
-            this.exito = !this.exito;
-            this.isactive = false;
-          }, 2000);
-          this.ruta.navigate(['/main/dashboard']);
-        },
-        (error) => {
-          console.error('Hola', error.status);
-          // Puedes agregar lógica adicional de manejo de errores aquí si es necesario
-          if(error.status == 0){
-            this.exito = true;
-            this.enEspera = false;
-            this.isactive = false;
-            setTimeout(()=> {
-              this.ruta.navigate(['/main/dashboard']);
-            },1000)
+            Texts.push(valueTexts);
+          });
 
-          }else{
-            this.isactive = false;
-            return;
+          // Recorrer las imágenes y obtener sus atributos o valores
+          images.forEach((image: HTMLImageElement, i: number) => {
+            const panelItem = imgArray[i];
+            const padreW = MuralData.clientWidth;
+            const padreH = MuralData.clientHeight;
+            const padreX = MuralData.getBoundingClientRect().left;
+            const padreY = MuralData.getBoundingClientRect().top;
+
+            const rect = image.getBoundingClientRect();
+            const X = rect.left - padreX;
+            const Y = rect.top - padreY;
+
+            const posX = rect.left;
+            const posY = rect.top;
+            const { left, top } = this.calcularPorcentajeLeftTop(
+              padreW,
+              padreH,
+              X,
+              Y
+            );
+
+
+            const valueImages: ImageDatasetItem = {
+              id_mural: localStorage.getItem('id_mural'),
+
+              url: panelItem.url,
+              alt: image.alt,
+              height: image.height,
+              width: image.width,
+              posx: Number(left),
+              posy: Number(top),
+              border_color:
+                !image.parentElement!.style.borderColor ||
+                image.parentElement!.style.borderColor == 'black'
+                  ? 'rgb(0,0,0)'
+                  : image.parentElement!.style.borderColor,
+              border_radius:
+                image.parentElement!.style.borderRadius == ''
+                  ? '1%'
+                  : image.parentElement!.style.borderRadius,
+              border_style:
+                image.parentElement!.style.borderStyle == ''
+                  ? 'solid'
+                  : image.parentElement!.style.borderStyle,
+            };
+            DataImagenes.push(valueImages);
+          });
+
+          // Recorrer los videos y obtener sus atributos o valores
+          videos.forEach((video: HTMLVideoElement, i: number) => {
+            const panelItem = videoArray[i];
+
+            const padreW = MuralData.clientWidth;
+            const padreH = MuralData.clientHeight;
+            const padreX = MuralData.getBoundingClientRect().left;
+            const padreY = MuralData.getBoundingClientRect().top;
+
+            const rect = video.getBoundingClientRect();
+            const X = rect.left - padreX;
+            const Y = rect.top - padreY;
+
+            const posX = rect.left;
+            const posY = rect.top;
+            const { left, top } = this.calcularPorcentajeLeftTop(
+              padreW,
+              padreH,
+              X,
+              Y
+            );
+
+
+            const DataVideo: VideoDatasetItem = {
+              id_mural: localStorage.getItem('id_mural'),
+              url_video: panelItem.url,
+              height: video.offsetHeight,
+              width: video.offsetWidth,
+              posx: Number(left),
+              posy: Number(top),
+              formato: 'mp4',
+              duration: video.duration,
+              border_color:
+                !video.parentElement!.style.borderColor ||
+                video.parentElement!.style.borderColor == 'black'
+                  ? 'rgb(0,0,0)'
+                  : video.parentElement!.style.borderColor,
+              border_radius:
+                video.parentElement!.style.borderRadius == ''
+                  ? '0%'
+                  : video.parentElement!.style.borderRadius,
+              border_style:
+                video.parentElement!.style.borderStyle == ''
+                  ? 'solid'
+                  : video.parentElement!.style.borderStyle,
+            };
+
+            Videos.push(DataVideo);
+          });
+
+          // Se recorre los pdfViewer y se almacena sus valores en un objeto
+
+          pdfs.forEach((pdf: PDFSource, i: number) => {
+            //para obtener la posX  y en Y
+
+            const computedStyle = pdf as HTMLElement;
+            const { x, y, height, width } = computedStyle.getBoundingClientRect();
+
+            const panelItem = pdfArray[i];
+
+            const padreW = MuralData.clientWidth;
+            const padreH = MuralData.clientHeight;
+            const padreX = MuralData.getBoundingClientRect().left;
+            const padreY = MuralData.getBoundingClientRect().top;
+
+            const rect = computedStyle.getBoundingClientRect();
+            const X = rect.left - padreX;
+            const Y = rect.top - padreY;
+
+            // const posX = rect.left;
+            // const posY = rect.top;
+            const { left, top } = this.calcularPorcentajeLeftTop(
+              padreW,
+              padreH,
+              X,
+              Y
+            );
+
+
+            const DataPdf: PdfsItem = {
+              id_mural: localStorage.getItem('id_mural'),
+              url_pdfs: panelItem.url,
+              height: height,
+              width: width,
+              posx: Number(left),
+              posy: Number(top),
+              border_color:
+                !computedStyle.parentElement!.style.borderColor ||
+                computedStyle.parentElement!.style.borderColor == 'black'
+                  ? 'rgb(0,0,0)'
+                  : computedStyle.parentElement!.style.borderColor,
+              border_style:
+                computedStyle.parentElement!.style.borderStyle == ''
+                  ? 'solid'
+                  : computedStyle.parentElement!.style.borderStyle,
+              border_radius:
+                computedStyle.parentElement!.style.borderRadius == ''
+                  ? '1%'
+                  : computedStyle.parentElement!.style.borderRadius,
+            };
+            DataPdfs.push(DataPdf);
+          });
+          //agregar los enlaces a la url del pdf
+          // if (this.pdfViewers.length === DataPdfs.length) {
+          //   let pdfViewersArray = this.pdfViewers.toArray();
+          //   for (let i = 0; i < pdfViewersArray.length; i++) {
+          //     DataPdfs[i].url_pdfs = pdfViewersArray[i].src as string;
+          //   }
+          // } else {
+          //   console.error('Los arrays pdfViewers y DataPdfs no tienen la misma longitud');
+          // }
+
+          //se guardan en el array el objeto con todo sus elementos
+          let nombreMural = this.MuralnameForm.controls['Muralname'].value;
+          //verificamos si se le puso nombre al mural
+          if (!nombreMural) {
+            nombreMural = 'sin nombre';
           }
+
+          //hacemos una captura del mural para usar en un dashbaord
+
+          const Url = canva.toDataURL('image/png');
+          dataUrl.push(Url);
+          // const downloadLink = document.createElement('a');
+          // downloadLink.href = dataUrl;
+          // downloadLink.download = 'captured_image.png'; // Nombre del archivo de descarga
+          // downloadLink.click();
+          this.isactive = true;
+          this.DataMural = {
+            id_mural: localStorage.getItem('id_mural'),
+            id_user: localStorage.getItem('id_user'),
+            editor: this.idRol,
+            imgMural: dataUrl[0]!,
+            nombrem: nombreMural!,
+            height: MuralData.offsetWidth,
+            width: MuralData.offsetHeight,
+            textos: Texts,
+            imagenes: DataImagenes,
+            videos: Videos,
+            pdfs: DataPdfs,
+            estado: 'en espera',
+          };
+
+
+          this.enEspera = true;
+          this.mService.postData(this.DataMural).subscribe((data) => {
+
+            this.exito = !this.exito;
+            this.enEspera = false;
+            setTimeout(() => {
+              this.exito = !this.exito;
+              this.isactive = false;
+            }, 2000);
+            this.ruta.navigate(['/main/dashboard']);
+          },
+          (error) => {
+            console.error('Hola', error.status);
+            // Puedes agregar lógica adicional de manejo de errores aquí si es necesario
+            if(error.status == 0){
+              this.exito = true;
+              this.enEspera = false;
+              this.isactive = false;
+              setTimeout(()=> {
+                this.ruta.navigate(['/main/dashboard']);
+              },1000)
+
+            }else{
+              this.isactive = false;
+              return;
+            }
+          });
         });
       });
     });
+
+    // Esperar a que se establezca idRol usando una Promesa
+
   }
 
   //boton para ocultar

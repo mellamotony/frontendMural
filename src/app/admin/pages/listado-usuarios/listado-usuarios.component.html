@@ -25,7 +25,18 @@
         <th>Correo</th>
         <th>Rol</th>
         <th>Editar</th>
-        <th>Eliminar</th>
+        <th>Desactivar</th>
+        <th>
+          <form  [formGroup]="formFiltro">
+            <select (change)="filtro()" formControlName="opcion">
+              <option disabled value="">Mostrar por rol</option>
+              <option  value="diseñador">diseñador</option>
+              <option   value="editor">editor</option>
+              <option   value="inactivo">inactivo</option>
+              <option   value="all">todos los usuarios</option>
+            </select>
+          </form>
+          </th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-users>
@@ -35,6 +46,7 @@
         <td>{{ users.apellidos }}</td>
         <td>{{ users.correo }}</td>
         <td>{{ users.rol}}</td>
+
         <td>
           <p-button [id]="users.id_user" (onClick)="editarUsuario($event)" styleClass="p-button-success">
             <svg [ngStyle]="{'pointer-events':'none'}"  [id]="users.id_user" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0,0,256,256">
@@ -53,8 +65,8 @@
           </p-button>
         </td>
         <td>
-          <p-button  (onClick)="eliminarUsuario($event)"  [id]="users.id_user" styleClass="p-button-danger">
-            <svg [ngStyle]="{'pointer-events':'none'}"  [id]="users.id_user" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0,0,256,256">
+          <p-button *ngIf="users.rol != 'admin'"  (onClick)="eliminarUsuario($event)"  [id]="users.id_user" styleClass="p-button-danger">
+            <!-- <svg [ngStyle]="{'pointer-events':'none'}"  [id]="users.id_user" xmlns="https://img.icons8.com/external-bartama-outline-64-bartama-graphic/64/000000/external-ban-miscellaneous-elements-outline-bartama-outline-64-bartama-graphic.png" x="0px" y="0px" width="25" height="25" viewBox="0,0,256,256">
               <g fill="#ffffff" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt"
                 stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0"
                 font-family="none" font-weight="none" font-size="none" text-anchor="none"
@@ -65,12 +77,15 @@
                   </path>
                 </g>
               </g>
-            </svg>
+            </svg> -->
+
+            <svg [ngStyle]="{'pointer-events':'none','color':'white'}"  [id]="users.id_user" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path d="M367.2 412.5L99.5 144.8C77.1 176.1 64 214.5 64 256c0 106 86 192 192 192c41.5 0 79.9-13.1 111.2-35.5zm45.3-45.3C434.9 335.9 448 297.5 448 256c0-106-86-192-192-192c-41.5 0-79.9 13.1-111.2 35.5L412.5 367.2zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256z"/></svg>
+
+
           </p-button>
         </td>
-        <td>
 
-        </td>
+        <td></td>
       </tr>
     </ng-template>
   </p-table>

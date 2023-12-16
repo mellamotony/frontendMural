@@ -4,3 +4,16 @@
 ::ng-deep .p-avatar{
   background-color: red;
 } */
+.hedr{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap:20px;
+}
+.hedr h2{
+  padding: 0px;
+  margin-bottom: 0px;
+}
+.sbhr{
+  padding-top: 20%;
+}

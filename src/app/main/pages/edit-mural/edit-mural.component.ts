@@ -148,7 +148,7 @@ export class EditMuralComponent implements OnInit {
   public idRol: string = '';
 
   @ViewChild('contPanel') containerRef!: ElementRef<HTMLElement>;
-
+  herramientaActive:boolean = false;
   constructor(
     private ruta: Router,
     private mService: MuralService,
@@ -181,6 +181,8 @@ export class EditMuralComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.herramientaActive = true;
     //Funcion que limpia el C:\\wamp\www\codeigniter
 
     let nombreMural: string = '';
@@ -425,8 +427,6 @@ export class EditMuralComponent implements OnInit {
                   },
                 ],
               },
-            ],
-            [
               {
                 label: 'Video',
                 items: [
@@ -450,6 +450,7 @@ export class EditMuralComponent implements OnInit {
                 ],
               },
             ],
+
           ],
           // command:()=>{
           //   alert('subiendo_:...')
@@ -550,7 +551,7 @@ export class EditMuralComponent implements OnInit {
       height: 100,
       width: 200,
       color: '',
-      border_color: 'rgb(9, 9, 54)',
+      border_color: 'rgb(0, 0, 0)',
       border_radius: '',
       border_style: '',
       backgroundcolor: '',
@@ -558,6 +559,7 @@ export class EditMuralComponent implements OnInit {
       sangria: 'center',
     };
     this.valueInputs.push(txt);
+
   }
   //Crear archivos
   createFileInput() {
@@ -611,6 +613,7 @@ export class EditMuralComponent implements OnInit {
 
   //click al elemento ContainerTxt
   handleClick(e: MouseEvent) {
+    this.herramientaActive = false;
     this.IsVidActive = false;
     if ((this.isPdfActive = true)) {
       this.isPdfActive = false;
@@ -621,10 +624,82 @@ export class EditMuralComponent implements OnInit {
     this.isActive = true;
 
     this.e = e;
+    const elemento = e.target as HTMLElement
+    const color = this.eliminarUnidades(elemento.style.color) == '' ? 'rgb(0,0,0)': this.eliminarUnidades(elemento.style.color)
+    const background_color = this.eliminarUnidades(elemento.style.backgroundColor) == '' ||'black' ? 'rgb(255,255,255)': this.eliminarUnidades(elemento.style.color)
+    const border_color = this.eliminarUnidades(elemento.style.borderColor) == '' ? 'rgb(0,0,0)': this.eliminarUnidades(elemento.style.borderColor)
+
+
+
+    this.toolsForm.controls['height'].setValue(parseInt(this.eliminarUnidades(elemento.style.height)));
+    this.toolsForm.controls['width'].setValue(parseInt(this.eliminarUnidades(elemento.style.width)));
+    this.toolsForm.controls['color'].setValue(this.rgbToHex(color));
+    this.toolsForm.controls['fonts'].setValue((this.eliminarUnidades(elemento.style.fontFamily)));
+    this.toolsForm.controls['borderStyle'].setValue((this.eliminarUnidades(elemento.style.borderStyle)));
+    this.toolsForm.controls['borderRadius'].setValue(parseInt(this.eliminarUnidades(elemento.style.borderRadius)));
+    this.toolsForm.controls['alignment'].setValue((this.eliminarUnidades(elemento.style.textAlign)));
+    this.toolsForm.controls['fontSize'].setValue(parseInt(this.eliminarUnidades(elemento.style.fontSize)));
+    this.toolsForm.controls['borderColor'].setValue(this.rgbToHex(border_color));
+    this.toolsForm.controls['background'].setValue(this.rgbToHex(background_color));
   }
+    //permite tener los estilos en la barra de herramientas
+    mantenerStilos(e:MouseEvent){
+      const elemento = e.target as HTMLElement
+      if(elemento.classList.contains('panel-i')){
+      const border_color = this.eliminarUnidades(elemento.style.borderColor) == '' ? 'rgb(0,0,0)': this.eliminarUnidades(elemento.style.borderColor)
+
+      this.toolsForm.controls['borderColor'].setValue(this.rgbToHex(border_color));
+      this.toolsForm.controls['height'].setValue(parseInt(this.eliminarUnidades(elemento.style.height)));
+      this.toolsForm.controls['width'].setValue(parseInt(this.eliminarUnidades(elemento.style.width)));
+      this.toolsForm.controls['borderRadius'].setValue(parseInt(this.eliminarUnidades(elemento.style.borderRadius)));
+      this.toolsForm.controls['borderStyle'].setValue((this.eliminarUnidades(elemento.style.borderStyle)));
+      return
+    }
+      const ePadre = elemento.parentElement
+      const border_color = this.eliminarUnidades(ePadre!.style.borderColor) == '' ? 'rgb(0,0,0)': this.eliminarUnidades(ePadre!.style.borderColor);
+
+      this.toolsForm.controls['borderColor'].setValue(this.rgbToHex(border_color));
+      this.toolsForm.controls['height'].setValue(parseInt(this.eliminarUnidades(ePadre!.style.height)));
+      this.toolsForm.controls['width'].setValue(parseInt(this.eliminarUnidades(ePadre!.style.width)));
+      this.toolsForm.controls['borderRadius'].setValue(parseInt(this.eliminarUnidades(ePadre!.style.borderRadius)));
+      this.toolsForm.controls['borderStyle'].setValue((this.eliminarUnidades(ePadre!.style.borderStyle)));
+    }
+    //cambiar formato
+    rgbToHex(rgbString: string): string | null {
+      const match = rgbString.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+
+      if (!match) {
+        return null; // Devuelve null si el formato del string RGB no es válido
+      }
+
+      const [, r, g, b] = match.map(Number);
+
+      const toHex = (c: number) => {
+        const hex = c.toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+      };
+
+      const hexR = toHex(r);
+      const hexG = toHex(g);
+      const hexB = toHex(b);
+
+      return `#${hexR}${hexG}${hexB}`;
+    }
+    //funcion que limpia los px y / de un texto
+     eliminarUnidades(cadena: string): string {
+      // Eliminar "px"
+      const sinPx = cadena.replace("px", "");
+
+      // Eliminar "/"
+      const sinSlash = sinPx.replace("/", "");
+      const sincomi = sinSlash.replaceAll('"',"")
+
+      return sincomi;
+    }
 
   //click a los elementos de video,pdf e imagenes
   handleClickMultimedia(e: MouseEvent) {
+    this.herramientaActive = false;
     // const newElement = e.target as HTMLElement;
     // this.isActive = false;
     // if (this.isPdfActive = true) {
@@ -672,6 +747,7 @@ export class EditMuralComponent implements OnInit {
     this.IsVidActive = true;
 
     this.e = e;
+    this.mantenerStilos(e);
   }
 
   //funcion para cambiar cambiar la barra de herramientas de texto
@@ -922,6 +998,8 @@ export class EditMuralComponent implements OnInit {
 
   //funcion para enviar los datos y actualizar los datos
   OnSaveMural() {
+    this.isActive = false;
+    this.IsVidActive = false;
     //obtener valores del mural
     const MuralData = this.containerRef.nativeElement;
     //copia del array con los archivos subidos en el mural separados por tipo
@@ -1271,7 +1349,7 @@ export class EditMuralComponent implements OnInit {
       //ordenamos en un objeto todos los datos necesarios para enviar al backend
       this.DataMural = {
         id_mural: this.idMural,
-        id_user: this.idUser,
+        id_user: localStorage.getItem('id_user'),
         editor: this.idRol,
         nombrem: nombreMural!,
         imgMural: dataUrl[0]!,

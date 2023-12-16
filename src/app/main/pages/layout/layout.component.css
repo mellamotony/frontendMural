@@ -53,6 +53,19 @@
 .containerg{
   min-width: 1090px;
   height:100%;
+
 }
 
+
+
+.headr{
+  display: flex;
+  gap:30px;
+}
+.subhr{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+}
 

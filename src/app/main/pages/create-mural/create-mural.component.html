@@ -61,8 +61,17 @@
       <!-- <div class="element" *ngFor="let image of images" cdkDrag>
         <img [src]="image" width="100" />
       </div> -->
+      <!--
+      <div *ngFor="let guide of verticalGuides"
+      class="guide"
+      [style.left]="guide.left">
+    </div>
 
-
+    <div *ngFor="let guide of horizontalGuides"
+      class="guideh"
+      [style.top]="guide.top">
+    </div>
+    -->
 
       <input
         type="file"
@@ -80,7 +89,7 @@
         (click)="handleClickMultimedia($event)"
       >
         <ng-container class="contVideo"  *ngIf="item.type.startsWith('video/')">
-          <video [id]="item.id" [src]="item.url" controls></video>
+          <video  [id]="item.id" [src]="item.url" controls></video>
         </ng-container>
         <ng-container class="contImg" *ngIf="item.type.startsWith('image/')">
           <img [id]="item.id" [src]="item.url" [alt]="item.file.name" />
@@ -120,6 +129,10 @@
 
   <div class="barrita">
     <!-- Barra de herramientas para textos -->
+
+    <h1 class="herraText"  *ngIf="herramientaActive">
+
+      Da click al elemento generado para generar la barra de herramientas</h1>
     <div class="MenuBarEdicionTexto" *ngIf="isActive">
       <div class="botoncito">
         <button class="hidenbuttom" (click)="ocultarToolbarTxt()">
@@ -218,7 +231,7 @@
 
         <div class="menu-item">
           <label for="fontSize">Tamaño de la fuente</label>
-          <input formControlName="fontSize" type="number" min="0" max="50" />
+          <input formControlName="fontSize" type="number" min="1" max="50" />
         </div>
 
         <button class="btnGuardar" type="submit">Guardar</button>

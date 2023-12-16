@@ -12,12 +12,22 @@ export class LayoutEComponent implements OnInit {
   avatar: string ='';
   nombre: string = '';
   apellidos: string = '';
-  colors:string[] = ['red','blue','white']
+  public rol:string = ''
+  colors:string[] = ['#000000',
+  '#00008B',
+  '#FF0000',
+  '#008000',
+  '#800080',
+  '#A9A9A9',
+  '#FFFF00',
+  '#FFA500',
+  '#00CED1',
+  '#FF69B4']
   coloRandom:string=''
   constructor(private ms:EditorService){}
   ngOnInit(): void {
     const idRadom = Math.floor(Math.random() * this.colors.length)
-
+    this.rol = localStorage.getItem('rol')!
     this.coloRandom = this.colors[idRadom]
 
     this.items = [
